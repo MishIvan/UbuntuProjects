@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/Arrow_up.png</file>
+        <file>images/Arrow_down.png</file>
+        <file>images/MarkLabel.ico</file>
+    </qresource>
+</RCC>
