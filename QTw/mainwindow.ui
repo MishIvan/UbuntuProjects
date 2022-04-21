@@ -34,16 +34,6 @@
      <string>Закрыть</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="editor">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>20</y>
-      <width>621</width>
-      <height>241</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="picWidget">
     <property name="geometry">
      <rect>
@@ -55,6 +45,16 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QTableView" name="tableView">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>701</width>
+      <height>261</height>
+     </rect>
     </property>
    </widget>
   </widget>

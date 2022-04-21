@@ -13,6 +13,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::Initialize()
+{
+    setWindowTitle("Первое приложение Qt Widgets");
+    setWindowIcon(QIcon(":/images/MarkLabel.ico"));
+
+    QPushButton *btn = findChild<QPushButton *>("closeButton");
+    btn->setText("Закрыть окно");
+    btn->setToolTip("Закрыть приложение");
+
+    QLabel *pic = findChild<QLabel *>("picWidget");
+    pic->setPixmap(QPixmap(":/images/Arrow_up.png"));
+}
+
 
 void MainWindow::on_closeButton_clicked()
 {
