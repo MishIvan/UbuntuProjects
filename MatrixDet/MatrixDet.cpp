@@ -6,6 +6,7 @@
 #include <fstream>
 #include <string.h>
 #include <stdlib.h>
+#include <random>
 
 void GetFullPathInWD(char* fullExePath, const char* dataFileName, char* fullFileName);
 void LinearSystemSolve(int n, double* A, double* b, double* &x, double& det, bool onlyDet);
@@ -14,6 +15,8 @@ double errNorm(int n, double* A, double* b, double* x);
 void PrintMatrix(const char* header, int size, double* A);
 void PrintVector(const char* header, int size, double* x);
 double Minor(int n, double* A, int i, int j);
+void CalculateMinors(double *A, int size, double *MMinor);
+double MaxMinor(double *minor, int size, int &k, int &p);
 
 int main(int argc, char* argv[])
 {
@@ -58,6 +61,14 @@ int main(int argc, char* argv[])
     }
     meanval /= (double)size * (double)size;
 
+    double * minors = new double[size*size];
+    CalculateMinors(A, size, minors);
+    PrintMatrix("Матрица миноров матрицы А", size, minors);
+    int k,p;
+    double mmax = MaxMinor(minors, size, k,p);
+    std::cout << "Максимальный минор M("<< k << "," << p << ") = " << mmax <<" методом отжига" << std::endl;
+
+    delete [] minors;
     delete [] A;
 
     std::cout << "Среднее значение миноров матрицы A = " << meanval << std::endl;
@@ -83,6 +94,54 @@ void GetFullPathInWD(char* fullExePath, const char* dataFileName, char* fullFile
         s1.replace(k + 1, s1.size() - 1, dataFileName);
         strcpy(fullFileName, s1.data());
     }
+}
+
+/// <summary>
+///Формирование матрицы миноров
+/// </summary>
+/// <param name="size">размерность исходной матрицы и матрицы миноров</param>
+/// <param name="A">матрица, для которой формируются миноры</param>
+/// <param name="MMinor">формируемая матрица миноров, память должна быть выделена</param>
+void CalculateMinors(double *A, int size, double *MMinor)
+{
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            MMinor[i*size+j] = Minor(size, A, i, j);
+
+        }
+    }
+
+}
+
+/// <summary>
+/// Генератор случайных целых чисел
+/// </summary>
+/// <param name="from">начальное значение</param>
+/// <param name="to">конечное значение</param>
+/// <returns>случайное число</returns>
+
+double MaxMinor(double *minor, int size, int &k, int &p)
+{
+    double Tmax = 1000, Tmin = 1;
+    double T = Tmax;
+    k = rand()%(size-1);
+    p = rand()%(size-1);
+    double val0 = minor[k*size+k];
+
+    while(T >= Tmin)
+    {
+        int i = rand()%(size-1);
+        int j = rand()%(size-1);
+        double val = minor[i*size+j];
+        if(val > val0 || double(rand()) / RAND_MAX < exp(-(val - val0)/T))
+        {
+            val0 = val; k = i; p = j;
+        }
+        T *= 0.9;
+    }
+    return val0;
 }
 
 /// <summary>
