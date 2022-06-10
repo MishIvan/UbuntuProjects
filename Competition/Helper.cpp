@@ -98,8 +98,17 @@ void InputDataFromConsole(vector<Participant> &youngGroup,
           }
     }
 
-    string ch;
-    do
+    int count;
+    while(true)
+    {
+        cout << "Введите количество участников соревнований (от 1 до 18): ";
+        cin >> count;
+        if(count >= 1 && count <= 18) break;
+        else
+          cerr << "Число участников соревнований должно находится в пределах от 1 до 18" << endl;
+    }
+
+    for(int i =0 ; i < count; i++)
     {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         string fio;
@@ -166,10 +175,7 @@ void InputDataFromConsole(vector<Participant> &youngGroup,
                 oldGroup.push_back(person);
         }
 
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        cout << "Продолжить ввод (Y/N)?";
-        cin >> ch;
-    } while(ch != "N" || ch !="n" || ch != "Т" || ch !="т");
+    }
 }
 
 // Отображение time_t в виде строки
@@ -194,11 +200,11 @@ void OutputParticipantsToConsole(vector<Participant> &group, int count = 0)
     {
         Participant elem  = group[i];
         cout << "-------------------------------------------------------" << endl;
-        cout << i+1 << ". " << elem.Name << endl;
+        cout << "ФИО: " << elem.Name << endl;
         cout << "Возраст: " << elem.Age << endl;
         cout << "Время старта: " << Timet2String(elem.TimeBegin) << endl;
         cout << "Время финиша: " << Timet2String(elem.TimeEnd) << endl;
-        cout << "Время прохождения дистанции: " << StringTimeDiff(elem.TimeEnd, elem.TimeBegin);
+        cout << "Время прохождения дистанции: " << StringTimeDiff(elem.TimeEnd, elem.TimeBegin) << endl;
     }
 }
 // Функуия сравнения по времени для сортировки списка
