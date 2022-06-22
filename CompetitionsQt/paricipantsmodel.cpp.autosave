@@ -1,0 +1,19 @@
+#include "paricipantsmodel.h"
+
+ParticipantsModel::ParicipantsModel()
+{
+    
+}
+
+QVariant ParticipantsModel::data(const QModelIndex &idx, int Role) const
+{
+    if(!idx.isValid())
+        return QVariant();
+    return (Role == Qt::DisplayRole || Role == Qt::EditRole) ?
+                QVariant::fromValue(m_pList.at(idx.row())) : QVariant();
+}
+
+bool ParticipantModel::setData(const QModelIndex &idx, const QVariant &value, int Role)
+{
+    if(idx.IsValid() && Role == Qt::EditRole)
+}

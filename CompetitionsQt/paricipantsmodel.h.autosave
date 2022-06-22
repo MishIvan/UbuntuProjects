@@ -1,0 +1,18 @@
+#ifndef PARTICIPANTSMODEL_H
+#define PARICIPANTSMODEL_H
+
+#include <QObject>
+#include <QAbstractListModel>
+#include <Helper.h>
+
+class ParticipantsModel : public QAbstractListModel
+{
+    Q_OBJECT
+    QList<Participant> m_pList;
+public:
+    ParicipantsModel();
+    QVariant data(const QModelIndex &idx, int Role) const;
+    bool setData(const QModelIndex &idx, const QVariant &value, int Role);
+};
+
+#endif // PARICIPANTSMODEL_H
