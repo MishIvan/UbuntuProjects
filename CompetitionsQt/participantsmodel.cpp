@@ -9,7 +9,7 @@ ParticipantsModel::~ParticipantsModel()
     delete m_pList;
 }
 
-
+// *** Перегруженные функции ***
 QVariant ParticipantsModel::data(const QModelIndex &idx, int Role) const
 {
     if(!idx.isValid())
@@ -24,9 +24,9 @@ QVariant ParticipantsModel::data(const QModelIndex &idx, int Role) const
                    case 1:
                     return p.age;
                    case 2:
-                    return p.startTime;
+                    return p.startTime.toString();
                    case 3:
-                    return p.endTime;
+                    return p.endTime.toString();
             }
     }
     else
@@ -47,10 +47,10 @@ bool ParticipantsModel::setData(const QModelIndex &idx, const QVariant &val, int
                   p.age = val.value<int>();
                   break;
             case 2:
-              p.startTime = val.value<QTime>();
+              p.startTime = QTime::fromString(val.value<QString>());
               break;
             case 3:
-               p.endTime = val.value<QTime>();
+               p.endTime = QTime::fromString(val.value<QString>());
                break;
 
 
@@ -94,14 +94,20 @@ QVariant ParticipantsModel::headerData(int section, Qt::Orientation orientation,
                 return QString("Старт");
             case 3:
                 return QString("Финиш");
+            default:
+                return QVariant();
 
         }
     }
-    if(orientation == Qt::Vertical)
+    else if(orientation == Qt::Vertical)
     {
         return QString::number(section+1);
     }
+    else
+        return QVariant();
 }
+
+// *** Функции добавления и вставки ***
 void ParticipantsModel::append(Participant p)
 {
     int newRow =  m_pList->count()+1;
@@ -109,4 +115,28 @@ void ParticipantsModel::append(Participant p)
        beginInsertRows(QModelIndex(), newRow, newRow);
            m_pList->append(p);
        endInsertRows();
+}
+void ParticipantsModel::deleteRow(int idx)
+{
+    beginRemoveRows(QModelIndex(), idx,idx);
+        m_pList->removeAt(idx);
+    endRemoveRows();
+}
+
+void ParticipantsModel::insertAt(int idx, Participant p)
+{
+
+    int newRow = idx;
+
+    beginInsertRows(QModelIndex(), newRow, newRow);
+        m_pList->insert(newRow,p);
+    endInsertRows();
+}
+
+void ParticipantsModel::clear()
+{
+    beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
+        m_pList->clear();
+    endRemoveRows();
+
 }

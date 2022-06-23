@@ -49,7 +49,8 @@ void MainWindow::on_addBunnon_clicked()
 
 void MainWindow::on_delButton_clicked()
 {
-
+    QModelIndex idx = participantsView->currentIndex();
+    model->deleteRow(idx.row());
 }
 
 void MainWindow::on_sortButton_clicked()
