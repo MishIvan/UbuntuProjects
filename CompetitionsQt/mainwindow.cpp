@@ -10,6 +10,11 @@ MainWindow::MainWindow(QWidget *parent)
     model = new ParticipantsModel();
     participantsView->setModel(model);
     participantsView->setColumnWidth(0, 280);
+    connect(participantsView->selectionModel(),
+            SIGNAL( currentChanged(const QModelIndex, const QModelInex & ) ),
+            this,
+            SLOT( test() ) );
+
 }
 
 MainWindow::~MainWindow()
@@ -57,3 +62,32 @@ void MainWindow::on_sortButton_clicked()
 {
 
 }
+
+
+void MainWindow::test()
+{
+    QModelIndex idx = participantsView->selectionModel()->currentIndex();
+    if(idx.isValid())
+    {
+        if(idx.column() == 0)
+            name->setText(model->data(idx, Qt::DisplayRole).toString());
+    }
+
+}
+
+
+void MainWindow::on_action_open_triggered()
+{
+    
+}
+
+void MainWindow::on_action_save_triggered()
+{
+    
+}
+
+void MainWindow::on_action_exit_triggered()
+{
+    QApplication::exit();
+}
+

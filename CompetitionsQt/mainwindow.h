@@ -20,7 +20,14 @@ private slots:
     void on_delButton_clicked();
 
     void on_sortButton_clicked();
+    void test();
 
+    void on_action_open_triggered();
+
+    void on_action_save_triggered();
+    
+    void on_action_exit_triggered();
+    
 private:
 };
 #endif // MAINWINDOW_H
