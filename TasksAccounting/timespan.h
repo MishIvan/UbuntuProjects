@@ -12,9 +12,10 @@ class TimeSpan
     int m_minutes; // минуты
     int m_seconds; // секунды
     double Seconds();
+    void fromSecond(double );
 public:
     TimeSpan();
-    TimeSpan(int hr, int mn, int s);
+    TimeSpan(int hr, int mn, int s = 0);
     TimeSpan(double secs);
     QString toString();
     static bool Parse(const QString & , TimeSpan &);
@@ -26,6 +27,7 @@ public:
     friend bool operator == (TimeSpan one, TimeSpan two);
     friend TimeSpan operator -(TimeSpan one, TimeSpan two);
     friend TimeSpan operator +(TimeSpan one, TimeSpan two);
+    TimeSpan & operator += (TimeSpan );
 
 
 };

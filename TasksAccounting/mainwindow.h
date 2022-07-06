@@ -3,19 +3,24 @@
 
 #include <QMainWindow>
 #include "ui_mainwindow.h"
-#include <QtSql/QSqlDatabase>
-#include <QSqlTableModel>
+#include <QtSql>
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QString, QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
     void on_addTaskButton_clicked();
+
+    void on_delTaskButton_clicked();
+
+    void on_editTaskButton_clicked();
+
+    void on_worksButton_clicked();
 
 private:
     QSqlDatabase m_database;

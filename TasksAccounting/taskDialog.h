@@ -3,20 +3,17 @@
 
 #include "ui_taskDialog.h"
 #include "timespan.h"
-struct Task
-{
-    QString m_name;
-    QString m_content;
+#include <QtSql>
 
-
-};
-
-class taskDialog : public QDialog, private Ui::Dialog
+class taskDialog : public QDialog, private Ui::tasksDialog
 {
     Q_OBJECT
-
+    QModelIndex m_idx;
+    QSqlTableModel *m_model;
 public:
-    explicit taskDialog(QWidget *parent = nullptr);
+    explicit taskDialog(QSqlTableModel *model ,QModelIndex idx = QModelIndex(), QWidget *parent = nullptr);
+private slots:
+    void on_tasksDialog_accepted();
 };
 
 #endif // DIALOG_H

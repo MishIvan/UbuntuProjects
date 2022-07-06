@@ -6,20 +6,26 @@ TimeSpan::TimeSpan()
 {
         m_hours = 0; m_minutes = 0; m_seconds = 0;
 }
-TimeSpan::TimeSpan(int hr, int mn, int s = 0)
+TimeSpan::TimeSpan(int hr, int mn, int s)
 {
     m_hours = hr; m_minutes = mn; m_seconds = s;
 }
 TimeSpan::TimeSpan(double secs)
 {
-    m_hours = (int)floor(secs/3600.0);
-    m_minutes = (int)floor((secs - m_hours*3600.0)/60.0);
-    m_seconds = (int)floor(secs - m_hours*3600.0 - m_minutes*60.0);
+    fromSecond(secs);
 }
 
 double TimeSpan::Seconds()
 {
     return m_hours*3600.0 + m_minutes*60.0 + m_seconds;
+}
+
+void TimeSpan::fromSecond(double secs)
+{
+    m_hours = (int)floor(secs/3600.0);
+    m_minutes = (int)floor((secs - m_hours*3600.0)/60.0);
+    m_seconds = (int)floor(secs - m_hours*3600.0 - m_minutes*60.0);
+
 }
 
 QString TimeSpan::toString()
@@ -64,6 +70,14 @@ TimeSpan& TimeSpan::operator = (TimeSpan ts)
     this->m_hours = ts.m_hours;
     this->m_minutes = ts.m_minutes;
     this->m_seconds = ts.m_seconds;
+    return *this;
+}
+
+TimeSpan & TimeSpan::operator += (TimeSpan ts)
+{
+    this->m_hours += ts.m_hours;
+    this->m_minutes += ts.m_minutes;
+    this->m_seconds += ts.m_seconds;
     return *this;
 }
 
