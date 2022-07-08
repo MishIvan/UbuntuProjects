@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "taskDialog.h"
+#include "worksdialog.h"
 #include <QMessageBox>
 #include <QSqlError>
 #include <QSqlRecord>
@@ -13,7 +14,6 @@ MainWindow::MainWindow(QString pathToData, QWidget *parent)
 {
     setupUi(this);
     m_database = QSqlDatabase::addDatabase("QSQLITE");
-    QStringList co = m_database.connectionNames();
     m_database.setDatabaseName(pathToData);
     if(!m_database.open())
     {
@@ -30,7 +30,7 @@ MainWindow::MainWindow(QString pathToData, QWidget *parent)
     m_model->setHeaderData(3, Qt::Horizontal, QObject::tr("Срок"));
     m_model->setHeaderData(4, Qt::Horizontal, QObject::tr("Завершение"));
     m_model->setHeaderData(5, Qt::Horizontal, QObject::tr("Время\nпо плану"));
-    m_model->setHeaderData(6, Qt::Horizontal, QObject::tr("Фактическое\nвремя"));
+    m_model->setHeaderData(6, Qt::Horizontal, QObject::tr("Время\nпо факту"));
 
     taskTableView->setModel(m_model);
     taskTableView->setColumnHidden(0, true);
@@ -104,5 +104,21 @@ void MainWindow::on_editTaskButton_clicked()
 
 void MainWindow::on_worksButton_clicked()
 {
+    if(!m_database.isOpen())
+    {
+        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
+        return;
+    }
+    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
+    QModelIndex idx = selmodel->currentIndex();
+    if(idx.isValid())
+    {
+        worksDialog wd(m_model,idx, this);
+        wd.exec();
+    }
+}
 
+void MainWindow::on_action_exit_triggered()
+{
+    QApplication::exit(0);
 }

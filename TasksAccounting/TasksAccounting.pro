@@ -20,17 +20,20 @@ SOURCES += \
     mainwindow.cpp \
     taskDialog.cpp \
     timespan.cpp \
+    workrecdialog.cpp \
     worksdialog.cpp
 
 HEADERS += \
     mainwindow.h \
     taskDialog.h \
     timespan.h \
+    workrecdialog.h \
     worksdialog.h
 
 FORMS += \
     mainwindow.ui \
     taskDialog.ui \
+    workrecdialog.ui \
     worksdialog.ui
 
 # Default rules for deployment.

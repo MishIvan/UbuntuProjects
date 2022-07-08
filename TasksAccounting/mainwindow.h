@@ -22,6 +22,8 @@ private slots:
 
     void on_worksButton_clicked();
 
+    void on_action_exit_triggered();
+
 private:
     QSqlDatabase m_database;
     QSqlTableModel *m_model;

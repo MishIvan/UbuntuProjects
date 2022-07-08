@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Учёт задач</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="MainResource.qrc">
+    <normaloff>:/images/Tasks64.png</normaloff>:/images/Tasks64.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTableView" name="taskTableView">
     <property name="geometry">
@@ -27,7 +31,7 @@
      <enum>QAbstractItemView::SelectRows</enum>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>710</x>
@@ -126,8 +130,41 @@
      <height>24</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="action_exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Отчёт</string>
+    </property>
+    <addaction name="action_time_period"/>
+    <addaction name="action_time_tasks"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="action_time_period">
+   <property name="text">
+    <string>Время за период</string>
+   </property>
+  </action>
+  <action name="action_time_tasks">
+   <property name="text">
+    <string>Время по задачам</string>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="text">
+    <string>Выход</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="MainResource.qrc"/>

@@ -7,26 +7,32 @@
     <x>0</x>
     <y>0</y>
     <width>838</width>
-    <height>510</height>
+    <height>564</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Работы по задаче</string>
   </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
   <widget class="QTableView" name="worksTableView">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>10</y>
+     <y>180</y>
      <width>721</width>
-     <height>381</height>
+     <height>311</height>
     </rect>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::SingleSelection</enum>
    </property>
    <property name="selectionBehavior">
     <enum>QAbstractItemView::SelectRows</enum>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>760</x>
@@ -97,6 +103,84 @@
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>0</y>
+     <width>721</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Задача</string>
+   </property>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>121</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Описание:</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="m_taskDescription">
+    <property name="geometry">
+     <rect>
+      <x>135</x>
+      <y>70</y>
+      <width>511</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>631</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Наименование:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="m_taskName">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="closeButton">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>510</y>
+     <width>151</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Закрыть</string>
+   </property>
   </widget>
  </widget>
  <resources>

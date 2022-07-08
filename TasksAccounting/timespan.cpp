@@ -28,10 +28,13 @@ void TimeSpan::fromSecond(double secs)
 
 }
 
-QString TimeSpan::toString()
+QString TimeSpan::toString(bool withSeconds)
 {
     char buff[16];
-    sprintf(buff,"%02d:%02d:%02d", m_hours, m_minutes, m_seconds);
+    if(withSeconds)
+        sprintf(buff,"%02d:%02d:%02d", m_hours, m_minutes, m_seconds);
+    else
+        sprintf(buff,"%02d:%02d", m_hours, m_minutes);
     return QString(buff);
 
 }
@@ -75,9 +78,9 @@ TimeSpan& TimeSpan::operator = (TimeSpan ts)
 
 TimeSpan & TimeSpan::operator += (TimeSpan ts)
 {
-    this->m_hours += ts.m_hours;
-    this->m_minutes += ts.m_minutes;
-    this->m_seconds += ts.m_seconds;
+    double secs = this->Seconds();
+    secs += ts.Seconds();
+    this->fromSecond(secs);
     return *this;
 }
 
@@ -106,6 +109,11 @@ bool operator <= (TimeSpan one, TimeSpan two)
 bool operator == (TimeSpan one, TimeSpan two)
 {
       return one.Seconds() == two.Seconds();
+}
+
+bool operator == (TimeSpan one, double secs)
+{
+    return one.Seconds() == secs;
 }
 
  TimeSpan operator - (TimeSpan one, TimeSpan two)
