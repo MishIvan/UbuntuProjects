@@ -19,22 +19,27 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     taskDialog.cpp \
+    taskreportmodel.cpp \
     timespan.cpp \
     workrecdialog.cpp \
-    worksdialog.cpp
+    worksdialog.cpp \
+    worksreportdialog.cpp
 
 HEADERS += \
     mainwindow.h \
     taskDialog.h \
+    taskreportmodel.h \
     timespan.h \
     workrecdialog.h \
-    worksdialog.h
+    worksdialog.h \
+    worksreportdialog.h
 
 FORMS += \
     mainwindow.ui \
     taskDialog.ui \
     workrecdialog.ui \
-    worksdialog.ui
+    worksdialog.ui \
+    worksreportdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

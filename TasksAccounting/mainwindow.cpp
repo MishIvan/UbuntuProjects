@@ -2,10 +2,9 @@
 #include "ui_mainwindow.h"
 #include "taskDialog.h"
 #include "worksdialog.h"
+#include "worksreportdialog.h"
 #include <QMessageBox>
-#include <QSqlError>
-#include <QSqlRecord>
-#include <QSqlQuery>
+#include <QSql>
 #include <QDebug>
 
 MainWindow::MainWindow(QString pathToData, QWidget *parent)
@@ -20,7 +19,7 @@ MainWindow::MainWindow(QString pathToData, QWidget *parent)
         QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
     }
     qDebug() << m_database.tables().count();
-    m_model = new QSqlTableModel;
+    m_model = new QSqlTableModel(nullptr, m_database);
     m_model->setTable("Tasks");
     m_model->select();
 
@@ -121,4 +120,18 @@ void MainWindow::on_worksButton_clicked()
 void MainWindow::on_action_exit_triggered()
 {
     QApplication::exit(0);
+}
+
+void MainWindow::on_action_time_period_triggered()
+{
+    QFile file(":/texts/withSQL.sql");
+    QString sqlText;
+    if(file.open(QIODevice::ReadOnly))
+    {
+        QTextStream stream(&file);
+        sqlText = stream.readAll();
+        file.close();
+    }
+    worksReportDialog dlg(m_database, sqlText, this);
+    dlg.exec();
 }

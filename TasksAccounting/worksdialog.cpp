@@ -46,6 +46,11 @@ void worksDialog::on_closeButton_clicked()
 void worksDialog::on_addTaskButton_clicked()
 {
     workRecDialog wrd(this);
+    wrd.m_contents = "";
+    wrd.m_date = QDate::currentDate();
+    wrd.m_time = "00:00:00";
+    wrd.Initialize();
+
     if(wrd.exec() == QDialog::Accepted)
     {
          int row = m_taskIndex.row();

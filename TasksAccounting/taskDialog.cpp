@@ -68,8 +68,8 @@ void taskDialog::on_tasksDialog_accepted()
     m_model->setData(m_model->index(row,1), name);
     m_model->setData(m_model->index(row,2), content);
     if(df.year() > 2001)
-        m_model->setData(m_model->index(row,3), df.toString(Qt::ISODate));
-    m_model->setData(m_model->index(row,4), dp.toString(Qt::ISODate));
+        m_model->setData(m_model->index(row,3), dp.toString(Qt::ISODate));
+    m_model->setData(m_model->index(row,4), df.toString(Qt::ISODate));
     if(tp != "00:00")
         m_model->setData(m_model->index(row,5), tp);
     if(tf != "00:00")

@@ -48,7 +48,7 @@
     <item>
      <widget class="QPushButton" name="addTaskButton">
       <property name="toolTip">
-       <string>Добавить задачу</string>
+       <string>Добавить работу</string>
       </property>
       <property name="text">
        <string/>
@@ -68,7 +68,7 @@
     <item>
      <widget class="QPushButton" name="delTaskButton">
       <property name="toolTip">
-       <string>Удалить задачу</string>
+       <string>Удалить работу</string>
       </property>
       <property name="text">
        <string/>
@@ -87,6 +87,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="editTaskButton">
+      <property name="toolTip">
+       <string>Изменить работу</string>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -177,6 +180,9 @@
      <width>151</width>
      <height>41</height>
     </rect>
+   </property>
+   <property name="toolTip">
+    <string>Закрыть окно</string>
    </property>
    <property name="text">
     <string>Закрыть</string>

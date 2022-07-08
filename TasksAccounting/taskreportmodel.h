@@ -1,0 +1,39 @@
+#ifndef PARTICIPANTSMODEL_H
+#define PARTICIPANTSMODEL_H
+
+#include <QObject>
+#include <QAbstractListModel>
+#include "timespan.h"
+
+struct taskRecord
+{
+    QString m_name;
+    QString m_planDate;
+    QString m_factDate;
+    TimeSpan m_spentTime;
+};
+
+Q_DECLARE_METATYPE(taskRecord);
+class taskReportModel : public QAbstractListModel
+{
+    Q_OBJECT
+    QList<taskRecord> *m_pList;
+public:
+    taskReportModel(QObject *parent = nullptr);
+    ~taskReportModel();
+
+    QVariant data(const QModelIndex &idx, int Role) const;
+    bool setData(const QModelIndex &idx, const QVariant &val, int Role);
+    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &idx) const;
+    Qt::ItemFlags flags(const QModelIndex &idx) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int Role = Qt::DisplayRole) const;
+
+    void append(taskRecord p);
+    void deleteRow(int idx);
+    void insertAt(int idx, taskRecord p);
+    void clear();
+
+};
+
+#endif // PARTICIPANTSMODEL_H

@@ -24,6 +24,8 @@ private slots:
 
     void on_action_exit_triggered();
 
+    void on_action_time_period_triggered();
+
 private:
     QSqlDatabase m_database;
     QSqlTableModel *m_model;
