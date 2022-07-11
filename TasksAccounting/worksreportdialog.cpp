@@ -15,6 +15,7 @@ worksReportDialog::worksReportDialog(QSqlDatabase database,
     ShowResults();
     m_reportView->setModel(m_model);
     m_reportView->setColumnWidth(0, 520);
+   m_reportView->resizeRowsToContents();
 }
 worksReportDialog::~worksReportDialog()
 {
@@ -79,5 +80,5 @@ void worksReportDialog::ShowResults()
         m_sumTimeLabel->setText("Итого: 00:00");
     else
         m_sumTimeLabel->setText(QString("Итого: %1").arg(tsum.toString()));
-
+        m_reportView->resizeRowsToContents();
 }

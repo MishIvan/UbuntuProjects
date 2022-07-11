@@ -27,6 +27,9 @@
       <height>381</height>
      </rect>
     </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::SingleSelection</enum>
+    </property>
     <property name="selectionBehavior">
      <enum>QAbstractItemView::SelectRows</enum>
     </property>
@@ -141,6 +144,7 @@
      <string>Отчёт</string>
     </property>
     <addaction name="action_time_period"/>
+    <addaction name="action"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_2"/>
@@ -157,6 +161,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>Работы за период</string>
    </property>
   </action>
  </widget>

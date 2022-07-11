@@ -1,42 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>worksReportDialog</class>
- <widget class="QDialog" name="worksReportDialog">
+ <class>worksPeriodDialog</class>
+ <widget class="QDialog" name="worksPeriodDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>902</width>
-    <height>691</height>
+    <width>905</width>
+    <height>690</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Время по задачам за период</string>
+   <string>Работы за период</string>
   </property>
-  <property name="modal">
-   <bool>true</bool>
-  </property>
-  <widget class="QTableView" name="m_reportView">
+  <widget class="QPushButton" name="m_closeButton">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>120</y>
-     <width>881</width>
-     <height>461</height>
+     <x>380</x>
+     <y>640</y>
+     <width>141</width>
+     <height>31</height>
     </rect>
    </property>
-   <property name="editTriggers">
-    <set>QAbstractItemView::NoEditTriggers</set>
-   </property>
-   <property name="selectionBehavior">
-    <enum>QAbstractItemView::SelectRows</enum>
+   <property name="text">
+    <string>Закрыть</string>
    </property>
   </widget>
   <widget class="QLabel" name="m_sumTimeLabel">
    <property name="geometry">
     <rect>
      <x>760</x>
-     <y>590</y>
+     <y>610</y>
      <width>131</width>
      <height>19</height>
     </rect>
@@ -57,24 +51,11 @@
     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="m_closeButton">
-   <property name="geometry">
-    <rect>
-     <x>380</x>
-     <y>630</y>
-     <width>141</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Закрыть</string>
-   </property>
-  </widget>
   <widget class="QPushButton" name="m_setTimeButton">
    <property name="geometry">
     <rect>
-     <x>750</x>
-     <y>30</y>
+     <x>710</x>
+     <y>50</y>
      <width>94</width>
      <height>27</height>
     </rect>
@@ -86,11 +67,27 @@
     <string>Показать</string>
    </property>
   </widget>
+  <widget class="QTableView" name="m_reportView">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>140</y>
+     <width>881</width>
+     <height>461</height>
+    </rect>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
+   <property name="selectionBehavior">
+    <enum>QAbstractItemView::SelectRows</enum>
+   </property>
+  </widget>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>70</x>
-     <y>30</y>
+     <y>50</y>
      <width>601</width>
      <height>32</height>
     </rect>

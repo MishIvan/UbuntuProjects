@@ -1,12 +1,15 @@
 #include "taskreportmodel.h"
 
-taskReportModel::taskReportModel(QObject *parent) :QAbstractListModel(parent)
+taskReportModel::taskReportModel(QObject *parent, bool workRecords) :QAbstractListModel(parent)
 {
     m_pList = new QList<taskRecord>();
+    m_wList = new QList<workRecord>();
+    m_workRecords = workRecords;
 }
 taskReportModel::~taskReportModel()
 {
     delete m_pList;
+    delete m_wList;
 }
 
 // *** Перегруженные функции ***
@@ -16,17 +19,40 @@ QVariant taskReportModel::data(const QModelIndex &idx, int Role) const
         return QVariant();
     if(Role == Qt::DisplayRole || Role == Qt::EditRole)
     {
-            taskRecord p = m_pList->at(idx.row());
-            switch(idx.column())
+            if(!m_workRecords)
             {
-                   case 0:
-                    return p.m_name;
-                   case 1:
-                    return p.m_planDate;
-                   case 2:
-                    return p.m_factDate;
-                   case 3:
-                    return p.m_spentTime.toString();
+                taskRecord p = m_pList->at(idx.row());
+                switch(idx.column())
+                {
+                       case 0:
+                        return p.m_name; break;
+                       case 1:
+                        return p.m_planDate; break;
+                       case 2:
+                        return p.m_factDate; break;
+                       case 3:
+                        return p.m_spentTime.toString(); break;
+                      default:
+                        return  QVariant();
+                }
+            }
+            else
+            {
+                workRecord w = m_wList->at(idx.row());
+                switch(idx.column())
+                {
+                       case 0:
+                        return w.m_name; break;
+                       case 1:
+                        return w.m_content; break;
+                       case 2:
+                        return w.m_Date; break;
+                       case 3:
+                        return w.m_spentTime.toString(); break;
+                      default:
+                       return  QVariant();
+                }
+
             }
     }
     else
@@ -37,27 +63,51 @@ bool taskReportModel::setData(const QModelIndex &idx, const QVariant &val, int R
 {
     if(idx.isValid() && Role == Qt::EditRole)
     {
-        taskRecord p = m_pList->at(idx.row());
-        switch(idx.column())
+        if(!m_workRecords)
         {
-             case 0:
-                 p.m_name = val.value<QString>();
-                 break;
-            case 1:
-                  p.m_planDate = val.value<QString>();
-                  break;
-            case 2:
-                  p.m_factDate =  val.value<QString>();
-                  break;
-            case 3:
-                  TimeSpan ts;
-                  TimeSpan::Parse(val.value<QString>(), ts);
-                  p.m_spentTime = ts;
-                  break;
-
+            taskRecord p = m_pList->at(idx.row());
+            switch(idx.column())
+            {
+                 case 0:
+                     p.m_name = val.value<QString>();
+                     break;
+                case 1:
+                      p.m_planDate = val.value<QString>();
+                      break;
+                case 2:
+                      p.m_factDate =  val.value<QString>();
+                      break;
+                case 3:
+                      TimeSpan ts;
+                      TimeSpan::Parse(val.value<QString>(), ts);
+                      p.m_spentTime = ts;
+                      break;
+            }
+            m_pList->replace(idx.row(), p);
+        }
+        else
+        {
+            workRecord w= m_wList->at(idx.row());
+            switch(idx.column())
+            {
+                 case 0:
+                     w.m_name = val.value<QString>();
+                     break;
+                case 1:
+                      w.m_content = val.value<QString>();
+                      break;
+                case 2:
+                      w.m_Date =  val.value<QString>();
+                      break;
+                case 3:
+                      TimeSpan ts;
+                      TimeSpan::Parse(val.value<QString>(), ts);
+                      w.m_spentTime = ts;
+                      break;
+            }
+            m_wList->replace(idx.row(), w);
 
         }
-        m_pList->replace(idx.row(), p);
         emit dataChanged(idx, idx);
         return true;
     }
@@ -66,7 +116,7 @@ bool taskReportModel::setData(const QModelIndex &idx, const QVariant &val, int R
 
 int taskReportModel::rowCount(const QModelIndex & parent) const
 {
-    return m_pList->size();
+    return !m_workRecords ? m_pList->size() : m_wList->size();
 
 }
 int taskReportModel::columnCount(const QModelIndex &idx) const
@@ -91,9 +141,9 @@ QVariant taskReportModel::headerData(int section, Qt::Orientation orientation, i
             case 0:
                 return QString("Наименование\nзадачи");
             case 1:
-                return QString("Срок");
+                return !m_workRecords ? QString("Срок") : QString("Содержание\nработы");
             case 2:
-                return QString("Дата\nзавершения");
+                return !m_workRecords ? QString("Дата\nзавершения") : QString("Дата");
             case 3:
                 return QString("Время");
             default:
@@ -118,10 +168,22 @@ void taskReportModel::append(taskRecord p)
            m_pList->append(p);
        endInsertRows();
 }
+void taskReportModel::append(workRecord w)
+{
+    int newRow =  m_wList->count()+1;
+
+       beginInsertRows(QModelIndex(), newRow, newRow);
+           m_wList->append(w);
+       endInsertRows();
+}
+
 void taskReportModel::deleteRow(int idx)
 {
     beginRemoveRows(QModelIndex(), idx,idx);
+    if(!m_workRecords)
         m_pList->removeAt(idx);
+    else
+        m_wList->removeAt(idx);
     endRemoveRows();
 }
 
@@ -135,10 +197,23 @@ void taskReportModel::insertAt(int idx, taskRecord p)
     endInsertRows();
 }
 
+void taskReportModel::insertAt(int idx, workRecord w)
+{
+
+    int newRow = idx;
+
+    beginInsertRows(QModelIndex(), newRow, newRow);
+        m_wList->insert(newRow,w);
+    endInsertRows();
+}
+
 void taskReportModel::clear()
 {
     beginRemoveRows(QModelIndex(), 0, rowCount() - 1);
+    if(!m_workRecords)
         m_pList->clear();
+    else
+        m_wList->clear();
     endRemoveRows();
 
 }

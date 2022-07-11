@@ -23,6 +23,7 @@ SOURCES += \
     timespan.cpp \
     workrecdialog.cpp \
     worksdialog.cpp \
+    worksperioddialog.cpp \
     worksreportdialog.cpp
 
 HEADERS += \
@@ -32,6 +33,7 @@ HEADERS += \
     timespan.h \
     workrecdialog.h \
     worksdialog.h \
+    worksperioddialog.h \
     worksreportdialog.h
 
 FORMS += \
@@ -39,6 +41,7 @@ FORMS += \
     taskDialog.ui \
     workrecdialog.ui \
     worksdialog.ui \
+    worksperioddialog.ui \
     worksreportdialog.ui
 
 # Default rules for deployment.

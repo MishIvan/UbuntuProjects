@@ -3,6 +3,7 @@
 #include "taskDialog.h"
 #include "worksdialog.h"
 #include "worksreportdialog.h"
+#include "worksperioddialog.h"
 #include <QMessageBox>
 #include <QSql>
 #include <QDebug>
@@ -35,6 +36,7 @@ MainWindow::MainWindow(QString pathToData, QWidget *parent)
     taskTableView->setColumnHidden(0, true);
     taskTableView->setColumnHidden(2, true);
     taskTableView->setColumnWidth(1, 280);
+    taskTableView->resizeRowsToContents();
 
 }
 
@@ -133,5 +135,11 @@ void MainWindow::on_action_time_period_triggered()
         file.close();
     }
     worksReportDialog dlg(m_database, sqlText, this);
+    dlg.exec();
+}
+
+void MainWindow::on_action_triggered()
+{
+    worksPeriodDialog dlg(m_database, this);
     dlg.exec();
 }

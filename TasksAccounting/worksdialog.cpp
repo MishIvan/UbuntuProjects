@@ -29,6 +29,7 @@ worksDialog::worksDialog(QSqlTableModel *model,QModelIndex idx,  QWidget *parent
     worksTableView->hideColumn(0);
     worksTableView->hideColumn(1);
     worksTableView->setColumnWidth(2, 350);
+    worksTableView->resizeRowsToContents();
 
 }
 

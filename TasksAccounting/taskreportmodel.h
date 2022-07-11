@@ -12,14 +12,24 @@ struct taskRecord
     QString m_factDate;
     TimeSpan m_spentTime;
 };
+struct workRecord
+{
+    QString m_name;
+    QString m_content;
+    QString m_Date;
+    TimeSpan m_spentTime;
+};
 
 Q_DECLARE_METATYPE(taskRecord);
+Q_DECLARE_METATYPE(workRecord);
 class taskReportModel : public QAbstractListModel
 {
     Q_OBJECT
     QList<taskRecord> *m_pList;
+    QList <workRecord> *m_wList;
+    bool m_workRecords;
 public:
-    taskReportModel(QObject *parent = nullptr);
+    taskReportModel(QObject *parent = nullptr, bool workRecords = false);
     ~taskReportModel();
 
     QVariant data(const QModelIndex &idx, int Role) const;
@@ -30,8 +40,10 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int Role = Qt::DisplayRole) const;
 
     void append(taskRecord p);
+    void append(workRecord w);
     void deleteRow(int idx);
     void insertAt(int idx, taskRecord p);
+    void insertAt(int idx, workRecord w);
     void clear();
 
 };
