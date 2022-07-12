@@ -20,6 +20,11 @@ worksPeriodDialog::worksPeriodDialog(QSqlDatabase database,  QWidget *parent) :
 
 }
 
+worksPeriodDialog::~worksPeriodDialog()
+{
+    delete m_model;
+}
+
 void worksPeriodDialog::ShowResults()
 {
     QString from = m_dateFromEdit->date().toString(Qt::ISODate);
