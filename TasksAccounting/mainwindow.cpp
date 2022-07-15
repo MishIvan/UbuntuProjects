@@ -176,3 +176,39 @@ void MainWindow::on_action_triggered()
     worksPeriodDialog dlg(m_database, this);
     dlg.exec();
 }
+
+void MainWindow::on_action_view_all_triggered()
+{
+    m_model->setFilter("ID>0");
+    m_model->select();
+    setWindowTitle("Учёт задач - все задачи");
+    taskTableView->resizeRowsToContents();
+}
+
+void MainWindow::on_action_view_done_triggered()
+{
+    QString now = QDate::currentDate().toString(Qt::ISODate);
+    QString s1 = QString("FulfillmentDate<='%1'").arg(now);
+    m_model->setFilter(s1);
+    m_model->select();
+    setWindowTitle("Учёт задач - завершённые задачи");
+    taskTableView->resizeRowsToContents();
+}
+
+void MainWindow::on_action_view_expired_triggered()
+{
+    QString now = QDate::currentDate().toString(Qt::ISODate);
+    m_model->setFilter("Deadline<FulfillmentDate and FulfillmentDate !='9999-12-31'");
+    m_model->select();
+    setWindowTitle("Учёт задач - просроченные задачи");
+    taskTableView->resizeRowsToContents();
+
+}
+
+void MainWindow::on_action_view_nodeadline_triggered()
+{
+    m_model->setFilter("FulfillmentDate = '9999-12-31'");
+    m_model->select();
+    setWindowTitle("Учёт задач - задачи без срока");
+    taskTableView->resizeRowsToContents();
+}

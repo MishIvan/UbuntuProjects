@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Учёт задач</string>
+   <string>Учёт задач - все задачи</string>
   </property>
   <property name="windowIcon">
    <iconset resource="MainResource.qrc">
@@ -146,7 +146,17 @@
     <addaction name="action_time_period"/>
     <addaction name="action"/>
    </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>Вид</string>
+    </property>
+    <addaction name="action_view_all"/>
+    <addaction name="action_view_done"/>
+    <addaction name="action_view_expired"/>
+    <addaction name="action_view_nodeadline"/>
+   </widget>
    <addaction name="menu"/>
+   <addaction name="menu_3"/>
    <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -166,6 +176,47 @@
   <action name="action">
    <property name="text">
     <string>Работы за период</string>
+   </property>
+  </action>
+  <action name="action_view_all">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Все</string>
+   </property>
+   <property name="toolTip">
+    <string>Показать все задачи</string>
+   </property>
+  </action>
+  <action name="action_view_done">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Завершённые</string>
+   </property>
+   <property name="toolTip">
+    <string>Показать только завершённые задачи</string>
+   </property>
+  </action>
+  <action name="action_view_expired">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Просроченные</string>
+   </property>
+   <property name="toolTip">
+    <string>Показать только просроченные задачи</string>
+   </property>
+  </action>
+  <action name="action_view_nodeadline">
+   <property name="text">
+    <string>Без срока</string>
    </property>
   </action>
  </widget>

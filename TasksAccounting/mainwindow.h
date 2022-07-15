@@ -28,6 +28,14 @@ private slots:
 
     void on_action_triggered();
 
+    void on_action_view_all_triggered();
+
+    void on_action_view_done_triggered();
+
+    void on_action_view_expired_triggered();
+
+    void on_action_view_nodeadline_triggered();
+
 private:
     QSqlDatabase m_database;
     QSqlTableModel *m_model;
