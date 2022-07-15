@@ -31,5 +31,6 @@ private slots:
 private:
     QSqlDatabase m_database;
     QSqlTableModel *m_model;
+    void setDatabase(QString pathToData);
 };
 #endif // MAINWINDOW_H

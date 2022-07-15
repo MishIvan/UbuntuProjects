@@ -14,11 +14,8 @@ MainWindow::MainWindow(QString pathToData, QWidget *parent)
 {
     setupUi(this);
     m_database = QSqlDatabase::addDatabase("QSQLITE");
-    m_database.setDatabaseName(pathToData);
-    if(!m_database.open())
-    {
-        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-    }
+    setDatabase(pathToData);
+
     qDebug() << m_database.tables().count();
     m_model = new QSqlTableModel(nullptr, m_database);
     m_model->setTable("Tasks");
@@ -47,6 +44,41 @@ MainWindow::~MainWindow()
 
 }
 
+void MainWindow::setDatabase(QString pathToData)
+{
+    if(QFile::exists(pathToData))
+    {
+        m_database.setDatabaseName(pathToData);
+         if(!m_database.open())
+         {
+              QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
+          }
+    }
+    else
+    {
+        m_database.setDatabaseName("TasksAccounting.db");
+        if(!m_database.open())
+        {
+             QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
+         }
+        QStringList files = { ":/texts/taskscreate.sql" , ":/texts/workscreate.sql" , ":/texts/viewcreate.sql"};
+        for(int i =0 ; i < files.size(); i++)
+        {
+            QFile file(files.at(i));
+            if(file.open(QIODevice::ReadOnly))
+            {
+                QTextStream stream(&file);
+                QString sqlText = stream.readAll();
+
+                QSqlQuery qry(m_database);
+                qry.exec(sqlText);
+                file.close();
+            }
+        }
+    }
+
+}
+
 
 void MainWindow::on_addTaskButton_clicked()
 {
@@ -57,7 +89,8 @@ void MainWindow::on_addTaskButton_clicked()
     }
     taskDialog dlg(m_model, QModelIndex(), this);
     dlg.setModal(true);
-    dlg.exec();
+    if(dlg.exec() == QDialog::Accepted)
+        taskTableView->resizeRowToContents(m_model->rowCount() - 1);
 }
 
 void MainWindow::on_delTaskButton_clicked()
