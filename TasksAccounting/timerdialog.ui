@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>timerDialog</class>
+ <widget class="QDialog" name="timerDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>365</width>
+    <height>61</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Таймер</string>
+  </property>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>340</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>10</number>
+    </property>
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Время:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTimeEdit" name="m_timeEdit">
+      <property name="displayFormat">
+       <string>HH:mm:ss</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="m_start_stopButton">
+      <property name="toolTip">
+       <string>Начать (приостановить) отсчёт времени</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="MainResource.qrc">
+        <normaloff>:/images/start48.png</normaloff>:/images/start48.png</iconset>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="m_resetButton">
+      <property name="toolTip">
+       <string>Остановить и сбросить таймер в ноль</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset resource="MainResource.qrc">
+        <normaloff>:/images/restart48.png</normaloff>:/images/restart48.png</iconset>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="MainResource.qrc"/>
+ </resources>
+ <connections/>
+</ui>

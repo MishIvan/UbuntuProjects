@@ -152,8 +152,10 @@
     </property>
     <addaction name="action_view_all"/>
     <addaction name="action_view_done"/>
-    <addaction name="action_view_expired"/>
     <addaction name="action_view_nodeadline"/>
+    <addaction name="action_view_expired"/>
+    <addaction name="separator"/>
+    <addaction name="action_show_timer"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_3"/>
@@ -217,6 +219,11 @@
   <action name="action_view_nodeadline">
    <property name="text">
     <string>Без срока</string>
+   </property>
+  </action>
+  <action name="action_show_timer">
+   <property name="text">
+    <string>Показать таймер</string>
    </property>
   </action>
  </widget>

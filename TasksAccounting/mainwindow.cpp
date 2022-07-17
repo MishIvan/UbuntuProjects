@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QSql>
 #include <QDebug>
+QTime m_workTime;
 
 MainWindow::MainWindow(QString pathToData, QWidget *parent)
     : QMainWindow(parent)
@@ -34,6 +35,9 @@ MainWindow::MainWindow(QString pathToData, QWidget *parent)
     taskTableView->setColumnHidden(2, true);
     taskTableView->setColumnWidth(1, 280);
     taskTableView->resizeRowsToContents();
+    m_workTime = QTime(0,0,0);
+    m_timerDialog = new timerDialog(this);
+
 
 }
 
@@ -41,6 +45,7 @@ MainWindow::~MainWindow()
 {
     m_database.close();
     delete m_model;
+    delete m_timerDialog;
 
 }
 
@@ -211,4 +216,18 @@ void MainWindow::on_action_view_nodeadline_triggered()
     m_model->select();
     setWindowTitle("Учёт задач - задачи без срока");
     taskTableView->resizeRowsToContents();
+}
+
+void MainWindow::on_action_show_timer_triggered()
+{
+    if(m_timerDialog->isHidden())
+    {
+        m_timerDialog->show();
+        action_show_timer->setText("Скрыть таймер");
+    }
+    else
+    {
+        m_timerDialog->hide();
+        action_show_timer->setText("Показать таймер");
+    }
 }

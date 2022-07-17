@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "ui_mainwindow.h"
+#include "timerdialog.h"
 #include <QtSql>
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
@@ -36,9 +37,13 @@ private slots:
 
     void on_action_view_nodeadline_triggered();
 
+    void on_action_show_timer_triggered();
+
 private:
+
     QSqlDatabase m_database;
     QSqlTableModel *m_model;
     void setDatabase(QString pathToData);
+    timerDialog *m_timerDialog;
 };
 #endif // MAINWINDOW_H
