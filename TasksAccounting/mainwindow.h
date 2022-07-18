@@ -39,6 +39,8 @@ private slots:
 
     void on_action_show_timer_triggered();
 
+    void on_action_about_triggered();
+
 private:
 
     QSqlDatabase m_database;

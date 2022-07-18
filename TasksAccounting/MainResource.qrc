@@ -12,5 +12,7 @@
         <file>images/restart48.png</file>
         <file>images/start48.png</file>
         <file>images/stop48.png</file>
+        <file>images/Tasks128.png</file>
+        <file>texts/dbcreate.sql</file>
     </qresource>
 </RCC>

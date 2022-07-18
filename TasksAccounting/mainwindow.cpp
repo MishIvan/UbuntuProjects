@@ -4,6 +4,7 @@
 #include "worksdialog.h"
 #include "worksreportdialog.h"
 #include "worksperioddialog.h"
+#include "aboutdialog.h"
 #include <QMessageBox>
 #include <QSql>
 #include <QDebug>
@@ -79,7 +80,7 @@ void MainWindow::setDatabase(QString pathToData)
                 qry.exec(sqlText);
                 file.close();
             }
-        }
+         }
     }
 
 }
@@ -230,4 +231,10 @@ void MainWindow::on_action_show_timer_triggered()
         m_timerDialog->hide();
         action_show_timer->setText("Показать таймер");
     }
+}
+
+void MainWindow::on_action_about_triggered()
+{
+    aboutDialog dlg(this);
+    dlg.exec();
 }
