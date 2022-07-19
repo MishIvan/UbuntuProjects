@@ -67,20 +67,22 @@ void MainWindow::setDatabase(QString pathToData)
         {
              QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
          }
-        QStringList files = { ":/texts/taskscreate.sql" , ":/texts/workscreate.sql" , ":/texts/viewcreate.sql"};
-        for(int i =0 ; i < files.size(); i++)
-        {
-            QFile file(files.at(i));
+            QFile file(":/texts/dbcreate.sql");
             if(file.open(QIODevice::ReadOnly))
             {
+
                 QTextStream stream(&file);
                 QString sqlText = stream.readAll();
-
-                QSqlQuery qry(m_database);
-                qry.exec(sqlText);
                 file.close();
+                QStringList qrylist = sqlText.split(';');
+                int n = qrylist.size() -1;
+                for(int i=0; i < n; i++)
+                {
+                    QSqlQuery qry(m_database);
+                    qry.exec(qrylist.at(i));
+                }
+
             }
-         }
     }
 
 }
