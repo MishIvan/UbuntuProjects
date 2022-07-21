@@ -56,7 +56,7 @@
    <property name="plainText">
     <string>Учёт Задач 
 Учёт времени исполнения задач
-Версия 1.02.02</string>
+Версия 1.03.00</string>
    </property>
   </widget>
   <widget class="QPushButton" name="m_closeButton">

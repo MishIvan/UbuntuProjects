@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <QString>
+#include <QTime>
 
 using namespace std;
 
@@ -17,6 +18,7 @@ public:
     TimeSpan();
     TimeSpan(int hr, int mn, int s = 0);
     TimeSpan(double secs);
+    TimeSpan(QTime tm, bool roundToMinute = true);
     QString toString(bool withSeconds = false);
     static bool Parse(const QString & , TimeSpan &);
     TimeSpan & operator = (TimeSpan  );

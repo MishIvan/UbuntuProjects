@@ -15,6 +15,27 @@ TimeSpan::TimeSpan(double secs)
     fromSecond(secs);
 }
 
+TimeSpan::TimeSpan(QTime tm, bool roundToMinute)
+{
+    m_hours = tm.hour();
+    m_minutes = tm.minute();
+    m_seconds = tm.second();
+
+    if(roundToMinute)
+    {
+        if(m_seconds >= 30)
+        {
+            m_seconds = 0;
+            m_minutes++;
+        }
+        if(m_minutes > 59)
+        {
+            m_hours++;
+            m_minutes = 0;
+        }
+    }
+}
+
 double TimeSpan::Seconds()
 {
     return m_hours*3600.0 + m_minutes*60.0 + m_seconds;

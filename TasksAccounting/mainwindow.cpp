@@ -98,7 +98,9 @@ void MainWindow::on_addTaskButton_clicked()
     taskDialog dlg(m_model, QModelIndex(), this);
     dlg.setModal(true);
     if(dlg.exec() == QDialog::Accepted)
+    {
         taskTableView->resizeRowToContents(m_model->rowCount() - 1);
+    }
 }
 
 void MainWindow::on_delTaskButton_clicked()
