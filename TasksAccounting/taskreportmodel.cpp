@@ -12,6 +12,11 @@ taskReportModel::~taskReportModel()
     delete m_wList;
 }
 
+bool taskReportModel::isWorkRecords()
+{
+    return m_workRecords;
+}
+
 // *** Перегруженные функции ***
 QVariant taskReportModel::data(const QModelIndex &idx, int Role) const
 {
@@ -27,10 +32,12 @@ QVariant taskReportModel::data(const QModelIndex &idx, int Role) const
                        case 0:
                         return p.m_name; break;
                        case 1:
-                        return p.m_planDate; break;
+                        return p.m_content; break;
                        case 2:
-                        return p.m_factDate; break;
+                        return p.m_planDate; break;
                        case 3:
+                        return p.m_factDate; break;
+                       case 4:
                         return p.m_spentTime.toString(); break;
                       default:
                         return  QVariant();
@@ -69,15 +76,18 @@ bool taskReportModel::setData(const QModelIndex &idx, const QVariant &val, int R
             switch(idx.column())
             {
                  case 0:
-                     p.m_name = val.value<QString>();
+                     p.m_name = val.value<QString>();                     
                      break;
                 case 1:
+                    p.m_content = val.value<QString>();
+                    break;
+                case 2:
                       p.m_planDate = val.value<QString>();
                       break;
-                case 2:
+                case 3:
                       p.m_factDate =  val.value<QString>();
                       break;
-                case 3:
+                case 4:
                       TimeSpan ts;
                       TimeSpan::Parse(val.value<QString>(), ts);
                       p.m_spentTime = ts;
@@ -121,7 +131,7 @@ int taskReportModel::rowCount(const QModelIndex & parent) const
 }
 int taskReportModel::columnCount(const QModelIndex &idx) const
 {
-    return 4;
+    return !m_workRecords ? 5 : 4;
 }
 
 Qt::ItemFlags taskReportModel::flags(const QModelIndex &idx) const
@@ -141,11 +151,16 @@ QVariant taskReportModel::headerData(int section, Qt::Orientation orientation, i
             case 0:
                 return QString("Наименование\nзадачи");
             case 1:
-                return !m_workRecords ? QString("Срок") : QString("Содержание\nработы");
+                return  QString("Содержание\nработы");
             case 2:
-                return !m_workRecords ? QString("Дата\nзавершения") : QString("Дата");
+                return !m_workRecords ? QString("Плановая\nдата") : QString("Дата");
             case 3:
-                return QString("Время");
+                return !m_workRecords ? QString("Дата\nзавершения") : QString("Время");
+            case 4:
+                if(!m_workRecords)
+                    return QString("Время");
+                else
+                    return QVariant();
             default:
                 return QVariant();
 

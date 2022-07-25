@@ -15,13 +15,6 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_addTaskButton_clicked();
-
-    void on_delTaskButton_clicked();
-
-    void on_editTaskButton_clicked();
-
-    void on_worksButton_clicked();
 
     void on_action_exit_triggered();
 
@@ -40,6 +33,14 @@ private slots:
     void on_action_show_timer_triggered();
 
     void on_action_about_triggered();
+
+    void on_action_add_task_triggered();
+
+    void on_action_delete_task_triggered();
+
+    void on_action_edit_task_triggered();
+
+    void on_action_work_list_triggered();
 
 private:
 

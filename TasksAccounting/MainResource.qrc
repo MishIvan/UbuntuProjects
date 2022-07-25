@@ -12,5 +12,6 @@
         <file>images/Tasks128.png</file>
         <file>texts/dbcreate.sql</file>
         <file>images/timer48.png</file>
+        <file>images/addTimer48.png</file>
     </qresource>
 </RCC>

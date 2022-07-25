@@ -14,8 +14,9 @@ worksReportDialog::worksReportDialog(QSqlDatabase database,
     m_model = new taskReportModel();
     ShowResults();
     m_reportView->setModel(m_model);
-    m_reportView->setColumnWidth(0, 520);
-   m_reportView->resizeRowsToContents();
+    m_reportView->setColumnWidth(0, 250);
+    m_reportView->setColumnWidth(1, 350);
+    m_reportView->resizeRowsToContents();
 }
 worksReportDialog::~worksReportDialog()
 {
@@ -47,14 +48,16 @@ void worksReportDialog::ShowResults()
     {
         taskRecord rc;
         rc.m_name = qr.value(0).toString();
-        rc.m_planDate = qr.value(1).toString();
-        rc.m_factDate  = qr.value(2).toString();
-        QString stimes = qr.value(3).toString();
+        rc.m_content = qr.value(1).toString();
+        rc.m_planDate = qr.value(2).toString();
+        rc.m_factDate  = qr.value(3).toString();
+        QString stimes = qr.value(4).toString();
 
         QStringList ltimes = stimes.split(';');
         TimeSpan tts;
-        for( QString s1 : ltimes)
+        for(int i=0 ; i < ltimes.size(); i++)
         {
+            QString s1 = ltimes.at(i);
             TimeSpan ts;
             if(TimeSpan::Parse(s1, ts))
             {
@@ -69,7 +72,7 @@ void worksReportDialog::ShowResults()
     TimeSpan tsum;
     for(int i=0; i < rows; i++)
     {
-        QModelIndex idx = m_model->index(i, 3);
+        QModelIndex idx = m_model->index(i, 4);
         QString stime = m_model->data(idx, Qt::DisplayRole).toString();
 
          TimeSpan ts;

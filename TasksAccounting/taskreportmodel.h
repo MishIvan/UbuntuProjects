@@ -8,6 +8,7 @@
 struct taskRecord
 {
     QString m_name;
+    QString m_content;
     QString m_planDate;
     QString m_factDate;
     TimeSpan m_spentTime;
@@ -45,6 +46,8 @@ public:
     void insertAt(int idx, taskRecord p);
     void insertAt(int idx, workRecord w);
     void clear();
+
+    bool isWorkRecords();
 
 };
 

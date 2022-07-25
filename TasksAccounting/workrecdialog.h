@@ -16,6 +16,7 @@ public:
 private slots:
     void on_workRecDialog_accepted();
     void on_m_fromTimerButton_clicked();
+    void on_m_addFromTimerButton_clicked();
 };
 
 #endif // WORKRECDIALOG_H

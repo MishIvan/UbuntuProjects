@@ -87,81 +87,6 @@ void MainWindow::setDatabase(QString pathToData)
 
 }
 
-
-void MainWindow::on_addTaskButton_clicked()
-{
-    if(!m_database.isOpen())
-    {
-        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-        return;
-    }
-    taskDialog dlg(m_model, QModelIndex(), this);
-    dlg.setModal(true);
-    if(dlg.exec() == QDialog::Accepted)
-    {
-        taskTableView->resizeRowToContents(m_model->rowCount() - 1);
-    }
-}
-
-void MainWindow::on_delTaskButton_clicked()
-{
-    if(!m_database.isOpen())
-    {
-        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-        return;
-    }
-    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
-    QModelIndex idx = selmodel->currentIndex();
-    long id = m_model->data( m_model->index(idx.row(),0) ).toLongLong();
-
-    QSqlQuery qr(m_database);
-    QString qText;
-    qText = QString("select nullif(count(*),0) from Works where ID = %1").arg(id);
-    qr.exec(qText);
-    if(qr.size() > 0)
-    {
-        QMessageBox::warning(this,"Ошибка", "Нельзя удалять задачу для которой имеютсмя работы");
-        return;
-    }
-
-    m_model->removeRow(idx.row());
-    m_model->submitAll();
-    m_model->select();
-
-}
-
-void MainWindow::on_editTaskButton_clicked()
-{
-    if(!m_database.isOpen())
-    {
-        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-        return;
-    }
-    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
-    QModelIndex idx = selmodel->currentIndex();
-
-    taskDialog dlg(m_model,  idx, this);
-    dlg.setModal(true);
-    dlg.exec();
-
-}
-
-void MainWindow::on_worksButton_clicked()
-{
-    if(!m_database.isOpen())
-    {
-        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-        return;
-    }
-    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
-    QModelIndex idx = selmodel->currentIndex();
-    if(idx.isValid())
-    {
-        worksDialog wd(m_model,idx, this);
-        wd.exec();
-    }
-}
-
 void MainWindow::on_action_exit_triggered()
 {
     QApplication::exit(0);
@@ -241,4 +166,77 @@ void MainWindow::on_action_about_triggered()
 {
     aboutDialog dlg(this);
     dlg.exec();
+}
+
+void MainWindow::on_action_add_task_triggered()
+{
+    if(!m_database.isOpen())
+    {
+        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
+        return;
+    }
+    taskDialog dlg(m_model, QModelIndex(), this);
+    dlg.setModal(true);
+    if(dlg.exec() == QDialog::Accepted)
+    {
+        taskTableView->resizeRowToContents(m_model->rowCount() - 1);
+    }
+}
+
+void MainWindow::on_action_delete_task_triggered()
+{
+    if(!m_database.isOpen())
+    {
+        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
+        return;
+    }
+    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
+    QModelIndex idx = selmodel->currentIndex();
+    long id = m_model->data( m_model->index(idx.row(),0) ).toLongLong();
+
+    QSqlQuery qr(m_database);
+    QString qText;
+    qText = QString("select nullif(count(*),0) from Works where ID = %1").arg(id);
+    qr.exec(qText);
+    if(qr.size() > 0)
+    {
+        QMessageBox::warning(this,"Ошибка", "Нельзя удалять задачу для которой имеютсмя работы");
+        return;
+    }
+
+    m_model->removeRow(idx.row());
+    m_model->submitAll();
+    m_model->select();
+
+}
+
+void MainWindow::on_action_edit_task_triggered()
+{
+    if(!m_database.isOpen())
+    {
+        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
+        return;
+    }
+    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
+    QModelIndex idx = selmodel->currentIndex();
+
+    taskDialog dlg(m_model,  idx, this);
+    dlg.setModal(true);
+    dlg.exec();
+}
+
+void MainWindow::on_action_work_list_triggered()
+{
+    if(!m_database.isOpen())
+    {
+        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
+        return;
+    }
+    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
+    QModelIndex idx = selmodel->currentIndex();
+    if(idx.isValid())
+    {
+        worksDialog wd(m_model,idx, this);
+        wd.exec();
+    }
 }

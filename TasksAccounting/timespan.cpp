@@ -81,7 +81,7 @@ bool TimeSpan::Parse(const QString &strTime, TimeSpan &ts)
          j++;
          s1 = m.suffix().str();
      }
-     if(val[0] < 0 || val[0] > 23 || val[1] < 0 || val[1] > 59 || val[2] < 0 || val[2] > 59)
+     if(val[0] < 0 || val[1] < 0 || val[1] > 59 || val[2] < 0 || val[2] > 59)
          return false;
      ts = TimeSpan(val[0], val[1], val[2]);
         return true;
