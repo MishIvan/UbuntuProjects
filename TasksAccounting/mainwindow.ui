@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>740</width>
-    <height>600</height>
+    <height>534</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,10 +61,7 @@
     <property name="title">
      <string>Вид</string>
     </property>
-    <addaction name="action_view_all"/>
-    <addaction name="action_view_done"/>
-    <addaction name="action_view_nodeadline"/>
-    <addaction name="action_view_expired"/>
+    <addaction name="action_task_filter"/>
     <addaction name="separator"/>
     <addaction name="action_show_timer"/>
    </widget>
@@ -111,6 +108,7 @@
    <addaction name="action_edit_task"/>
    <addaction name="action_work_list"/>
    <addaction name="separator"/>
+   <addaction name="action_task_filter"/>
    <addaction name="action_show_timer"/>
   </widget>
   <action name="action_time_period">
@@ -129,50 +127,6 @@
   <action name="action">
    <property name="text">
     <string>Работы за период</string>
-   </property>
-  </action>
-  <action name="action_view_all">
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
-   <property name="checked">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Все задачи</string>
-   </property>
-   <property name="toolTip">
-    <string>Показать все задачи</string>
-   </property>
-  </action>
-  <action name="action_view_done">
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Завершённые задачи</string>
-   </property>
-   <property name="toolTip">
-    <string>Показать только завершённые задачи</string>
-   </property>
-  </action>
-  <action name="action_view_expired">
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Просроченные задачи</string>
-   </property>
-   <property name="toolTip">
-    <string>Показать только просроченные задачи</string>
-   </property>
-  </action>
-  <action name="action_view_nodeadline">
-   <property name="text">
-    <string>Задачи без срока</string>
-   </property>
-   <property name="toolTip">
-    <string>Задачи с неограниченным сроком</string>
    </property>
   </action>
   <action name="action_show_timer">
@@ -238,6 +192,18 @@
    </property>
    <property name="toolTip">
     <string>Список работ по задаче</string>
+   </property>
+  </action>
+  <action name="action_task_filter">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/filter48.png</normaloff>:/images/filter48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Фильтр отображения задач</string>
+   </property>
+   <property name="toolTip">
+    <string>Отобразить задачи в соответствии с выбранным фильтром</string>
    </property>
   </action>
  </widget>

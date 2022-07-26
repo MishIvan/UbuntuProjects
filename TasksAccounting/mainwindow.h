@@ -22,14 +22,6 @@ private slots:
 
     void on_action_triggered();
 
-    void on_action_view_all_triggered();
-
-    void on_action_view_done_triggered();
-
-    void on_action_view_expired_triggered();
-
-    void on_action_view_nodeadline_triggered();
-
     void on_action_show_timer_triggered();
 
     void on_action_about_triggered();
@@ -42,11 +34,18 @@ private slots:
 
     void on_action_work_list_triggered();
 
+    void on_action_task_filter_triggered();
+
 private:
 
     QSqlDatabase m_database;
     QSqlTableModel *m_model;
     void setDatabase(QString pathToData);
     timerDialog *m_timerDialog;
+    int m_oldWidth;
+    int m_oldHeight;
+    int m_filterFlag;
+protected:
+    virtual void resizeEvent(QResizeEvent *);
 };
 #endif // MAINWINDOW_H

@@ -20,6 +20,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     taskDialog.cpp \
+    taskfilterdialog.cpp \
     taskreportmodel.cpp \
     timerdialog.cpp \
     timespan.cpp \
@@ -32,6 +33,7 @@ HEADERS += \
     aboutdialog.h \
     mainwindow.h \
     taskDialog.h \
+    taskfilterdialog.h \
     taskreportmodel.h \
     timerdialog.h \
     timespan.h \
@@ -44,6 +46,7 @@ FORMS += \
     aboutdialog.ui \
     mainwindow.ui \
     taskDialog.ui \
+    taskfilterdialog.ui \
     timerdialog.ui \
     workrecdialog.ui \
     worksdialog.ui \

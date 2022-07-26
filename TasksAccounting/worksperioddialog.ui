@@ -10,6 +10,12 @@
     <height>690</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>905</width>
+    <height>690</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Работы за период</string>
   </property>
@@ -79,7 +85,7 @@
    <property name="title">
     <string>Период</string>
    </property>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>22</x>
