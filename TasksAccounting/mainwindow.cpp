@@ -6,6 +6,7 @@
 #include "worksperioddialog.h"
 #include "aboutdialog.h"
 #include "taskfilterdialog.h"
+#include "setperioddialog.h"
 #include <QMessageBox>
 #include <QSql>
 #include <QDebug>
@@ -263,4 +264,10 @@ void MainWindow::on_action_task_filter_triggered()
             break;
         };
     }
+}
+
+void MainWindow::on_action_set_accounting_period_triggered()
+{
+    setPeriodDialog dlg(this);
+    dlg.exec();
 }

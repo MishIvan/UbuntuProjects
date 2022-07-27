@@ -1,5 +1,6 @@
 #include "worksreportdialog.h"
 #include "timespan.h"
+void GetAccontingPeriod(QDate &, QDate &);
 
 worksReportDialog::worksReportDialog(QSqlDatabase database,
                                      QString query,
@@ -8,9 +9,14 @@ worksReportDialog::worksReportDialog(QSqlDatabase database,
     setupUi(this);
     m_database = database;
     m_sqlQuery = query;
-    QDate today = QDate::currentDate();
-    m_dateFromEdit->setDate(QDate(today.year(), today.month(),1));
-    m_dateToEdit->setDate(QDate(today.year(), today.month(),today.daysInMonth()));
+    //QDate today = QDate::currentDate();
+    //m_dateFromEdit->setDate(QDate(today.year(), today.month(),1));
+    //m_dateToEdit->setDate(QDate(today.year(), today.month(),today.daysInMonth()));
+    QDate dateBegin, dateEnd;
+    GetAccontingPeriod(dateBegin, dateEnd);
+    m_dateFromEdit->setDate(dateBegin);
+    m_dateToEdit->setDate(dateEnd);
+
     m_model = new taskReportModel();
     ShowResults();
     m_reportView->setModel(m_model);

@@ -36,6 +36,8 @@ private slots:
 
     void on_action_task_filter_triggered();
 
+    void on_action_set_accounting_period_triggered();
+
 private:
 
     QSqlDatabase m_database;

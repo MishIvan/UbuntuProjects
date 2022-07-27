@@ -1,16 +1,18 @@
 #include "worksperioddialog.h"
 
-
+void GetAccontingPeriod(QDate &, QDate &);
 worksPeriodDialog::worksPeriodDialog(QSqlDatabase database,  QWidget *parent) :
     QDialog(parent)
 {
     setupUi(this);
     m_database = database;
-    QDate today = QDate::currentDate();
+    //QDate today = QDate::currentDate();
     //QDate d1 = QDate(today.year(), today.month(),1);
     //QDate d2 = QDate(today.year(), today.month(),today.daysInMonth());
-    m_dateFromEdit->setDate(today);
-    m_dateToEdit->setDate(today);
+    QDate dateBegin, dateEnd;
+    GetAccontingPeriod(dateBegin, dateEnd);
+    m_dateFromEdit->setDate(dateBegin);
+    m_dateToEdit->setDate(dateEnd);
     m_model = new taskReportModel(nullptr, true);
     ShowResults();
     m_reportView->setModel(m_model);
@@ -31,7 +33,7 @@ void worksPeriodDialog::ShowResults()
     QString to = m_dateToEdit->date().toString(Qt::ISODate);
     m_model->clear();
 
-    QString textQuery =  QString("select Name, Content, Date, TimeSpent from WorksView where Date between '%1' and '%2'")
+    QString textQuery =  QString("select Name, Content, Date, TimeSpent from WorksView where Date between '%1' and '%2' order by Date")
             .arg(from)
             .arg(to);
     QSqlQuery qr(textQuery, m_database);

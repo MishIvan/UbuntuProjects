@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QAbstractListModel>
 #include "timespan.h"
+#include "sorting.hpp"
 
 struct taskRecord
 {

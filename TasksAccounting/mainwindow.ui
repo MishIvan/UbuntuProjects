@@ -48,6 +48,7 @@
     <property name="title">
      <string>Файл</string>
     </property>
+    <addaction name="action_set_accounting_period"/>
     <addaction name="action_exit"/>
    </widget>
    <widget class="QMenu" name="menu_2">
@@ -115,6 +116,9 @@
    <property name="text">
     <string>Время за период</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+T</string>
+   </property>
   </action>
   <action name="action_exit">
    <property name="text">
@@ -128,6 +132,9 @@
    <property name="text">
     <string>Работы за период</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+W</string>
+   </property>
   </action>
   <action name="action_show_timer">
    <property name="icon">
@@ -139,6 +146,9 @@
    </property>
    <property name="toolTip">
     <string>Показать (скрыть) таймер</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
   <action name="action_about">
@@ -204,6 +214,17 @@
    </property>
    <property name="toolTip">
     <string>Отобразить задачи в соответствии с выбранным фильтром</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+F</string>
+   </property>
+  </action>
+  <action name="action_set_accounting_period">
+   <property name="text">
+    <string>Установить отчётный период</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
    </property>
   </action>
  </widget>

@@ -32,6 +32,13 @@ taskDialog::taskDialog(QSqlTableModel *model ,QModelIndex idx, QWidget *parent) 
             currIdx = m_model->index(row,6);
             m_factTime->setText(m_model->data(currIdx).toString());
         }
+    else
+    {
+        QDate today = QDate::currentDate();
+        QDate d1 = QDate(today.year(), today.month(),today.daysInMonth());
+        m_datePlan->setDate(d1);
+        m_dateFact->setDate(QDate::fromString("9999-12-31", Qt::ISODate));
+    }
 
 }
 
