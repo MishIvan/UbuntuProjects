@@ -193,12 +193,6 @@ void MainWindow::on_action_delete_task_triggered()
         m_database.transaction();
         qText = QString("delete from Works where TaskID = %1").arg(id);
         qr.exec(qText);
-        if(qr.size() > 0)
-        {
-            QMessageBox::warning(this,"Ошибка", "Нельзя удалять задачу для которой имеютсмя работы");
-            return;
-        }
-
         m_model->removeRow(idx.row());
         m_database.commit();
         m_model->submitAll();
