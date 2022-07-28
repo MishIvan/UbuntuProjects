@@ -51,9 +51,9 @@ MainWindow::~MainWindow()
     m_database.close();
     delete m_model;
     delete m_timerDialog;
-
 }
 
+// открыть базу данных, если её нет, то создать новуюбазу ланных
 void MainWindow::setDatabase(QString pathToData)
 {
     if(QFile::exists(pathToData))
@@ -63,10 +63,12 @@ void MainWindow::setDatabase(QString pathToData)
          {
               QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
           }
+         m_pathToDB = pathToData;
     }
     else
     {
-        m_database.setDatabaseName("TasksAccounting.db");
+        m_pathToDB = "TasksAccounting.db";
+        m_database.setDatabaseName(m_pathToDB);
         if(!m_database.open())
         {
              QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
@@ -110,6 +112,7 @@ void MainWindow::on_action_exit_triggered()
     QApplication::exit(0);
 }
 
+// показать задачи и работы по ней с суммарным временем работ по задачам за период
 void MainWindow::on_action_time_period_triggered()
 {
     QFile file(":/texts/withSQL.sql");
@@ -124,12 +127,14 @@ void MainWindow::on_action_time_period_triggered()
     dlg.exec();
 }
 
+// показать список работ по задачам с их временем выполнения за период
 void MainWindow::on_action_triggered()
 {
     worksPeriodDialog dlg(m_database, this);
     dlg.exec();
 }
 
+// показать или скрыть таймер
 void MainWindow::on_action_show_timer_triggered()
 {
     if(m_timerDialog->isHidden())
@@ -144,12 +149,14 @@ void MainWindow::on_action_show_timer_triggered()
     }
 }
 
+// отобразить диалог О программе
 void MainWindow::on_action_about_triggered()
 {
     aboutDialog dlg(this);
     dlg.exec();
 }
 
+// добавить новую задачу
 void MainWindow::on_action_add_task_triggered()
 {
     if(!m_database.isOpen())
@@ -165,6 +172,7 @@ void MainWindow::on_action_add_task_triggered()
     }
 }
 
+// удалить задачу и все работы по ней
 void MainWindow::on_action_delete_task_triggered()
 {
     if(!m_database.isOpen())
@@ -172,26 +180,34 @@ void MainWindow::on_action_delete_task_triggered()
         QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
         return;
     }
-    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
-    QModelIndex idx = selmodel->currentIndex();
-    long id = m_model->data( m_model->index(idx.row(),0) ).toLongLong();
-
-    QSqlQuery qr(m_database);
-    QString qText;
-    qText = QString("select nullif(count(*),0) from Works where ID = %1").arg(id);
-    qr.exec(qText);
-    if(qr.size() > 0)
+    if(QMessageBox::question(this,tr("Предупреждение"),
+                             tr("Вы действительно хотите удалить задачу вместе с работами по ней"),
+                             QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
     {
-        QMessageBox::warning(this,"Ошибка", "Нельзя удалять задачу для которой имеютсмя работы");
-        return;
-    }
+        QItemSelectionModel *selmodel =  taskTableView->selectionModel();
+        QModelIndex idx = selmodel->currentIndex();
+        long id = m_model->data( m_model->index(idx.row(),0) ).toLongLong();
 
-    m_model->removeRow(idx.row());
-    m_model->submitAll();
-    m_model->select();
+        QSqlQuery qr(m_database);
+        QString qText;
+        m_database.transaction();
+        qText = QString("delete from Works where TaskID = %1").arg(id);
+        qr.exec(qText);
+        if(qr.size() > 0)
+        {
+            QMessageBox::warning(this,"Ошибка", "Нельзя удалять задачу для которой имеютсмя работы");
+            return;
+        }
+
+        m_model->removeRow(idx.row());
+        m_database.commit();
+        m_model->submitAll();
+        m_model->select();
+    }
 
 }
 
+// правка параметров задачи
 void MainWindow::on_action_edit_task_triggered()
 {
     if(!m_database.isOpen())
@@ -207,6 +223,7 @@ void MainWindow::on_action_edit_task_triggered()
     dlg.exec();
 }
 
+// отобразить диалог списка работ по задаче
 void MainWindow::on_action_work_list_triggered()
 {
     if(!m_database.isOpen())
@@ -222,7 +239,8 @@ void MainWindow::on_action_work_list_triggered()
         wd.exec();
     }
 }
-// фильтр отображения задач
+
+// установить фильтр отображения задач
 void MainWindow::on_action_task_filter_triggered()
 {
     taskFilterDialog dlg(this);
@@ -266,8 +284,16 @@ void MainWindow::on_action_task_filter_triggered()
     }
 }
 
+// установить отчётный период
 void MainWindow::on_action_set_accounting_period_triggered()
 {
     setPeriodDialog dlg(this);
     dlg.exec();
+}
+
+// сделать резервную копию БД
+void MainWindow::on_action_make_copy_triggered()
+{
+   QFile db(m_pathToDB);
+   db.copy(m_pathToDB.replace(QString("db"),QString("dbbak")));
 }

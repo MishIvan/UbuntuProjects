@@ -79,3 +79,21 @@ void worksPeriodDialog::on_m_setTimeButton_clicked()
 {
     ShowResults();
 }
+
+void worksPeriodDialog::on_m_todayCheckBox_stateChanged(int arg1)
+{
+    if(arg1 == Qt::Checked)
+    {
+        QDate today = QDate::currentDate();
+        m_dateFromEdit->setDate(today);
+        m_dateToEdit->setDate(today);
+
+    }
+    else
+    {
+        QDate dateBegin, dateEnd;
+        GetAccontingPeriod(dateBegin, dateEnd);
+        m_dateFromEdit->setDate(dateBegin);
+        m_dateToEdit->setDate(dateEnd);
+    }
+}

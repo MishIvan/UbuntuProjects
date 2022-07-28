@@ -49,6 +49,7 @@
      <string>Файл</string>
     </property>
     <addaction name="action_set_accounting_period"/>
+    <addaction name="action_make_copy"/>
     <addaction name="action_exit"/>
    </widget>
    <widget class="QMenu" name="menu_2">
@@ -225,6 +226,17 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="action_make_copy">
+   <property name="text">
+    <string>Сделать резервную копию</string>
+   </property>
+   <property name="toolTip">
+    <string>Сделать резервную копию базы данны</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
  </widget>

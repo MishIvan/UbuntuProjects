@@ -38,8 +38,10 @@ private slots:
 
     void on_action_set_accounting_period_triggered();
 
-private:
+    void on_action_make_copy_triggered();
 
+private:
+    QString m_pathToDB; // путь к базе данных
     QSqlDatabase m_database;
     QSqlTableModel *m_model;
     void setDatabase(QString pathToData);
