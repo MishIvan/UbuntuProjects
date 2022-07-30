@@ -1,6 +1,8 @@
 #include "taskreportmodel.h"
+#include "sorting.hpp"
 
-taskReportModel::taskReportModel(QObject *parent, bool workRecords) :QAbstractListModel(parent)
+taskReportModel::taskReportModel(QObject *parent, bool workRecords)
+    :QAbstractListModel(parent)
 {
     m_pList = new QList<taskRecord>();
     m_wList = new QList<workRecord>();
@@ -231,4 +233,113 @@ void taskReportModel::clear()
         m_wList->clear();
     endRemoveRows();
 
+}
+
+// сортировка по колонкам
+void taskReportModel::sort(int column, Qt::SortOrder order)
+{
+    // лямбды для сортировки по колонкам списка работ
+    auto fnnw = [] (workRecord one, workRecord two)-> int
+    {
+        if(one.m_name > two.m_name) return 1;
+        else if(one.m_name == two.m_name) return 0;
+        else return -1;
+    };
+
+    auto fncw = [] (workRecord one, workRecord two)-> int
+    {
+        if(one.m_content > two.m_content) return 1;
+        else if(one.m_content == two.m_content) return 0;
+        else return -1;
+    };
+
+    auto fndw = [] (workRecord one, workRecord two)-> int
+    {
+        if(one.m_Date > two.m_Date) return 1;
+        else if(one.m_Date == two.m_Date) return 0;
+        else return -1;
+    };
+
+    auto fntw = [] (workRecord one, workRecord two)-> int
+    {
+        if(one.m_spentTime > two.m_spentTime) return 1;
+        else if(one.m_spentTime == two.m_spentTime) return 0;
+        else return -1;
+    };
+
+    // лямбды для сортировки по колонкам списка работ по задачам
+    auto fnnt = [] (taskRecord one, taskRecord two)-> int
+    {
+        if(one.m_name > two.m_name) return 1;
+        else if(one.m_name == two.m_name) return 0;
+        else return -1;
+    };
+
+    auto fnct = [] (taskRecord one, taskRecord two)-> int
+    {
+        if(one.m_content > two.m_content) return 1;
+        else if(one.m_content == two.m_content) return 0;
+        else return -1;
+    };
+
+    auto fndpt = [] (taskRecord one, taskRecord two)-> int
+    {
+        if(one.m_planDate > two.m_planDate) return 1;
+        else if(one.m_planDate == two.m_planDate) return 0;
+        else return -1;
+    };
+
+    auto fndft = [] (taskRecord one, taskRecord two)-> int
+    {
+        if(one.m_factDate > two.m_factDate) return 1;
+        else if(one.m_factDate == two.m_planDate) return 0;
+        else return -1;
+    };
+
+    auto fntt = [] (taskRecord one, taskRecord two)-> int
+    {
+        if(one.m_spentTime > two.m_spentTime) return 1;
+        else if(one.m_spentTime == two.m_spentTime) return 0;
+        else return -1;
+    };
+
+        switch(column)
+        {
+            case 0:
+            if(m_workRecords)
+                BubbleSorting(*m_wList,  fnnw,  order == Qt::AscendingOrder);
+            else
+                BubbleSorting(*m_pList,  fnnt,  order == Qt::AscendingOrder);
+            break;
+            case 1:
+            if(m_workRecords)
+                BubbleSorting(*m_wList,  fncw,  order == Qt::AscendingOrder);
+            else
+                BubbleSorting(*m_pList,  fnct,  order == Qt::AscendingOrder);
+            break;
+            case 2:
+            if(m_workRecords)
+                BubbleSorting(*m_wList,  fndw,  order == Qt::AscendingOrder);
+            else
+                BubbleSorting(*m_pList,  fndpt,  order == Qt::AscendingOrder);
+            break;
+           case 3:
+            if(m_workRecords)
+              BubbleSorting(*m_wList,  fntw,  order == Qt::AscendingOrder);
+            else
+              BubbleSorting(*m_pList,  fndft,  order == Qt::AscendingOrder);
+           break;
+           case 4:
+            if(!m_workRecords)
+            {
+                BubbleSorting(*m_pList,  fntt,  order == Qt::AscendingOrder);
+                break;
+            }
+            else
+                return;
+            default:
+            return;
+          }
+        beginResetModel();
+        endResetModel();
 }

@@ -34,6 +34,7 @@ HEADERS += \
     aboutdialog.h \
     mainwindow.h \
     setperioddialog.h \
+    sorting.hpp \
     taskDialog.h \
     taskfilterdialog.h \
     taskreportmodel.h \

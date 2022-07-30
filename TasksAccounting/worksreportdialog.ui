@@ -31,6 +31,9 @@
    <property name="selectionBehavior">
     <enum>QAbstractItemView::SelectRows</enum>
    </property>
+   <property name="sortingEnabled">
+    <bool>true</bool>
+   </property>
   </widget>
   <widget class="QLabel" name="m_sumTimeLabel">
    <property name="geometry">

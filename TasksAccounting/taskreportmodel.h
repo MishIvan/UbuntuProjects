@@ -40,6 +40,7 @@ public:
     int columnCount(const QModelIndex &idx) const;
     Qt::ItemFlags flags(const QModelIndex &idx) const;
     QVariant headerData(int section, Qt::Orientation orientation, int Role = Qt::DisplayRole) const;
+    void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
 
     void append(taskRecord p);
     void append(workRecord w);
@@ -47,6 +48,8 @@ public:
     void insertAt(int idx, taskRecord p);
     void insertAt(int idx, workRecord w);
     void clear();
+
+
 
     bool isWorkRecords();
 
