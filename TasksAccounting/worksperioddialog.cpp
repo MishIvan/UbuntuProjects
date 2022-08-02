@@ -14,6 +14,7 @@ worksPeriodDialog::worksPeriodDialog(QSqlDatabase database,  QWidget *parent) :
     m_dateFromEdit->setDate(dateBegin);
     m_dateToEdit->setDate(dateEnd);
     m_model = new taskReportModel(nullptr, true);
+    m_periodCheckBox->setCheckState(Qt::Checked);
     ShowResults();
     m_reportView->setModel(m_model);
     m_reportView->setColumnWidth(0, 300);
@@ -87,13 +88,37 @@ void worksPeriodDialog::on_m_todayCheckBox_stateChanged(int arg1)
         QDate today = QDate::currentDate();
         m_dateFromEdit->setDate(today);
         m_dateToEdit->setDate(today);
-
+        if(m_periodCheckBox->isChecked())
+            m_periodCheckBox->setChecked(false);
+        m_todayCheckBox->setCheckState(Qt::Checked);
     }
-    else
+}
+
+void worksPeriodDialog::on_m_periodCheckBox_stateChanged(int arg1)
+{
+    if(arg1 == Qt::Checked)
     {
         QDate dateBegin, dateEnd;
         GetAccontingPeriod(dateBegin, dateEnd);
         m_dateFromEdit->setDate(dateBegin);
         m_dateToEdit->setDate(dateEnd);
+        if(m_todayCheckBox->isChecked())
+            m_todayCheckBox->setChecked(false);
+        m_periodCheckBox->setCheckState(Qt::Checked);
+
     }
+
+}
+
+void worksPeriodDialog::on_m_dateFromEdit_userDateChanged(const QDate &date)
+{
+    if(m_periodCheckBox->isChecked())
+        m_periodCheckBox->setChecked(Qt::Unchecked);
+    if(m_todayCheckBox->isChecked())
+        m_todayCheckBox->setChecked(Qt::Unchecked);
+}
+
+void worksPeriodDialog::on_m_dateToEdit_userDateChanged(const QDate &date)
+{
+    on_m_dateFromEdit_userDateChanged(date);
 }

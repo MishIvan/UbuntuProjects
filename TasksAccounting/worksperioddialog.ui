@@ -162,8 +162,36 @@
       <height>25</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Установить сегодняшние даты</string>
+    </property>
     <property name="text">
      <string>Сегодня</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="m_periodCheckBox">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>80</y>
+      <width>181</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Установить даты отчётного периода</string>
+    </property>
+    <property name="text">
+     <string>Отчётный период</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+    <property name="tristate">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>

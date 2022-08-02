@@ -48,7 +48,7 @@ void Reverse(QList<T> &lst)
 {
     int i = 0, k = 1;
     int n = lst.size();
-    while(i != n-k)
+    while(i < n-k)
     {
         lst.swap(i, n-k);
         i++; k++;
