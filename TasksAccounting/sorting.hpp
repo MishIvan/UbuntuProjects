@@ -1,6 +1,7 @@
 #ifndef SORTING_H
 #define SORTING_H
 #include <QList>
+#include <algorithm>
 
 // ---- функции сортировки ----
 
@@ -41,19 +42,6 @@ void BubbleSortingAsc(QList<T> &lst, Comparsion fn )
 
 }
 
-// перестановка элементов списка в обратном порядке
-// первый элемент становится последним, а последний первым
-template <typename T>
-void Reverse(QList<T> &lst)
-{
-    int i = 0, k = 1;
-    int n = lst.size();
-    while(i < n-k)
-    {
-        lst.swap(i, n-k);
-        i++; k++;
-    }
-}
 // сортировка элементов списка по возрастанию (asc = true) или по убыванию (asc = false)
 // lst - сортируемый список
 // Comparsion - указатель на функцию (или лямбда) сравнения элементов списка
@@ -62,7 +50,7 @@ void BubbleSorting(QList<T> &lst, Comparsion fn, bool asc = true)
 {
     BubbleSortingAsc(lst, fn);
     if(!asc)
-        Reverse(lst);
+        std::reverse(lst.begin(), lst.end());
 }
 // ------------------------------------------------------------------------------------------------------------------------
 
