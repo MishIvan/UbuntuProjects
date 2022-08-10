@@ -7,6 +7,7 @@ worksReportDialog::worksReportDialog(QSqlDatabase database,
                                      QWidget *parent) :  QDialog(parent)
 {
     setupUi(this);
+    m_flag = false;
     m_database = database;
     m_sqlQuery = query;
     //QDate today = QDate::currentDate();
@@ -23,15 +24,11 @@ worksReportDialog::worksReportDialog(QSqlDatabase database,
     m_reportView->setColumnWidth(0, 250);
     m_reportView->setColumnWidth(1, 350);
     m_reportView->resizeRowsToContents();
+    m_flag = true;
 }
 worksReportDialog::~worksReportDialog()
 {
     delete m_model;
-}
-
-void worksReportDialog::on_m_setTimeButton_clicked()
-{
-    ShowResults();
 }
 
 void worksReportDialog::on_m_closeButton_clicked()
@@ -90,4 +87,14 @@ void worksReportDialog::ShowResults()
     else
         m_sumTimeLabel->setText(QString("Итого: %1").arg(tsum.toString()));
         m_reportView->resizeRowsToContents();
+}
+
+void worksReportDialog::on_m_dateFromEdit_userDateChanged(const QDate &date)
+{
+    if(m_flag) ShowResults();
+}
+
+void worksReportDialog::on_m_dateToEdit_userDateChanged(const QDate &date)
+{
+    if(m_flag) ShowResults();
 }

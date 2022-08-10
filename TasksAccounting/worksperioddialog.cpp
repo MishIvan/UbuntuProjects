@@ -5,6 +5,7 @@ worksPeriodDialog::worksPeriodDialog(QSqlDatabase database,  QWidget *parent) :
     QDialog(parent)
 {
     setupUi(this);
+    m_flag = false;
     m_database = database;
     //QDate today = QDate::currentDate();
     //QDate d1 = QDate(today.year(), today.month(),1);
@@ -20,6 +21,7 @@ worksPeriodDialog::worksPeriodDialog(QSqlDatabase database,  QWidget *parent) :
     m_reportView->setColumnWidth(0, 300);
     m_reportView->setColumnWidth(1, 300);
     m_reportView->resizeRowsToContents();
+    m_flag = true;
 
 }
 
@@ -76,11 +78,6 @@ void worksPeriodDialog::on_m_closeButton_clicked()
     accept();
 }
 
-void worksPeriodDialog::on_m_setTimeButton_clicked()
-{
-    ShowResults();
-}
-
 void worksPeriodDialog::on_m_todayCheckBox_stateChanged(int arg1)
 {
     if(arg1 == Qt::Checked)
@@ -91,6 +88,7 @@ void worksPeriodDialog::on_m_todayCheckBox_stateChanged(int arg1)
         if(m_periodCheckBox->isChecked())
             m_periodCheckBox->setChecked(false);
         m_todayCheckBox->setCheckState(Qt::Checked);
+        ShowResults();
     }
 }
 
@@ -105,7 +103,7 @@ void worksPeriodDialog::on_m_periodCheckBox_stateChanged(int arg1)
         if(m_todayCheckBox->isChecked())
             m_todayCheckBox->setChecked(false);
         m_periodCheckBox->setCheckState(Qt::Checked);
-
+        ShowResults();
     }
 
 }
@@ -116,6 +114,7 @@ void worksPeriodDialog::on_m_dateFromEdit_userDateChanged(const QDate &date)
         m_periodCheckBox->setChecked(Qt::Unchecked);
     if(m_todayCheckBox->isChecked())
         m_todayCheckBox->setChecked(Qt::Unchecked);
+    if (m_flag) ShowResults();
 }
 
 void worksPeriodDialog::on_m_dateToEdit_userDateChanged(const QDate &date)

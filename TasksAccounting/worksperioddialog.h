@@ -10,6 +10,7 @@ class worksPeriodDialog : public QDialog, private Ui::worksPeriodDialog
     Q_OBJECT
     QSqlDatabase m_database;
     taskReportModel *m_model;
+    bool m_flag;
     void ShowResults();
 
 public:
@@ -18,7 +19,6 @@ public:
 
 private slots:
     void on_m_closeButton_clicked();
-    void on_m_setTimeButton_clicked();
     void on_m_todayCheckBox_stateChanged(int arg1);
     void on_m_periodCheckBox_stateChanged(int arg1);
     void on_m_dateFromEdit_userDateChanged(const QDate &date);

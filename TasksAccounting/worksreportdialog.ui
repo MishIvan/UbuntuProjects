@@ -78,29 +78,23 @@
     <rect>
      <x>10</x>
      <y>0</y>
-     <width>601</width>
+     <width>491</width>
      <height>101</height>
     </rect>
    </property>
    <property name="title">
     <string>Период</string>
    </property>
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>40</y>
-      <width>461</width>
+      <width>421</width>
       <height>32</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <property name="spacing">
-      <number>50</number>
-     </property>
-     <property name="sizeConstraint">
-      <enum>QLayout::SetMinAndMaxSize</enum>
-     </property>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
@@ -114,6 +108,19 @@
         <widget class="QDateEdit" name="m_dateFromEdit"/>
        </item>
       </layout>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>80</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -130,14 +137,17 @@
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="m_setTimeButton">
-       <property name="toolTip">
-        <string>Задать период и вывести  результаты</string>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-       <property name="text">
-        <string>Показать</string>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
        </property>
-      </widget>
+      </spacer>
      </item>
     </layout>
    </widget>

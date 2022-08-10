@@ -72,7 +72,7 @@
    </widget>
    <widget class="QMenu" name="menu_4">
     <property name="title">
-     <string>Помощь</string>
+     <string>Справка</string>
     </property>
     <addaction name="action_about"/>
    </widget>
