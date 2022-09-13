@@ -55,3 +55,9 @@ void timerDialog::on_m_resetButton_clicked()
         m_timeEdit->setTime(m_workTime);
     }
 }
+
+void timerDialog::on_m_timeEdit_userTimeChanged(const QTime &time)
+{
+    m_workTime = time;
+}
+
