@@ -1,4 +1,6 @@
 #include "timerdialog.h"
+#include "timespan.h"
+#include <QMessageBox>
 extern QTime m_workTime;
 
 
@@ -48,16 +50,32 @@ void timerDialog::on_m_start_stopButton_clicked()
 
 void timerDialog::on_m_resetButton_clicked()
 {
-    if(m_timerID != 0) {
-        m_workTime =QTime(0,0,0);
+    if(m_timerID != 0) {        
         m_start_stopButton->setIcon(QPixmap(":/images/start48.png"));
-        m_started = false;
-        m_timeEdit->setTime(m_workTime);
+        m_started = false;        
     }
+    m_workTime =QTime(0,0,0);
+    m_timeEdit->setTime(m_workTime);
 }
 
 void timerDialog::on_m_timeEdit_userTimeChanged(const QTime &time)
 {
     m_workTime = time;
+}
+
+
+void timerDialog::on_m_calcButton_clicked()
+{
+    QTime tbegin = m_beginInterval->time();
+    QTime tend = m_endInterval->time();
+    if(tbegin > tend)
+        QMessageBox::warning(this, "Ошибка", "Время начала не может быть больше времени завершения");
+    else
+    {
+        TimeSpan ts1(tbegin, false);
+        TimeSpan ts2(tend, false);
+        TimeSpan tdelta = ts2 - ts1;
+        m_timeEdit->setTime(QTime::fromString(tdelta.toString(true)));
+    }
 }
 

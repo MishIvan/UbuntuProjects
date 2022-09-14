@@ -20,6 +20,7 @@ private slots:
     void on_m_start_stopButton_clicked();
     void on_m_resetButton_clicked();
     void on_m_timeEdit_userTimeChanged(const QTime &time);
+    void on_m_calcButton_clicked();
 };
 
 #endif // TIMERDIALOG_H

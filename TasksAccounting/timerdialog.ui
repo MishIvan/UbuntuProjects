@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>365</width>
-    <height>61</height>
+    <height>185</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>365</width>
-    <height>61</height>
+    <height>185</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>365</width>
-    <height>61</height>
+    <height>185</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -81,6 +81,97 @@
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>60</y>
+     <width>341</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Вычислить время</string>
+   </property>
+   <widget class="QPushButton" name="m_calcButton">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>30</y>
+      <width>48</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Вычислить время по заданному интервалу</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="MainResource.qrc">
+      <normaloff>:/images/calculate48.png</normaloff>:/images/calculate48.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>24</width>
+      <height>24</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>21</x>
+      <y>31</y>
+      <width>201</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Начало:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTimeEdit" name="m_beginInterval">
+       <property name="displayFormat">
+        <string>HH:mm:ss</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>70</y>
+      <width>201</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Завершение:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTimeEdit" name="m_endInterval">
+       <property name="displayFormat">
+        <string>HH:mm:ss</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
  </widget>
  <resources>
