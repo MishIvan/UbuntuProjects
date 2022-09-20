@@ -149,7 +149,7 @@
     <string>Показать таймер</string>
    </property>
    <property name="toolTip">
-    <string>Показать (скрыть) таймер</string>
+    <string>Показать (скрыть) таймер (Crrl+T)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+T</string>
@@ -169,7 +169,10 @@
     <string>Добавить</string>
    </property>
    <property name="toolTip">
-    <string>Добавить задачу</string>
+    <string>Добавить задачу (Ctrl+Ins)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Ins</string>
    </property>
   </action>
   <action name="action_delete_task">
@@ -181,7 +184,10 @@
     <string>Удалить</string>
    </property>
    <property name="toolTip">
-    <string>Удалить задачу</string>
+    <string>Удалить задачу (Ctrl+Del)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Del</string>
    </property>
   </action>
   <action name="action_edit_task">
@@ -193,7 +199,10 @@
     <string>Редактировать</string>
    </property>
    <property name="toolTip">
-    <string>Править параметры задачи</string>
+    <string>Править параметры задачи (F7)</string>
+   </property>
+   <property name="shortcut">
+    <string>F7</string>
    </property>
   </action>
   <action name="action_work_list">
@@ -202,10 +211,13 @@
      <normaloff>:/images/WorksList64.png</normaloff>:/images/WorksList64.png</iconset>
    </property>
    <property name="text">
-    <string>Список работ </string>
+    <string>Список работ</string>
    </property>
    <property name="toolTip">
-    <string>Список работ по задаче</string>
+    <string>Список работ по задаче (F5)</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
    </property>
   </action>
   <action name="action_task_filter">
@@ -217,7 +229,7 @@
     <string>Фильтр отображения задач</string>
    </property>
    <property name="toolTip">
-    <string>Отобразить задачи в соответствии с выбранным фильтром</string>
+    <string>Отобразить задачи в соответствии с выбранным фильтром (Alt+F)</string>
    </property>
    <property name="shortcut">
     <string>Alt+F</string>
@@ -236,7 +248,7 @@
     <string>Сделать резервную копию</string>
    </property>
    <property name="toolTip">
-    <string>Сделать резервную копию базы данны</string>
+    <string>Сделать резервную копию базы данных</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
