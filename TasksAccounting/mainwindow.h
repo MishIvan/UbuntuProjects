@@ -49,6 +49,7 @@ private:
     int m_oldWidth;
     int m_oldHeight;
     int m_filterFlag;
+    QString m_filterName;
 protected:
     virtual void resizeEvent(QResizeEvent *);
 };

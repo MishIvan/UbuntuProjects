@@ -43,6 +43,7 @@ MainWindow::MainWindow(QString pathToData, QWidget *parent)
     m_oldWidth = width();
     m_oldHeight = height();
     m_filterFlag = TaskFilter::ALL;
+    m_filterName = "";
 
 }
 
@@ -239,14 +240,22 @@ void MainWindow::on_action_task_filter_triggered()
 {
     taskFilterDialog dlg(this);
     dlg.setFilterFlag(m_filterFlag);
+    dlg.setFilterString(m_filterName);
     if(dlg.exec() == QDialog::Accepted)
     {
         QString now, s1;
         m_filterFlag = dlg.filterFlag();
+        m_filterName = dlg.filterString();
         switch(m_filterFlag)
         {
             case TaskFilter::ALL:
-                m_model->setFilter("ID>0");
+                if(!m_filterName.isEmpty())
+                {
+                    s1 = QString("Name like'%1'").arg(QString("%")+m_filterName+QString("%"));
+                }
+                else
+                    s1 = QString("ID>0");
+                m_model->setFilter(s1);
                 m_model->select();
                 setWindowTitle("Учёт задач - все задачи");
                 taskTableView->resizeRowsToContents();
@@ -254,20 +263,34 @@ void MainWindow::on_action_task_filter_triggered()
             case TaskFilter::DONE:
                 now = QDate::currentDate().toString(Qt::ISODate);
                 s1 = QString("FulfillmentDate<='%1'").arg(now);
+                if(!m_filterName.isEmpty())
+                {
+                    s1 += QString(" and Name like'%1'").arg(QString("%")+m_filterName+QString("%"));
+                }
                 m_model->setFilter(s1);
                 m_model->select();
                 setWindowTitle("Учёт задач - завершённые задачи");
                 taskTableView->resizeRowsToContents();
             break;
             case TaskFilter::INFINITE:
-                m_model->setFilter("FulfillmentDate = '9999-12-31'");
+                s1 = QString("FulfillmentDate = '9999-12-31'");
+                if(!m_filterName.isEmpty())
+                {
+                    s1 += QString(" and Name like'%1'").arg(QString("%")+m_filterName+QString("%"));
+                }
+                m_model->setFilter(s1);
                 m_model->select();
                 setWindowTitle("Учёт задач - задачи без срока");
                 taskTableView->resizeRowsToContents();
             break;
             case TaskFilter::EXPIRED:
                 now = QDate::currentDate().toString(Qt::ISODate);
-                m_model->setFilter("Deadline<FulfillmentDate and FulfillmentDate !='9999-12-31'");
+                s1 = QString("Deadline<FulfillmentDate and FulfillmentDate !='9999-12-31'");
+                if(!m_filterName.isEmpty())
+                {
+                    s1 += QString(" and Name like'%1'").arg(QString("%")+m_filterName+QString("%"));
+                }
+                m_model->setFilter(s1);
                 m_model->select();
                 setWindowTitle("Учёт задач - просроченные задачи");
                 taskTableView->resizeRowsToContents();

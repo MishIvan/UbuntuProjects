@@ -4,6 +4,7 @@ taskFilterDialog::taskFilterDialog(QWidget *parent) :
     QDialog(parent)
 {
     setupUi(this);
+    m_filterString = "";
 }
 int taskFilterDialog::filterFlag()
 {
@@ -31,6 +32,14 @@ void taskFilterDialog::setFilterFlag(int flag)
     };
 
 }
+QString taskFilterDialog::filterString()
+{
+    return m_filterString;
+}
+void taskFilterDialog::setFilterString(QString &filterString)
+{
+    m_nameFilter->setText(filterString);
+}
 void taskFilterDialog::on_buttonBox_accepted()
 {
     if(m_AllRadioButton->isChecked())
@@ -41,6 +50,7 @@ void taskFilterDialog::on_buttonBox_accepted()
         m_filterFlag = TaskFilter::EXPIRED;
     if(m_InfiniteRadioButton->isChecked())
         m_filterFlag = TaskFilter::INFINITE;
+    m_filterString = m_nameFilter->text();
 }
 
 void taskFilterDialog::on_buttonBox_rejected()
