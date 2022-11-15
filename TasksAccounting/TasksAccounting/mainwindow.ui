@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>740</width>
+    <height>534</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Учёт задач - все задачи</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="MainResource.qrc">
+    <normaloff>:/images/Tasks64.png</normaloff>:/images/Tasks64.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTableView" name="taskTableView">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>711</width>
+      <height>381</height>
+     </rect>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::SingleSelection</enum>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
+    </property>
+    <property name="sortingEnabled">
+     <bool>true</bool>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>740</width>
+     <height>24</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="action_set_accounting_period"/>
+    <addaction name="action_make_copy"/>
+    <addaction name="action_exit"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Отчёт</string>
+    </property>
+    <addaction name="action_time_period"/>
+    <addaction name="action"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>Вид</string>
+    </property>
+    <addaction name="action_task_filter"/>
+    <addaction name="separator"/>
+    <addaction name="action_show_timer"/>
+   </widget>
+   <widget class="QMenu" name="menu_4">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+    <addaction name="action_about"/>
+   </widget>
+   <widget class="QMenu" name="menu_5">
+    <property name="title">
+     <string>Задачи</string>
+    </property>
+    <addaction name="action_add_task"/>
+    <addaction name="action_delete_task"/>
+    <addaction name="action_edit_task"/>
+    <addaction name="action_work_list"/>
+    <addaction name="separator"/>
+    <addaction name="action_task_finish"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_5"/>
+   <addaction name="menu_3"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_4"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="m_mainToolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="action_add_task"/>
+   <addaction name="action_delete_task"/>
+   <addaction name="action_edit_task"/>
+   <addaction name="action_work_list"/>
+   <addaction name="separator"/>
+   <addaction name="action_task_filter"/>
+   <addaction name="action_show_timer"/>
+  </widget>
+  <action name="action_time_period">
+   <property name="text">
+    <string>Время за период</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+T</string>
+   </property>
+  </action>
+  <action name="action_exit">
+   <property name="text">
+    <string>Выход</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="text">
+    <string>Работы за период</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+W</string>
+   </property>
+  </action>
+  <action name="action_show_timer">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/timer48.png</normaloff>:/images/timer48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Показать таймер</string>
+   </property>
+   <property name="toolTip">
+    <string>Показать (скрыть) таймер (Crrl+T)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="action_about">
+   <property name="text">
+    <string>О программе</string>
+   </property>
+  </action>
+  <action name="action_add_task">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
+   </property>
+   <property name="text">
+    <string>Добавить</string>
+   </property>
+   <property name="toolTip">
+    <string>Добавить задачу (Ctrl+Ins)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Ins</string>
+   </property>
+  </action>
+  <action name="action_delete_task">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/delete.png</normaloff>:/images/delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>Удалить</string>
+   </property>
+   <property name="toolTip">
+    <string>Удалить задачу (Ctrl+Del)</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Del</string>
+   </property>
+  </action>
+  <action name="action_edit_task">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/edit.png</normaloff>:/images/edit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Редактировать</string>
+   </property>
+   <property name="toolTip">
+    <string>Править параметры задачи (F7)</string>
+   </property>
+   <property name="shortcut">
+    <string>F7</string>
+   </property>
+  </action>
+  <action name="action_work_list">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/WorksList64.png</normaloff>:/images/WorksList64.png</iconset>
+   </property>
+   <property name="text">
+    <string>Список работ</string>
+   </property>
+   <property name="toolTip">
+    <string>Список работ по задаче (F5)</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="action_task_filter">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/filter48.png</normaloff>:/images/filter48.png</iconset>
+   </property>
+   <property name="text">
+    <string>Фильтр отображения задач</string>
+   </property>
+   <property name="toolTip">
+    <string>Отобразить задачи в соответствии с выбранным фильтром (Alt+F)</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+F</string>
+   </property>
+  </action>
+  <action name="action_set_accounting_period">
+   <property name="text">
+    <string>Установить отчётный период</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="action_make_copy">
+   <property name="text">
+    <string>Сделать резервную копию</string>
+   </property>
+   <property name="toolTip">
+    <string>Сделать резервную копию базы данных</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="action_task_finish">
+   <property name="text">
+    <string>Завершить задачу</string>
+   </property>
+   <property name="toolTip">
+    <string>Установить дату завершения задачи на дату последней работы</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="MainResource.qrc"/>
+ </resources>
+ <connections/>
+</ui>
