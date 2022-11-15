@@ -314,3 +314,36 @@ void MainWindow::on_action_make_copy_triggered()
    QFile db(m_pathToDB);
    db.copy(m_pathToDB.replace(QString("db"),QString("dbbak")));
 }
+// завершить задачу
+void MainWindow::on_action_task_finish_triggered()
+{
+    if(!m_database.isOpen())
+    {
+        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
+        return;
+    }
+    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
+    QModelIndex idx = selmodel->currentIndex();
+    if(idx.isValid())
+    {
+        int row = idx.row();
+        long id = m_model->data(m_model->index(row,0)).toULongLong();
+        QString sqlText = QString("select taskID, Name, max(Date) maxDate from WorksView group by TaskID, name having taskID=%1").
+                arg(id);
+        QSqlQuery qry(m_database);
+        if(qry.exec(sqlText))
+        {
+            QString dval("");
+            while(qry.next())
+            {
+                dval = qry.value(2).toString();
+            }
+            if(!dval.isEmpty())
+            {
+                m_model->setData(m_model->index(row, 4), dval);
+            }
+        }
+    }
+
+}
+

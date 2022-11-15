@@ -84,6 +84,8 @@
     <addaction name="action_delete_task"/>
     <addaction name="action_edit_task"/>
     <addaction name="action_work_list"/>
+    <addaction name="separator"/>
+    <addaction name="action_task_finish"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menu_5"/>
@@ -252,6 +254,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="action_task_finish">
+   <property name="text">
+    <string>Завершить задачу</string>
+   </property>
+   <property name="toolTip">
+    <string>Установить дату завершения задачи на дату последней работы</string>
    </property>
   </action>
  </widget>

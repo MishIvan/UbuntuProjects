@@ -40,6 +40,8 @@ private slots:
 
     void on_action_make_copy_triggered();
 
+    void on_action_task_finish_triggered();
+
 private:
     QString m_pathToDB; // путь к базе данных
     QSqlDatabase m_database;
