@@ -53,6 +53,18 @@ void BeeHive::populate()
     m_mother = new MotherBee(m_motherLiveEnergy, m_motherConsumption, m_motherLiveTime);
 }
 
+void BeeHive::dispatchCollectors(int count)
+{
+    int n = m_collectors.size();
+    for(int i=0; i < n; i++)
+    {
+        CollectorBee bee = m_collectors[i];
+        if(bee.status() != IDLE) continue;
+         bee.setStatus(IN_TRIP, m_builderConsumption);
+        if(--count < 1) break;
+    }
+
+}
 double BeeHive::overallConsumption(bool norm)
 {
     double val = 0.0;

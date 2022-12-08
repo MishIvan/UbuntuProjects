@@ -56,6 +56,9 @@ public:
     bool isAlive();
     // определить количество незанятых собирателей
     int calculateIdleCollectors();
+    // назначить собирателей в рейс из числа незанятых
+    // параметры: count - количество незанятых собирателей
+    void dispatchCollectors(int count);
 };
 
 #endif // BEEHIVE_H
