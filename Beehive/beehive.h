@@ -9,9 +9,10 @@ using namespace std;
 
 class BeeHive
 {
-    double m_honeyStore; // запасы мёда
-    bool m_isAlive; // жизнеспособен ли улей (наличие запасов мёда, жива ли матка)
-    double m_nectarStore; // запасы нектара
+    double m_honeyStore;  // запасы мёда
+    bool m_isAlive;              // жизнеспособен ли улей (наличие запасов мёда, жива ли матка)
+    double m_nectarStore;  // запасы нектара
+    double m_koeffHoneyStore; // коэффициен сохранения гарантированного запаса мёда (меньше единицы)
 
     // время жизни матки, строителя и собирателя
     int m_motherLiveTime;
@@ -24,6 +25,7 @@ class BeeHive
     double m_collectorLiveEnergy;
 
     // норматив потребления для поддержания жизненных сил
+    // без их снижения
     // для матки, строителя и собирателя
     double m_motherConsumption;
     double m_builderConsumption;
@@ -32,14 +34,13 @@ class BeeHive
     // среднее количество нектара, которое несёт собиратель за рейс
     double m_nectarPerTrip;
 
-    vector <CollectorBee> m_collectors;
-    vector <BuilderBee> m_builders;
-    MotherBee *m_mother;
+    vector <CollectorBee> m_collectors; // собиратели
+    vector <BuilderBee> m_builders;      // строители
+    MotherBee *m_mother;                     // матка
 
     // общее потребление для всего улья
-    double overallConsumption();
-    // скорректировать численность пчёл
-    void correctPopulationQuantity();
+    // norm - фактическое (false), нормативное (true)
+    double overallConsumption(bool norm = false);
 public:
     BeeHive();
     ~BeeHive();
@@ -47,13 +48,14 @@ public:
     // ввод параметров модели и заведение пчёл в улье
     // функция вызывается сразу же после вызова конструктора
     void populate();
-    // вычисление потребностей в нектаре для поддержания запасов мёда
-    // и определение жизненных сил пчёл улья
-    void calculateNeeds();
+    // скорректировать численность пчёл
+    void correctPopulationQuantity();
     // расчёт параметров пчёл за единицу времени
     void step();
-    //
+    // жизнеспособен ли улей
     bool isAlive();
+    // определить количество незанятых собирателей
+    int calculateIdleCollectors();
 };
 
 #endif // BEEHIVE_H
