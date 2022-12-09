@@ -58,6 +58,7 @@ void BeeHive::populate()
 
 void BeeHive::dispatchCollectors(int count)
 {
+    if(count < 1) return;
     int n = m_collectors.size();
     for(int i=0; i < n; i++)
     {
