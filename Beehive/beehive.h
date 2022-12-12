@@ -47,7 +47,7 @@ public:
     void dispatchCollectors(int count);
 
     // увеличить возраст пчёл
-    void setBeesAge(int age);
+    void setBeesAge();
 
     // породить рабочих пчёл: собирателей и строителей
     // параметры: ncollectors - порождать собирателей

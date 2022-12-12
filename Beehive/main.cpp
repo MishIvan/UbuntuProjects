@@ -20,7 +20,6 @@ int main()
 {
     BeeHive hive;
     hive.populate();
-    int age = 0;
     char ch, ch1;
     do
     {
@@ -40,7 +39,7 @@ int main()
         }  while (qci > qc);
         hive.dispatchCollectors(qci);
         hive.step();
-        hive.setBeesAge(++age);
+        hive.setBeesAge();
         cout << "Продолжить (y/n)? ";
         cin >> ch;
 

@@ -156,15 +156,15 @@ int BeeHive::calculateIdleCollectors()
     return q;
 }
 
-void BeeHive::setBeesAge(int age)
+void BeeHive::setBeesAge()
 {
-    int n = m_collectors.size();
+    int n = m_collectors.size();   
     for(int i = 0; i <n; i++)
-        m_collectors[i].setAge(age);
+        m_collectors[i].setAge(m_collectors[i].age() + 1);
     n = m_builders.size();
     for(int i = 0; i <n; i++)
-        m_builders[i].setAge(age);
-    m_mother->setAge(age);
+        m_builders[i].setAge(m_builders[i].age() + 1);
+    m_mother->setAge(m_mother->age() + 1);
 
 }
 
