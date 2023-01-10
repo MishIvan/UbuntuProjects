@@ -16,13 +16,31 @@ MainWindow::MainWindow(QString pathToData, QWidget *parent)
     : QMainWindow(parent)
 
 {
-    setupUi(this);
-    m_database = QSqlDatabase::addDatabase("QSQLITE");
-    setDatabase(pathToData);
+    setupUi(this);    
+    //m_database = QSqlDatabase::addDatabase("QSQLITE");
+    //setDatabase(pathToData);
 
-    qDebug() << m_database.tables().count();
+    //qDebug() << m_database.tables().count();
+    qDebug() << QSqlDatabase::drivers();
+    m_database = QSqlDatabase::addDatabase("QPSQL");
+    m_database.setHostName("localhost");
+    m_database.setDatabaseName("task_accounting");
+    m_database.setUserName("ivan");
+    m_database.setPassword("123456");
+    m_database.setPort(5432);
+    m_database.setConnectOptions();
+
+    if(m_database.open())
+    {
+        qDebug() << "opened!";
+    }
+    else
+    {
+        qDebug() << m_database.lastError();
+    }
+
     m_model = new QSqlTableModel(nullptr, m_database);
-    m_model->setTable("Tasks");
+    m_model->setTable("tasks");
     m_model->select();
 
     m_model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
@@ -251,10 +269,10 @@ void MainWindow::on_action_task_filter_triggered()
             case TaskFilter::ALL:
                 if(!m_filterName.isEmpty())
                 {
-                    s1 = QString("Name like'%1'").arg(QString("%")+m_filterName+QString("%"));
+                    s1 = QString("name like'%1'").arg(QString("%")+m_filterName+QString("%"));
                 }
                 else
-                    s1 = QString("ID>0");
+                    s1 = QString("id>0");
                 m_model->setFilter(s1);
                 m_model->select();
                 setWindowTitle("Учёт задач - все задачи");
@@ -262,10 +280,10 @@ void MainWindow::on_action_task_filter_triggered()
             break;
             case TaskFilter::DONE:
                 now = QDate::currentDate().toString(Qt::ISODate);
-                s1 = QString("FulfillmentDate<='%1'").arg(now);
+                s1 = QString("fulfillmentdate<='%1'").arg(now);
                 if(!m_filterName.isEmpty())
                 {
-                    s1 += QString(" and Name like'%1'").arg(QString("%")+m_filterName+QString("%"));
+                    s1 += QString(" and name like'%1'").arg(QString("%")+m_filterName+QString("%"));
                 }
                 m_model->setFilter(s1);
                 m_model->select();
@@ -273,7 +291,7 @@ void MainWindow::on_action_task_filter_triggered()
                 taskTableView->resizeRowsToContents();
             break;
             case TaskFilter::INFINITE:
-                s1 = QString("FulfillmentDate = '9999-12-31'");
+                s1 = QString("fulfillmentdate = '9999-12-31'");
                 if(!m_filterName.isEmpty())
                 {
                     s1 += QString(" and Name like'%1'").arg(QString("%")+m_filterName+QString("%"));
@@ -285,7 +303,7 @@ void MainWindow::on_action_task_filter_triggered()
             break;
             case TaskFilter::EXPIRED:
                 now = QDate::currentDate().toString(Qt::ISODate);
-                s1 = QString("Deadline<FulfillmentDate and FulfillmentDate !='9999-12-31'");
+                s1 = QString("deadline<fulfillmentdate and fulfillmentdate !='9999-12-31'");
                 if(!m_filterName.isEmpty())
                 {
                     s1 += QString(" and Name like'%1'").arg(QString("%")+m_filterName+QString("%"));

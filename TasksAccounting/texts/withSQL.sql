@@ -1,18 +1,18 @@
-with x(WorkID, TaskID, Name, Content, Deadline, Fulfillment, TimeSpent, cnt, len)
+with recursive x
 as
 (
-select WorkID, TaskID, Name, Content, Deadline, FulfillmentDate, TimeSpent,
-count(*) over(PARTITION by TaskID), 1
-from WorksView 
-where Date BETWEEN ':d1' and ':d2'
+select workid, taskid, name, content, deadline, fulfillmentdate, cast(timespent as text) timespent,
+count(*) over(PARTITION by taskid) cnt , 1 len
+from public.worksview
+where date BETWEEN ':d1' and ':d2'
 union ALL
-select t1.WorkID, x.TaskID, x.Name, cast(x.Content || ';' || char(13) || t1.Content as TEXT), x.Deadline, x.Fulfillment,
-cast(x.TimeSpent || ';' || t1.TimeSpent as TEXT),
+select t1.workid, x.taskid, x.name, concat(x.content, ';', chr(13) ,t1.content), x.deadline, x.fulfillmentdate,
+cast(concat(x.timespent, ';' ,t1.timespent) as text),
 x.cnt, x.len + 1
-from WorksView t1 join x on x.TaskID = t1.TaskID and t1.WorkID > x.WorkID
-where t1.Date BETWEEN ':d1' and ':d2'
+from public.worksview t1 join x on x.taskid = t1.taskid and t1.workid > x.workid
+where t1.date BETWEEN ':d1' and ':d2'
 )
-select Name, Content, Deadline, Fulfillment, TimeSpent
+select name, content, deadline, fulfillmentdate, timespent
 from x
 where len=cnt
-order by Name
+order by name;

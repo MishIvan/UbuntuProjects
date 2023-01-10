@@ -1,0 +1,18 @@
+with x(workid, taskid, name, content, deadline, fulfillment, timespent, cnt, len)
+as
+(
+select workid, taskid, name, content, deadline, fulfillmentdate, timespent,
+count(*) over(PARTITION by taskid), 1
+from public.worksview
+where Date BETWEEN ':d1' and ':d2'
+union ALL
+select t1.workid, x.taskid, x.name, cast(x.content || ';' || char(13) || t1.content as TEXT), x.deadline, x.fulfillment,
+cast(x.timespent || ';' || t1.timespent as TEXT),
+x.cnt, x.len + 1
+from public.workswiew t1 join x on x.taskid = t1.taskid and t1.workid > x.workid
+where t1.Date BETWEEN ':d1' and ':d2'
+)
+select name, content, deadline, fulfillment, timespent
+from x
+where len=cnt
+order by name

@@ -45,8 +45,8 @@ void worksReportDialog::ShowResults()
     QString textQuery =  m_sqlQuery;
     textQuery.replace(QString(":d1"), from);
     textQuery.replace(QString(":d2"), to);
-    QSqlQuery qr(textQuery, m_database);
-    qr.exec();
+    QSqlQuery qr(m_database);
+    qr.exec(textQuery);
     while(qr.next())
     {
         taskRecord rc;

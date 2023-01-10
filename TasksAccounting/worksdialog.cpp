@@ -8,7 +8,7 @@ worksDialog::worksDialog(QSqlTableModel *model,QModelIndex idx,  QWidget *parent
     m_taskIndex = idx;
     m_worksModel = new QSqlTableModel(nullptr, m_tasksModel->database());
 
-    m_worksModel->setTable("Works");
+    m_worksModel->setTable("works");
 
     int row = m_taskIndex.row();
     m_taskID = m_tasksModel->data(m_tasksModel->index(row,0)).toULongLong();

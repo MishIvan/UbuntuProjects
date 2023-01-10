@@ -36,11 +36,11 @@ void worksPeriodDialog::ShowResults()
     QString to = m_dateToEdit->date().toString(Qt::ISODate);
     m_model->clear();
 
-    QString textQuery =  QString("select Name, Content, Date, TimeSpent from WorksView where Date between '%1' and '%2' order by Date")
+    QString textQuery =  QString("select name, content, date, timespent from worksview where date between '%1' and '%2' order by date")
             .arg(from)
             .arg(to);
-    QSqlQuery qr(textQuery, m_database);
-    qr.exec();
+    QSqlQuery qr(m_database);
+    qr.exec(textQuery);
     while(qr.next())
     {
         workRecord wr;
