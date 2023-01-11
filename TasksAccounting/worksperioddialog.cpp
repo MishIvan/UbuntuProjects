@@ -48,6 +48,7 @@ void worksPeriodDialog::ShowResults()
         wr.m_content = qr.value(1).toString();
         wr.m_Date  = qr.value(2).toString();
         QString stime = qr.value(3).toString();
+
         TimeSpan ts;
         TimeSpan::Parse(stime, ts);
         wr.m_spentTime = ts;
@@ -69,7 +70,7 @@ void worksPeriodDialog::ShowResults()
         m_sumTimeLabel->setText("Итого: 00:00");
     else
         m_sumTimeLabel->setText(QString("Итого: %1").arg(tsum.toString()));
-        m_reportView->resizeRowsToContents();
+    m_reportView->resizeRowsToContents();
 
 }
 

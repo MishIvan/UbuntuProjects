@@ -56,8 +56,9 @@ void worksReportDialog::ShowResults()
         rc.m_factDate  = qr.value(3).toString();
         QString stimes = qr.value(4).toString();
 
-        QStringList ltimes = stimes.split(';');
         TimeSpan tts;
+
+        /*QStringList ltimes = stimes.split(';');
         for(int i=0 ; i < ltimes.size(); i++)
         {
             QString s1 = ltimes.at(i);
@@ -66,12 +67,14 @@ void worksReportDialog::ShowResults()
             {
                 tts += ts;
             }
-        }
+        } */
+
+        TimeSpan::Parse(stimes, tts);
         rc.m_spentTime = tts;
         m_model->append(rc);
     }
 
-    int rows = m_model->rowCount();
+    /*int rows = m_model->rowCount();
     TimeSpan tsum;
     for(int i=0; i < rows; i++)
     {
@@ -81,12 +84,23 @@ void worksReportDialog::ShowResults()
          TimeSpan ts;
          if(TimeSpan::Parse(stime, ts))
             tsum += ts;
+    }*/
+
+    qr.exec(QString("select sum(timespent) ts from ( %1 ) t;").arg(textQuery));
+    QString stime;
+    while(qr.next())
+    {
+        stime = qr.value(0).toString();
     }
-    if(tsum == 0.0)
+
+    TimeSpan ts;
+    TimeSpan::Parse(stime, ts);
+
+    if(ts == 0.0)
         m_sumTimeLabel->setText("Итого: 00:00");
     else
-        m_sumTimeLabel->setText(QString("Итого: %1").arg(tsum.toString()));
-        m_reportView->resizeRowsToContents();
+        m_sumTimeLabel->setText(QString("Итого: %1").arg(ts.toString()));
+    m_reportView->resizeRowsToContents();
 }
 
 void worksReportDialog::on_m_dateFromEdit_userDateChanged(const QDate &date)
