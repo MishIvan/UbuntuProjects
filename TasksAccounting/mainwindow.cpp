@@ -39,6 +39,7 @@ MainWindow::MainWindow(QString pathToData, QWidget *parent)
         qDebug() << m_database.lastError();
     }
 
+    action_make_copy->setVisible(false);
     m_model = new QSqlTableModel(nullptr, m_database);
     m_model->setTable("tasks");
     m_model->select();
