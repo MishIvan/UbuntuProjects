@@ -1,5 +1,4 @@
 #include "taskreportmodel.h"
-#include "sorting.hpp"
 
 taskReportModel::taskReportModel(QObject *parent, bool workRecords)
     :QAbstractListModel(parent)
@@ -40,7 +39,7 @@ QVariant taskReportModel::data(const QModelIndex &idx, int Role) const
                        case 3:
                         return p.m_factDate; break;
                        case 4:
-                        return p.m_spentTime.toString(); break;
+                        return p.m_spentTime; break;
                       default:
                         return  QVariant();
                 }
@@ -57,7 +56,7 @@ QVariant taskReportModel::data(const QModelIndex &idx, int Role) const
                        case 2:
                         return w.m_Date; break;
                        case 3:
-                        return w.m_spentTime.toString(); break;
+                        return w.m_spentTime; break;
                       default:
                        return  QVariant();
                 }
@@ -90,9 +89,9 @@ bool taskReportModel::setData(const QModelIndex &idx, const QVariant &val, int R
                       p.m_factDate =  val.value<QString>();
                       break;
                 case 4:
-                      TimeSpan ts;
-                      TimeSpan::Parse(val.value<QString>(), ts);
-                      p.m_spentTime = ts;
+                      //TimeSpan ts;
+                      //TimeSpan::Parse(val.value<QString>(), ts);
+                      p.m_spentTime = val.value<QString>();
                       break;
             }
             m_pList->replace(idx.row(), p);
@@ -112,9 +111,9 @@ bool taskReportModel::setData(const QModelIndex &idx, const QVariant &val, int R
                       w.m_Date =  val.value<QString>();
                       break;
                 case 3:
-                      TimeSpan ts;
-                      TimeSpan::Parse(val.value<QString>(), ts);
-                      w.m_spentTime = ts;
+                      //TimeSpan ts;
+                      //TimeSpan::Parse(val.value<QString>(), ts);
+                      w.m_spentTime = val.value<QString>();
                       break;
             }
             m_wList->replace(idx.row(), w);

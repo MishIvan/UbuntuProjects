@@ -41,21 +41,22 @@ void worksPeriodDialog::ShowResults()
             .arg(to);
     QSqlQuery qr(m_database);
     qr.exec(textQuery);
+    QString stime;
     while(qr.next())
     {
         workRecord wr;
         wr.m_name = qr.value(0).toString();
         wr.m_content = qr.value(1).toString();
         wr.m_Date  = qr.value(2).toString();
-        QString stime = qr.value(3).toString();
+        stime = qr.value(3).toString();
 
-        TimeSpan ts;
-        TimeSpan::Parse(stime, ts);
-        wr.m_spentTime = ts;
+        //TimeSpan ts;
+        //TimeSpan::Parse(stime, ts);
+        wr.m_spentTime = stime;
         m_model->append(wr);
     }
 
-    int rows = m_model->rowCount();
+   /* int rows = m_model->rowCount();
     TimeSpan tsum;
     for(int i=0; i < rows; i++)
     {
@@ -65,11 +66,20 @@ void worksPeriodDialog::ShowResults()
          TimeSpan ts;
          if(TimeSpan::Parse(stime, ts))
             tsum += ts;
+    }*/
+    textQuery =  QString("select sum(timespent) from worksview where date between '%1' and '%2'")
+            .arg(from)
+            .arg(to);
+    qr.exec(textQuery);
+    stime = "";
+    while(qr.next())
+    {
+        stime = qr.value(0).toString();
     }
-    if(tsum == 0.0)
-        m_sumTimeLabel->setText("Итого: 00:00");
+    if(stime.isEmpty())
+        m_sumTimeLabel->setText("Итого: 00:00:00");
     else
-        m_sumTimeLabel->setText(QString("Итого: %1").arg(tsum.toString()));
+        m_sumTimeLabel->setText(QString("Итого: %1").arg(stime));
     m_reportView->resizeRowsToContents();
 
 }

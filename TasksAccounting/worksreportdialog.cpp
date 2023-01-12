@@ -69,8 +69,8 @@ void worksReportDialog::ShowResults()
             }
         } */
 
-        TimeSpan::Parse(stimes, tts);
-        rc.m_spentTime = tts;
+        //TimeSpan::Parse(stimes, tts);
+        rc.m_spentTime = stimes;
         m_model->append(rc);
     }
 
@@ -87,19 +87,19 @@ void worksReportDialog::ShowResults()
     }*/
 
     qr.exec(QString("select sum(timespent) ts from ( %1 ) t;").arg(textQuery));
-    QString stime;
+    QString stime("");
     while(qr.next())
     {
         stime = qr.value(0).toString();
     }
 
-    TimeSpan ts;
-    TimeSpan::Parse(stime, ts);
+    //TimeSpan ts;
+    //TimeSpan::Parse(stime, ts);
 
-    if(ts == 0.0)
-        m_sumTimeLabel->setText("Итого: 00:00");
+    if(stime.isEmpty())
+        m_sumTimeLabel->setText("Итого: 00:00:00");
     else
-        m_sumTimeLabel->setText(QString("Итого: %1").arg(ts.toString()));
+        m_sumTimeLabel->setText(QString("Итого: %1").arg(stime));
     m_reportView->resizeRowsToContents();
 }
 

@@ -78,13 +78,14 @@ void worksDialog::on_delTaskButton_clicked()
     m_worksModel->select();
 
 }
+
 // при закрытии диалога рассчитать общее время, затраченное на выполнение задачи
 void worksDialog::closeEvent(QCloseEvent *evt)
 {    
     int rows = m_worksModel->rowCount();
     if(rows < 1) return;
     int row = m_taskIndex.row();
-    QString tm = m_tasksModel->data(m_tasksModel->index(row,6)).toString();
+    /*QString tm = m_tasksModel->data(m_tasksModel->index(row,6)).toString();
     TimeSpan tss;
     for(int i = 0; i < rows; i++)
     {
@@ -92,9 +93,18 @@ void worksDialog::closeEvent(QCloseEvent *evt)
         TimeSpan ts;
         if( TimeSpan::Parse(stime, ts))
             tss += ts;
+    }*/
+    QSqlQuery qr(m_tasksModel->database());
+    QString sqlText = QString("select sum(timespent) from works where taskid = %1").arg(m_taskID);
+    qr.exec(sqlText);
+    QString res("");
+    while(qr.next())
+    {
+                res = qr.value(0).toString();
     }
-    if(tss == 0.0 || tss.toString() == tm) return;
-    m_tasksModel->setData(m_tasksModel->index(row,6), tss.toString());
+    //if(tss == 0.0 || tss.toString() == tm) return;
+    if(res.isEmpty()) return;
+    m_tasksModel->setData(m_tasksModel->index(row,6), res);
     m_tasksModel->submitAll();
     m_tasksModel->select();
 }

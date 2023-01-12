@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QAbstractListModel>
-#include "timespan.h"
+//#include "timespan.h"
 #include "sorting.hpp"
 
 struct taskRecord
@@ -12,14 +12,14 @@ struct taskRecord
     QString m_content;
     QString m_planDate;
     QString m_factDate;
-    TimeSpan m_spentTime;
+    QString m_spentTime;
 };
 struct workRecord
 {
     QString m_name;
     QString m_content;
     QString m_Date;
-    TimeSpan m_spentTime;
+    QString m_spentTime;
 };
 
 Q_DECLARE_METATYPE(taskRecord);
