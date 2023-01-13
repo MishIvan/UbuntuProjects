@@ -1,5 +1,4 @@
 #include "timerdialog.h"
-#include "timespan.h"
 #include <QMessageBox>
 extern QTime m_workTime;
 
@@ -28,7 +27,7 @@ void timerDialog::timerEvent(QTimerEvent *evt)
 
 void timerDialog::closeEvent(QCloseEvent *e)
 {
-    e->ignore();
+    this->hide();
 }
 
 
@@ -72,10 +71,9 @@ void timerDialog::on_m_calcButton_clicked()
         QMessageBox::warning(this, "Ошибка", "Время начала не может быть больше времени завершения");
     else
     {
-        TimeSpan ts1(tbegin, false);
-        TimeSpan ts2(tend, false);
-        TimeSpan tdelta = ts2 - ts1;
-        m_timeEdit->setTime(QTime::fromString(tdelta.toString(true)));
+        int secs = tbegin.secsTo(tend);
+        QTime t = QTime(0,0,0).addSecs(secs);
+        m_timeEdit->setTime(t);
     }
 }
 

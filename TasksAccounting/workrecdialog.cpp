@@ -1,5 +1,4 @@
 #include "workrecdialog.h"
-#include "timespan.h"
 
 extern QTime m_workTime;
 
@@ -27,19 +26,16 @@ void workRecDialog::Initialize()
 // внести время по таймеру
 void workRecDialog::on_m_fromTimerButton_clicked()
 {
-    TimeSpan ts(m_workTime);
-    m_timeEdit->setText(ts.toString());
+    //TimeSpan ts(m_workTime);
+    m_timeEdit->setText(m_workTime.toString());
 }
 
 // добавить время по таймеру
 void workRecDialog::on_m_addFromTimerButton_clicked()
 {
-    TimeSpan ts(m_workTime);
     QString scurrTime = m_timeEdit->text();
-    TimeSpan ttimer;
-    if(TimeSpan::Parse(scurrTime, ttimer))
-    {
-        ts += ttimer;
-        m_timeEdit->setText(ts.toString());
-    }
+    QTime currTime = QTime::fromString(scurrTime);
+    int secs = m_workTime.hour()*3600 + m_workTime.minute()*60 + m_workTime.second();
+    QTime t = currTime.addSecs(secs);
+    m_timeEdit->setText(t.toString());
 }

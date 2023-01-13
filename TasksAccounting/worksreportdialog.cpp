@@ -1,5 +1,5 @@
 #include "worksreportdialog.h"
-#include "timespan.h"
+//#include "timespan.h"
 void GetAccontingPeriod(QDate &, QDate &);
 
 worksReportDialog::worksReportDialog(QSqlDatabase database,
@@ -56,7 +56,7 @@ void worksReportDialog::ShowResults()
         rc.m_factDate  = qr.value(3).toString();
         QString stimes = qr.value(4).toString();
 
-        TimeSpan tts;
+        //TimeSpan tts;
 
         /*QStringList ltimes = stimes.split(';');
         for(int i=0 ; i < ltimes.size(); i++)
