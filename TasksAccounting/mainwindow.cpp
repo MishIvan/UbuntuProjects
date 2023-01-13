@@ -10,15 +10,17 @@
 #include <QMessageBox>
 #include <QSql>
 #include <QDebug>
-QTime m_workTime;
 
-MainWindow::MainWindow(QString pathToData, QWidget *parent)
+QTime m_workTime;
+extern QString pathToProgram;
+
+MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 
 {
     setupUi(this);    
     //m_database = QSqlDatabase::addDatabase("QSQLITE");
-    //setDatabase(pathToData);
+    //setDatabase();
 
     //qDebug() << m_database.tables().count();
     qDebug() << QSqlDatabase::drivers();
@@ -73,9 +75,11 @@ MainWindow::~MainWindow()
     delete m_timerDialog;
 }
 
-// открыть базу данных, если её нет, то создать новуюбазу ланных
-void MainWindow::setDatabase(QString pathToData)
+// открыть базу данных, если её нет, то создать новую базу данных
+void MainWindow::setDatabase()
 {
+    QString dbName("TasksAccounting.db");
+    QString pathToData = pathToProgram + '/' + dbName;
     if(QFile::exists(pathToData))
     {
         m_database.setDatabaseName(pathToData);
@@ -87,7 +91,7 @@ void MainWindow::setDatabase(QString pathToData)
     }
     else
     {
-        m_pathToDB = "TasksAccounting.db";
+        m_pathToDB = dbName;
         m_database.setDatabaseName(m_pathToDB);
         if(!m_database.open())
         {
@@ -135,15 +139,15 @@ void MainWindow::on_action_exit_triggered()
 // показать задачи и работы по ней с суммарным временем работ по задачам за период
 void MainWindow::on_action_time_period_triggered()
 {
-    QFile file(":/texts/withSQL.sql");
+    /*QFile file(":/texts/withSQL.sql");
     QString sqlText;
     if(file.open(QIODevice::ReadOnly))
     {
         QTextStream stream(&file);
         sqlText = stream.readAll();
         file.close();
-    }
-    worksReportDialog dlg(m_database, sqlText, this);
+    }*/
+    worksReportDialog dlg(m_database,  this);
     dlg.exec();
 }
 

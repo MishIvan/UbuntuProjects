@@ -11,7 +11,7 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QString, QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 private slots:
@@ -46,7 +46,7 @@ private:
     QString m_pathToDB; // путь к базе данных
     QSqlDatabase m_database;
     QSqlTableModel *m_model;
-    void setDatabase(QString pathToData);
+    void setDatabase();
     timerDialog *m_timerDialog;
     int m_oldWidth;
     int m_oldHeight;

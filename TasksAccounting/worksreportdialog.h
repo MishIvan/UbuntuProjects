@@ -14,7 +14,7 @@ class worksReportDialog : public QDialog, private Ui::worksReportDialog
     bool m_flag;
     void ShowResults();
 public:
-    explicit worksReportDialog(QSqlDatabase database, QString query, QWidget *parent = nullptr);
+    explicit worksReportDialog(QSqlDatabase database, QWidget *parent = nullptr);
     ~worksReportDialog();
 private slots:
     void on_m_closeButton_clicked();
