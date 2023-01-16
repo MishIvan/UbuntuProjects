@@ -52,7 +52,7 @@
      <string>Файл</string>
     </property>
     <addaction name="action_set_accounting_period"/>
-    <addaction name="action_make_copy"/>
+    <addaction name="action_sqlite_export"/>
     <addaction name="action_exit"/>
    </widget>
    <widget class="QMenu" name="menu_2">
@@ -262,6 +262,14 @@
    </property>
    <property name="toolTip">
     <string>Установить дату завершения задачи на дату последней работы</string>
+   </property>
+  </action>
+  <action name="action_sqlite_export">
+   <property name="text">
+    <string>Экспорт в SQLite</string>
+   </property>
+   <property name="toolTip">
+    <string>Экспорт данных в БД SQLite</string>
    </property>
   </action>
  </widget>

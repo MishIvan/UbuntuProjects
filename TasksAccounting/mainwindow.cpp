@@ -19,10 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 {
     setupUi(this);    
-    //m_database = QSqlDatabase::addDatabase("QSQLITE");
-    //setDatabase();
 
-    //qDebug() << m_database.tables().count();
     qDebug() << QSqlDatabase::drivers();
     m_database = QSqlDatabase::addDatabase("QPSQL");
     m_database.setHostName("localhost");
@@ -73,48 +70,6 @@ MainWindow::~MainWindow()
     m_database.close();
     delete m_model;
     delete m_timerDialog;
-}
-
-// открыть базу данных, если её нет, то создать новую базу данных
-void MainWindow::setDatabase()
-{
-    QString dbName("TasksAccounting.db");
-    QString pathToData = pathToProgram + '/' + dbName;
-    if(QFile::exists(pathToData))
-    {
-        m_database.setDatabaseName(pathToData);
-         if(!m_database.open())
-         {
-              QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-          }
-         m_pathToDB = pathToData;
-    }
-    else
-    {
-        m_pathToDB = dbName;
-        m_database.setDatabaseName(m_pathToDB);
-        if(!m_database.open())
-        {
-             QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-         }
-            QFile file(":/texts/dbcreate.sql");
-            if(file.open(QIODevice::ReadOnly))
-            {
-
-                QTextStream stream(&file);
-                QString sqlText = stream.readAll();
-                file.close();
-                QStringList qrylist = sqlText.split(';');
-                int n = qrylist.size() -1;
-                for(int i=0; i < n; i++)
-                {
-                    QSqlQuery qry(m_database);
-                    qry.exec(qrylist.at(i));
-                }
-
-            }
-    }
-
 }
 
 void MainWindow::resizeEvent(QResizeEvent *evt)
@@ -331,13 +286,6 @@ void MainWindow::on_action_set_accounting_period_triggered()
     dlg.exec();
 }
 
-// сделать резервную копию БД
-void MainWindow::on_action_make_copy_triggered()
-{
-   QFile db(m_pathToDB);
-   db.copy(m_pathToDB.replace(QString("db"),QString("dbbak")));
-}
-
 // установить дату завершения задачи
 void MainWindow::on_action_task_finish_triggered()
 {
@@ -357,6 +305,95 @@ void MainWindow::on_action_task_finish_triggered()
         if(qr.exec(sqlText))
             m_model->select();
     }
+
+}
+
+// экспорт в БД SQLite
+void MainWindow::on_action_sqlite_export_triggered()
+{
+    QString dbName("TasksAccounting.db");
+    QString pathToData = pathToProgram + '/' + dbName;
+    QSqlDatabase dbsqlite = QSqlDatabase::addDatabase("QSQLITE", "ExportDB");
+    if(QFile::exists(pathToData))
+    {
+        dbsqlite.setDatabaseName(pathToData);
+        if(!dbsqlite.open())
+        {
+              QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
+              return;
+         }
+        dbsqlite.transaction();
+        QSqlQuery qr(dbsqlite);
+        qr.exec("delete from Works");
+        qr.exec("delete from Tasks");
+        dbsqlite.commit();
+        m_pathToDB = pathToData;
+    }
+    else
+    {
+        m_pathToDB = dbName;
+        dbsqlite.setDatabaseName(m_pathToDB);
+        if(!dbsqlite.open())
+        {
+             QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
+             return;
+         }
+            QFile file(":/texts/dbcreate.sql");
+            if(file.open(QIODevice::ReadOnly))
+            {
+
+                QTextStream stream(&file);
+                QString sqlText = stream.readAll();
+                file.close();
+                QStringList qrylist = sqlText.split(';');
+                QSqlQuery qry(dbsqlite);
+                int n = qrylist.size() -1;
+                for(int i=0; i < n; i++)
+                    qry.exec(qrylist.at(i));
+            }
+    }
+
+    // выгрузка данных
+    QSqlQuery qr(m_database);
+    QString sqlText = QString("select t.id,t.name,t.content,t.deadline,t.fulfillmentdate,t.plan,t.fact from public.tasks t");
+    qr.exec(sqlText);
+    QList <QString> lst;
+    QString str;
+    while(qr.next())
+    {
+        str = QString("insert into Tasks (ID, Name,Content, Deadline,FulfillmentDate,Plan,Fact) values (%1,'%2','%3','%4','%5','%6','%7')")
+                .arg(qr.value(0).toLongLong())
+                .arg(qr.value(1).toString())
+                .arg(qr.value(2).toString())
+                .arg(qr.value(3).toString())
+                .arg(qr.value(4).toString())
+                .arg(qr.value(5).toString())
+                .arg(qr.value(6).toString());
+        lst.append(str);
+    }
+
+    QSqlQuery qr1(m_database);
+    sqlText = QString("select w.id,w.taskid,w.content,w.date,w.timespent from public.works w");
+    qr1.exec(sqlText);
+    while(qr1.next())
+    {
+        str = QString("insert into Works (ID,TaskID,Content,Date,TimeSpent) values (%1,%2,'%3','%4','%5')")
+                .arg(qr1.value(0).toLongLong())
+                .arg(qr1.value(1).toLongLong())
+                .arg(qr1.value(2).toString())
+                .arg(qr1.value(3).toString())
+                .arg(qr1.value(4).toString());
+        lst.append(str);
+    }
+
+    // вставка данных
+    QSqlQuery qry(dbsqlite);
+    int n = lst.count();
+    dbsqlite.transaction();
+    for(int i =0; i < n ; i++)
+        qry.exec(lst.at(i));
+    dbsqlite.commit();
+    QSqlDatabase::removeDatabase("ExportDB");
 
 }
 
