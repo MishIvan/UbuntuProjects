@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "ui_mainwindow.h"
 #include "timerdialog.h"
+#include "threadexportdb.h"
 #include <QtSql>
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
@@ -42,8 +43,10 @@ private slots:
 
     void on_action_sqlite_export_triggered();
 
+public slots:
+    void on_end_export_action();
+
 private:
-    QString m_pathToDB; // путь к базе данных
     QSqlDatabase m_database;
     QSqlTableModel *m_model;
     timerDialog *m_timerDialog;
@@ -51,6 +54,7 @@ private:
     int m_oldHeight;
     int m_filterFlag;
     QString m_filterName;
+    ThreadExportDB * m_expDB;
 protected:
     virtual void resizeEvent(QResizeEvent *);
 };

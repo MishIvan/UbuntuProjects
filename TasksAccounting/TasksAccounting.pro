@@ -23,6 +23,7 @@ SOURCES += \
     taskDialog.cpp \
     taskfilterdialog.cpp \
     taskreportmodel.cpp \
+    threadexportdb.cpp \
     timerdialog.cpp \
     workrecdialog.cpp \
     worksdialog.cpp \
@@ -37,6 +38,7 @@ HEADERS += \
     taskDialog.h \
     taskfilterdialog.h \
     taskreportmodel.h \
+    threadexportdb.h \
     timerdialog.h \
     workrecdialog.h \
     worksdialog.h \

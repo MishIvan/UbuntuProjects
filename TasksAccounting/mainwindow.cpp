@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 {
     setupUi(this);    
+    m_expDB = nullptr;
 
     qDebug() << QSqlDatabase::drivers();
     m_database = QSqlDatabase::addDatabase("QPSQL");
@@ -63,6 +64,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_filterFlag = TaskFilter::ALL;
     m_filterName = "";
 
+    m_expDB = new ThreadExportDB(m_database);
+    QObject::connect(m_expDB, SIGNAL(finished()),
+                                this, SLOT(on_end_export_action()));
 }
 
 MainWindow::~MainWindow()
@@ -70,6 +74,7 @@ MainWindow::~MainWindow()
     m_database.close();
     delete m_model;
     delete m_timerDialog;
+    delete m_expDB;
 }
 
 void MainWindow::resizeEvent(QResizeEvent *evt)
@@ -310,8 +315,10 @@ void MainWindow::on_action_task_finish_triggered()
 
 // экспорт в БД SQLite
 void MainWindow::on_action_sqlite_export_triggered()
-{
-    QString dbName("TasksAccounting.db");
+{    
+    if(!m_expDB->isRunning())
+        m_expDB->start();
+/*    QString dbName("TasksAccounting.db");
     QString pathToData = pathToProgram + '/' + dbName;
     QSqlDatabase dbsqlite = QSqlDatabase::addDatabase("QSQLITE", "ExportDB");
     if(QFile::exists(pathToData))
@@ -393,7 +400,16 @@ void MainWindow::on_action_sqlite_export_triggered()
     for(int i =0; i < n ; i++)
         qry.exec(lst.at(i));
     dbsqlite.commit();
-    QSqlDatabase::removeDatabase("ExportDB");
+    QSqlDatabase::removeDatabase("ExportDB"); */
 
 }
 
+ void MainWindow::on_end_export_action()
+ {
+        QString Msg = m_expDB->errorMsg();
+        if(!Msg.isEmpty())
+            QMessageBox::critical(this,"Ошибка", Msg);
+        else
+            QMessageBox::information(this,"Сообщение", "Экспорт в SQLite завершён");
+
+ }
