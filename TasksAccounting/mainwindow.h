@@ -43,7 +43,6 @@ private slots:
 
     void on_action_sqlite_export_triggered();
 
-public slots:
     void on_end_export_action();
 
 private:

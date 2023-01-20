@@ -79,10 +79,14 @@ void taskDialog::on_tasksDialog_accepted()
     m_model->setData(m_model->index(row,4), df.toString(Qt::ISODate));
     if(tp != "00:00")
         m_model->setData(m_model->index(row,5), tp);
+    if(tf == ":")  tf = "00:00";
     if(tf != "00:00")
         m_model->setData(m_model->index(row,6), tf);
     if(!m_model->submitAll())
-        QMessageBox::warning(this,"Ошибка","Данные не внесены");
+    {
+        QString msg = m_model->database().lastError().text();
+        QMessageBox::warning(this,"Ошибка",QString("Данные не внесены. %1").arg(msg));
+    }
     m_model->select();
 
 
