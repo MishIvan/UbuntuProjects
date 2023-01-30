@@ -93,6 +93,7 @@ void ThreadExportDB::run()
         for(int i =0; i < n ; i++)
             qry.exec(lst.at(i));
         dbsqlite.commit();
+        dbsqlite.close();
         QSqlDatabase::removeDatabase("ExportDB");
         m_errorMsg = "";
         emit finished();

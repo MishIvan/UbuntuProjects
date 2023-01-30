@@ -245,17 +245,6 @@
     <string>Ctrl+A</string>
    </property>
   </action>
-  <action name="action_make_copy">
-   <property name="text">
-    <string>Сделать резервную копию</string>
-   </property>
-   <property name="toolTip">
-    <string>Сделать резервную копию базы данных</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+R</string>
-   </property>
-  </action>
   <action name="action_task_finish">
    <property name="text">
     <string>Завершить задачу</string>

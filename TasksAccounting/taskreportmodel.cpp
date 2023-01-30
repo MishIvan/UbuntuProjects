@@ -83,14 +83,12 @@ bool taskReportModel::setData(const QModelIndex &idx, const QVariant &val, int R
                     p.m_content = val.value<QString>();
                     break;
                 case 2:
-                      p.m_planDate = val.value<QString>();
+                      p.m_planDate = val.value<QDate>();
                       break;
                 case 3:
-                      p.m_factDate =  val.value<QString>();
+                      p.m_factDate =  val.value<QDate>();
                       break;
                 case 4:
-                      //TimeSpan ts;
-                      //TimeSpan::Parse(val.value<QString>(), ts);
                       p.m_spentTime = val.value<QString>();
                       break;
             }
@@ -108,11 +106,9 @@ bool taskReportModel::setData(const QModelIndex &idx, const QVariant &val, int R
                       w.m_content = val.value<QString>();
                       break;
                 case 2:
-                      w.m_Date =  val.value<QString>();
+                      w.m_Date =  val.value<QDate>();
                       break;
                 case 3:
-                      //TimeSpan ts;
-                      //TimeSpan::Parse(val.value<QString>(), ts);
                       w.m_spentTime = val.value<QString>();
                       break;
             }

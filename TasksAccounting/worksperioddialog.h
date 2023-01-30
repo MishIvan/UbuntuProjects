@@ -3,13 +3,14 @@
 
 #include "ui_worksperioddialog.h"
 #include <QtSql>
-#include "taskreportmodel.h"
+//#include "taskreportmodel.h"
 
 class worksPeriodDialog : public QDialog, private Ui::worksPeriodDialog
 {
     Q_OBJECT
     QSqlDatabase m_database;
-    taskReportModel *m_model;
+    //taskReportModel *m_model;
+    QSqlQueryModel *m_model;
     bool m_flag;
     void ShowResults();
 

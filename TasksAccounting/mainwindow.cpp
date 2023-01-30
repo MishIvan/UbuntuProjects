@@ -14,6 +14,10 @@
 QTime m_workTime;
 extern QString pathToProgram;
 
+const char * DATABASE_NAME = "task_accounting";
+const char * USER_NAME = "ivan";
+const char * PASSWORD = "123456";
+// database \"task_accounting1\" does not exist
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 
@@ -24,9 +28,9 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << QSqlDatabase::drivers();
     m_database = QSqlDatabase::addDatabase("QPSQL");
     m_database.setHostName("localhost");
-    m_database.setDatabaseName("task_accounting");
-    m_database.setUserName("ivan");
-    m_database.setPassword("123456");
+    m_database.setDatabaseName(DATABASE_NAME);
+    m_database.setUserName(USER_NAME);
+    m_database.setPassword(PASSWORD);
     m_database.setPort(5432);
     m_database.setConnectOptions();
 
@@ -37,11 +41,13 @@ MainWindow::MainWindow(QWidget *parent)
     else
     {
         QString s1 = m_database.lastError().text();
+        QString se = m_database.lastError().nativeErrorCode();
         qDebug() << s1;
         statusBar()->showMessage(QString("Ошибка: %1").arg(s1));
+        return;
     }
 
-    action_make_copy->setVisible(false);
+    //action_make_copy->setVisible(false);
     m_model = new QSqlTableModel(nullptr, m_database);
     m_model->setTable("tasks");
     m_model->select();

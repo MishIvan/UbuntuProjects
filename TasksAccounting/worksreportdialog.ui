@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>902</width>
+    <width>1092</width>
     <height>691</height>
    </rect>
   </property>
@@ -21,7 +21,7 @@
     <rect>
      <x>10</x>
      <y>120</y>
-     <width>881</width>
+     <width>1051</width>
      <height>461</height>
     </rect>
    </property>
@@ -38,7 +38,7 @@
   <widget class="QLabel" name="m_sumTimeLabel">
    <property name="geometry">
     <rect>
-     <x>760</x>
+     <x>930</x>
      <y>590</y>
      <width>131</width>
      <height>19</height>
@@ -63,8 +63,8 @@
   <widget class="QPushButton" name="m_closeButton">
    <property name="geometry">
     <rect>
-     <x>380</x>
-     <y>630</y>
+     <x>460</x>
+     <y>620</y>
      <width>141</width>
      <height>31</height>
     </rect>
@@ -85,7 +85,7 @@
    <property name="title">
     <string>Период</string>
    </property>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>20</x>

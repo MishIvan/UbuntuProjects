@@ -14,15 +14,24 @@ worksPeriodDialog::worksPeriodDialog(QSqlDatabase database,  QWidget *parent) :
     GetAccontingPeriod(dateBegin, dateEnd);
     m_dateFromEdit->setDate(dateBegin);
     m_dateToEdit->setDate(dateEnd);
-    m_model = new taskReportModel(nullptr, true);
-    m_periodCheckBox->setCheckState(Qt::Checked);
-    ShowResults();
+    //m_model = new taskReportModel(nullptr, true);
+   m_model = new QSqlQueryModel;
+
+   ShowResults();
+
+   m_model->setHeaderData(0, Qt::Horizontal, QObject::tr("Наименование"));
+   m_model->setHeaderData(1, Qt::Horizontal, QObject::tr("Содержание"));
+   m_model->setHeaderData(2, Qt::Horizontal, QObject::tr("Дата"));
+   m_model->setHeaderData(3, Qt::Horizontal, QObject::tr("Время"));
+
     m_reportView->setModel(m_model);
     m_reportView->setColumnWidth(0, 300);
     m_reportView->setColumnWidth(1, 300);
-    m_reportView->resizeRowsToContents();
-    m_flag = true;
 
+    m_reportView->resizeRowsToContents();
+    m_reportView->show();
+    m_flag = true;
+    m_periodCheckBox->setCheckState(Qt::Checked);
 }
 
 worksPeriodDialog::~worksPeriodDialog()
@@ -34,44 +43,33 @@ void worksPeriodDialog::ShowResults()
 {
     QString from = m_dateFromEdit->date().toString(Qt::ISODate);
     QString to = m_dateToEdit->date().toString(Qt::ISODate);
-    m_model->clear();
+    //m_model->clear();
 
     QString textQuery =  QString("select name, content, date, timespent from worksview where date between '%1' and '%2' order by date")
             .arg(from)
             .arg(to);
+    m_model->setQuery(textQuery, m_database);
+
     QSqlQuery qr(m_database);
-    qr.exec(textQuery);
+    /*qr.exec(textQuery);
     QString stime;
     while(qr.next())
     {
         workRecord wr;
+
         wr.m_name = qr.value(0).toString();
         wr.m_content = qr.value(1).toString();
-        wr.m_Date  = qr.value(2).toString();
-        stime = qr.value(3).toString();
+        wr.m_Date  = qr.value(2).toDate();
+        wr.m_spentTime = qr.value(3).toString();
 
-        //TimeSpan ts;
-        //TimeSpan::Parse(stime, ts);
-        wr.m_spentTime = stime;
         m_model->append(wr);
-    }
+    } */
 
-   /* int rows = m_model->rowCount();
-    TimeSpan tsum;
-    for(int i=0; i < rows; i++)
-    {
-        QModelIndex idx = m_model->index(i, 3);
-        QString stime = m_model->data(idx, Qt::DisplayRole).toString();
-
-         TimeSpan ts;
-         if(TimeSpan::Parse(stime, ts))
-            tsum += ts;
-    }*/
     textQuery =  QString("select sum(timespent) from worksview where date between '%1' and '%2'")
             .arg(from)
             .arg(to);
     qr.exec(textQuery);
-    stime = "";
+    QString stime = "";
     while(qr.next())
     {
         stime = qr.value(0).toString();

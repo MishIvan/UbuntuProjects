@@ -5,20 +5,21 @@
 #include <QAbstractListModel>
 //#include "timespan.h"
 #include "sorting.hpp"
+#include <QDate>
 
 struct taskRecord
 {
     QString m_name;
     QString m_content;
-    QString m_planDate;
-    QString m_factDate;
+    QDate m_planDate;
+    QDate m_factDate;
     QString m_spentTime;
 };
 struct workRecord
 {
     QString m_name;
     QString m_content;
-    QString m_Date;
+    QDate m_Date;
     QString m_spentTime;
 };
 

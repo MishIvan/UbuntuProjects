@@ -2,14 +2,15 @@
 #define WORKSREPORTDIALOG_H
 
 #include "ui_worksreportdialog.h"
-#include "taskreportmodel.h"
+//#include "taskreportmodel.h"
 #include <QtSql>
 
 class worksReportDialog : public QDialog, private Ui::worksReportDialog
 {
     Q_OBJECT
     QSqlDatabase m_database;
-    taskReportModel *m_model;
+    //taskReportModel *m_model;
+    QSqlQueryModel *m_model;
     QString m_sqlQuery;
     bool m_flag;
     void ShowResults();
