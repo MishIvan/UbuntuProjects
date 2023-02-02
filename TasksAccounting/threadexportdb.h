@@ -9,10 +9,12 @@ class ThreadExportDB : public QThread
     Q_OBJECT
     QSqlDatabase m_database;
     QString m_errorMsg;
+    QString m_dbsqliteName;
 public:
     explicit ThreadExportDB(QSqlDatabase & ,QObject *parent = nullptr);
     void run();
     QString  errorMsg() {return m_errorMsg;}
+    void setDbsqliteName(const QString & dbname) { m_dbsqliteName = dbname; }
 signals:
     void finished();
 };

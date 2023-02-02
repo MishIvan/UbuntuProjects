@@ -12,31 +12,21 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>905</width>
-    <height>690</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="windowTitle">
    <string>Работы за период</string>
   </property>
-  <widget class="QPushButton" name="m_closeButton">
-   <property name="geometry">
-    <rect>
-     <x>380</x>
-     <y>640</y>
-     <width>141</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Закрыть</string>
-   </property>
-  </widget>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
   <widget class="QLabel" name="m_sumTimeLabel">
    <property name="geometry">
     <rect>
      <x>760</x>
-     <y>610</y>
+     <y>660</y>
      <width>131</width>
      <height>19</height>
     </rect>
@@ -63,7 +53,7 @@
      <x>10</x>
      <y>140</y>
      <width>881</width>
-     <height>461</height>
+     <height>511</height>
     </rect>
    </property>
    <property name="editTriggers">
@@ -129,7 +119,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>23</x>

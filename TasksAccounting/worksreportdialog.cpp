@@ -29,40 +29,25 @@ worksReportDialog::worksReportDialog(QSqlDatabase database,
     m_reportView->setColumnWidth(1, 400);
     m_reportView->resizeRowsToContents();
     m_flag = true;
+    m_oldWidth = width();
+    m_oldHeight = height();
+
 }
 worksReportDialog::~worksReportDialog()
 {
     delete m_model;
 }
 
-void worksReportDialog::on_m_closeButton_clicked()
-{
-    accept();
-}
-
 void worksReportDialog::ShowResults()
 {
     QString from = m_dateFromEdit->date().toString(Qt::ISODate);
     QString to = m_dateToEdit->date().toString(Qt::ISODate);
-    //m_model->clear();
 
     QString textQuery = QString("select * from public.get_works('%1', '%2')")
             .arg(from)
             .arg(to);
     m_model->setQuery(textQuery, m_database);
     QSqlQuery qr(m_database);
-   /* qr.exec(textQuery);
-    while(qr.next())
-    {
-        taskRecord rc;
-        rc.m_name = qr.value(0).toString();
-        rc.m_content = qr.value(1).toString();
-        rc.m_planDate = qr.value(2).toDate();
-        rc.m_factDate  = qr.value(3).toDate();
-        rc.m_spentTime = qr.value(4).toString();
-
-        m_model->append(rc);
-    } */
 
     textQuery = QString("select sum(timespent) from public.get_works('%1', '%2')")
             .arg(from)
@@ -89,4 +74,24 @@ void worksReportDialog::on_m_dateFromEdit_userDateChanged(const QDate &date)
 void worksReportDialog::on_m_dateToEdit_userDateChanged(const QDate &date)
 {
     if(m_flag) ShowResults();
+}
+
+void worksReportDialog::resizeEvent(QResizeEvent *evt)
+{
+    int h = evt->size().height();
+    int w = evt->size().width();
+    int deltax = w - m_oldWidth;
+    int deltay = h - m_oldHeight;
+
+    m_reportView->setGeometry(m_reportView->x(), m_reportView->y(),
+                                  m_reportView->width() + deltax,
+                                  m_reportView->height() + deltay);
+    m_reportView->updateGeometry();
+
+    m_sumTimeLabel->setGeometry(m_sumTimeLabel->x() + deltax, m_sumTimeLabel->y() + deltay,
+                                m_sumTimeLabel->width(), m_sumTimeLabel->height()
+                                );
+    m_sumTimeLabel->updateGeometry();
+    m_oldWidth = w;
+    m_oldHeight = h;
 }

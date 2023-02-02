@@ -26,7 +26,6 @@ void workRecDialog::Initialize()
 // внести время по таймеру
 void workRecDialog::on_m_fromTimerButton_clicked()
 {
-    //TimeSpan ts(m_workTime);
     m_timeEdit->setText(m_workTime.toString());
 }
 

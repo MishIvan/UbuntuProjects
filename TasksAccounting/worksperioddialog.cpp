@@ -14,8 +14,7 @@ worksPeriodDialog::worksPeriodDialog(QSqlDatabase database,  QWidget *parent) :
     GetAccontingPeriod(dateBegin, dateEnd);
     m_dateFromEdit->setDate(dateBegin);
     m_dateToEdit->setDate(dateEnd);
-    //m_model = new taskReportModel(nullptr, true);
-   m_model = new QSqlQueryModel;
+    m_model = new QSqlQueryModel;
 
    ShowResults();
 
@@ -32,6 +31,9 @@ worksPeriodDialog::worksPeriodDialog(QSqlDatabase database,  QWidget *parent) :
     m_reportView->show();
     m_flag = true;
     m_periodCheckBox->setCheckState(Qt::Checked);
+
+    m_oldWidth = width();
+    m_oldHeight = height();
 }
 
 worksPeriodDialog::~worksPeriodDialog()
@@ -51,19 +53,6 @@ void worksPeriodDialog::ShowResults()
     m_model->setQuery(textQuery, m_database);
 
     QSqlQuery qr(m_database);
-    /*qr.exec(textQuery);
-    QString stime;
-    while(qr.next())
-    {
-        workRecord wr;
-
-        wr.m_name = qr.value(0).toString();
-        wr.m_content = qr.value(1).toString();
-        wr.m_Date  = qr.value(2).toDate();
-        wr.m_spentTime = qr.value(3).toString();
-
-        m_model->append(wr);
-    } */
 
     textQuery =  QString("select sum(timespent) from worksview where date between '%1' and '%2'")
             .arg(from)
@@ -80,11 +69,6 @@ void worksPeriodDialog::ShowResults()
         m_sumTimeLabel->setText(QString("Итого: %1").arg(stime));
     m_reportView->resizeRowsToContents();
 
-}
-
-void worksPeriodDialog::on_m_closeButton_clicked()
-{
-    accept();
 }
 
 void worksPeriodDialog::on_m_todayCheckBox_stateChanged(int arg1)
@@ -129,4 +113,24 @@ void worksPeriodDialog::on_m_dateFromEdit_userDateChanged(const QDate &date)
 void worksPeriodDialog::on_m_dateToEdit_userDateChanged(const QDate &date)
 {
     on_m_dateFromEdit_userDateChanged(date);
+}
+
+void worksPeriodDialog::resizeEvent(QResizeEvent *evt)
+{
+    int h = evt->size().height();
+    int w = evt->size().width();
+    int deltax = w - m_oldWidth;
+    int deltay = h - m_oldHeight;
+
+    m_reportView->setGeometry(m_reportView->x(), m_reportView->y(),
+                                  m_reportView->width() + deltax,
+                                  m_reportView->height() + deltay);
+    m_reportView->updateGeometry();
+
+    m_sumTimeLabel->setGeometry(m_sumTimeLabel->x() + deltax, m_sumTimeLabel->y() + deltay,
+                                m_sumTimeLabel->width(), m_sumTimeLabel->height()
+                                );
+    m_sumTimeLabel->updateGeometry();
+    m_oldWidth = w;
+    m_oldHeight = h;
 }

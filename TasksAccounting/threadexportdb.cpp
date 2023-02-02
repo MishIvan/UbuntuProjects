@@ -6,12 +6,15 @@ ThreadExportDB::ThreadExportDB(QSqlDatabase & database, QObject *parent)
 {
     m_database = database;
     m_errorMsg = "";
+    m_dbsqliteName = "";
 }
 
 void ThreadExportDB::run()
 {
+    QString pathToData = m_dbsqliteName;
     QString dbName("TasksAccounting.db");
-    QString pathToData = pathToProgram + '/' + dbName;
+    if (pathToData.isEmpty())
+        pathToData = pathToProgram + '/' + dbName;
     QSqlDatabase dbsqlite = QSqlDatabase::addDatabase("QSQLITE", "ExportDB");
     if(QFile::exists(pathToData))
     {
@@ -31,7 +34,7 @@ void ThreadExportDB::run()
       }
       else
       {
-         dbsqlite.setDatabaseName(dbName);
+         dbsqlite.setDatabaseName(pathToData);
          if(!dbsqlite.open())
          {
             //QMessageBox::critical(this,"Ошибка", m_database.lastError().text());

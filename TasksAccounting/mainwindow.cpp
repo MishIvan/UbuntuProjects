@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include <QSql>
 #include <QDebug>
+#include <QFileDialog>
 
 QTime m_workTime;
 extern QString pathToProgram;
@@ -47,7 +48,6 @@ MainWindow::MainWindow(QWidget *parent)
         return;
     }
 
-    //action_make_copy->setVisible(false);
     m_model = new QSqlTableModel(nullptr, m_database);
     m_model->setTable("tasks");
     m_model->select();
@@ -60,11 +60,48 @@ MainWindow::MainWindow(QWidget *parent)
     m_model->setHeaderData(5, Qt::Horizontal, QObject::tr("Время\nпо плану"));
     m_model->setHeaderData(6, Qt::Horizontal, QObject::tr("Время\nпо факту"));
 
-    taskTableView->setModel(m_model);
-    taskTableView->setColumnHidden(0, true);
-    taskTableView->setColumnHidden(2, true);
-    taskTableView->setColumnWidth(1, 280);
-    taskTableView->resizeRowsToContents();
+    m_taskTableView->setModel(m_model);
+    m_taskTableView->setColumnHidden(0, true);
+    m_taskTableView->setColumnHidden(2, true);
+    m_taskTableView->setColumnWidth(1, 280);
+    m_taskTableView->resizeRowsToContents();    
+
+    m_worksModel = new QSqlTableModel(nullptr, m_database);
+    m_worksModel->setTable("works");
+
+    m_taskID = 0;
+    QItemSelectionModel *selmodel =  m_taskTableView->selectionModel();
+    if(m_model->rowCount()>0)
+    {
+        QModelIndex idx = m_model->index(0,0);
+        selmodel->setCurrentIndex(idx, QItemSelectionModel::SelectCurrent | QItemSelectionModel::Toggle);
+    }
+    m_taskTableView->setFocus();
+
+    QModelIndex m_taskIndex = selmodel->currentIndex();
+    if(m_taskIndex.isValid())
+    {
+        int row = m_taskIndex.row();
+        m_taskID = m_model->data(m_model->index(row,0)).toULongLong();
+    }
+
+    QString filter = QString("taskid=%1").arg(m_taskID);
+    m_worksModel->setFilter(filter);
+    m_worksModel->select();
+
+    m_worksModel->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
+    m_worksModel->setHeaderData(1, Qt::Horizontal, QObject::tr("ID задачи"));
+    m_worksModel->setHeaderData(2, Qt::Horizontal, QObject::tr("Описание"));
+    m_worksModel->setHeaderData(3, Qt::Horizontal, QObject::tr("Дата"));
+    m_worksModel->setHeaderData(4, Qt::Horizontal, QObject::tr("Затраченное\nвремя"));
+
+    m_worksTableView->setModel(m_worksModel);
+    m_worksTableView->hideColumn(0);
+    m_worksTableView->hideColumn(1);
+    m_worksTableView->setColumnWidth(2, 450);
+    m_worksTableView->setColumnWidth(4, 120);
+    m_worksTableView->resizeRowsToContents();
+
     m_workTime = QTime(0,0,0);
     m_timerDialog = new timerDialog(this);
     m_oldWidth = width();
@@ -81,7 +118,10 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     m_database.close();
+
     delete m_model;
+    delete m_worksModel;
+
     delete m_timerDialog;
     delete m_expDB;
 }
@@ -92,10 +132,20 @@ void MainWindow::resizeEvent(QResizeEvent *evt)
     int w = evt->size().width();
     int deltax = w - m_oldWidth;
     int deltay = h - m_oldHeight;
-    taskTableView->setGeometry(taskTableView->x(), taskTableView->y(),
-                                   taskTableView->width() + deltax,
-                                   taskTableView->height() + deltay);
-    taskTableView->updateGeometry();
+
+    m_worksTableView->setGeometry(m_worksTableView->x(), m_worksTableView->y(),
+                                  m_worksTableView->width() + deltax,
+                                  m_worksTableView->height() + deltay);
+    m_taskTableView->setGeometry(m_taskTableView->x(), m_taskTableView->y(),
+                                   m_taskTableView->width() + deltax,
+                                   m_taskTableView->height() + deltay);
+    m_tabWidget->setGeometry(m_tabWidget->x(), m_tabWidget->y(),
+                             m_tabWidget->width() + deltax,
+                             m_tabWidget->height() + deltay);
+    m_tabWidget->updateGeometry();
+    m_worksTableView->updateGeometry();
+    m_taskTableView->updateGeometry();
+
     m_oldWidth = w;
     m_oldHeight = h;
 }
@@ -149,7 +199,7 @@ void MainWindow::on_action_about_triggered()
     dlg.exec();
 }
 
-// добавить новую задачу
+// добавить новую задачу или новую работу по задаче
 void MainWindow::on_action_add_task_triggered()
 {
     if(!m_database.isOpen())
@@ -157,15 +207,41 @@ void MainWindow::on_action_add_task_triggered()
         QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
         return;
     }
-    taskDialog dlg(m_model, QModelIndex(), this);
-    dlg.setModal(true);
-    if(dlg.exec() == QDialog::Accepted)
+    int idx =  m_tabWidget->currentIndex();
+    if(idx == 0)
     {
-        taskTableView->resizeRowToContents(m_model->rowCount() - 1);
+        taskDialog dlg(m_model, QModelIndex(), this);
+        dlg.setModal(true);
+        if(dlg.exec() == QDialog::Accepted)
+            m_taskTableView->resizeRowsToContents();
     }
+    else if (idx == 1)
+    {
+        workRecDialog wrd(this);
+        wrd.m_contents = "";
+        wrd.m_date = QDate::currentDate();
+        wrd.m_time = "00:00:00";
+        wrd.Initialize();
+
+        if(wrd.exec() == QDialog::Accepted)
+        {
+             int row = m_worksModel->rowCount();
+             m_worksModel->insertRows(row,1);
+             m_worksModel->setData(m_worksModel->index(row,1), QVariant((qlonglong)m_taskID));
+             m_worksModel->setData(m_worksModel->index(row,2), wrd.m_contents);
+             m_worksModel->setData(m_worksModel->index(row,3), wrd.m_date.toString(Qt::ISODate));
+             m_worksModel->setData(m_worksModel->index(row,4), wrd.m_time);
+             m_worksModel->submitAll();
+             m_worksModel->setFilter(QString("TaskID=%1").arg(m_taskID));
+             m_worksModel->select();
+             calculateTaskTime();
+        }
+    }
+
+
 }
 
-// удалить задачу и все работы по ней
+// удалить задачу и все работы по ней или удалить работу по текущей задаче
 void MainWindow::on_action_delete_task_triggered()
 {
     if(!m_database.isOpen())
@@ -173,28 +249,49 @@ void MainWindow::on_action_delete_task_triggered()
         QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
         return;
     }
-    if(QMessageBox::question(this,tr("Предупреждение"),
-                             tr("Вы действительно хотите удалить задачу вместе с работами по ней"),
-                             QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
+    int idx = m_tabWidget->currentIndex();
+    if (idx == 0)
     {
-        QItemSelectionModel *selmodel =  taskTableView->selectionModel();
-        QModelIndex idx = selmodel->currentIndex();
-        long id = m_model->data( m_model->index(idx.row(),0) ).toLongLong();
+        if(QMessageBox::question(this,tr("Предупреждение"),
+                                 tr("Вы действительно хотите удалить задачу вместе с работами по ней"),
+                                 QMessageBox::Yes | QMessageBox::No, QMessageBox::No) == QMessageBox::Yes)
+        {
+            QItemSelectionModel *selmodel =  m_taskTableView->selectionModel();
+            QModelIndex idx = selmodel->currentIndex();
+            long id = m_model->data( m_model->index(idx.row(),0) ).toLongLong();
 
-        QSqlQuery qr(m_database);
-        QString qText;
-        m_database.transaction();
-        qText = QString("delete from Works where TaskID = %1").arg(id);
-        qr.exec(qText);
-        m_model->removeRow(idx.row());
-        m_database.commit();
-        m_model->submitAll();
-        m_model->select();
+            QSqlQuery qr(m_database);
+            QString qText;
+            m_database.transaction();
+            qText = QString("delete from Works where TaskID = %1").arg(id);
+            qr.exec(qText);
+            m_model->removeRow(idx.row());
+            m_database.commit();
+            m_model->submitAll();
+            m_model->select();
+        }
+    }
+    else if (idx == 1)
+    {
+        if(QMessageBox::question(this,tr("Предупреждение"),
+                                 tr("Вы действительно хотите удалить выбранную работу по задаче?"),
+                                 QMessageBox::Yes | QMessageBox::No, QMessageBox::No) != QMessageBox::Yes) return;
+
+        QItemSelectionModel *selmodel =  m_worksTableView->selectionModel();
+        QModelIndex idx = selmodel->currentIndex();
+        if(idx.isValid())
+        {
+            m_worksModel->removeRow(idx.row());
+            m_worksModel->submitAll();
+            m_worksModel->select();
+            calculateTaskTime();
+        }
+
     }
 
 }
 
-// правка параметров задачи
+// правка параметров задачи или параметров работы по задаче
 void MainWindow::on_action_edit_task_triggered()
 {
     if(!m_database.isOpen())
@@ -202,29 +299,40 @@ void MainWindow::on_action_edit_task_triggered()
         QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
         return;
     }
-    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
-    QModelIndex idx = selmodel->currentIndex();
-
-    taskDialog dlg(m_model,  idx, this);
-    dlg.setModal(true);
-    dlg.exec();
-}
-
-// отобразить диалог списка работ по задаче
-void MainWindow::on_action_work_list_triggered()
-{
-    if(!m_database.isOpen())
+    int idx = m_tabWidget->currentIndex();
+    if (idx == 0)
     {
-        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-        return;
+        QItemSelectionModel *selmodel =  m_taskTableView->selectionModel();
+        QModelIndex idx = selmodel->currentIndex();
+
+        taskDialog dlg(m_model,  idx, this);
+        dlg.setModal(true);
+        dlg.exec();
     }
-    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
-    QModelIndex idx = selmodel->currentIndex();
-    if(idx.isValid())
+    else if(idx == 1)
     {
-        worksDialog wd(m_model,idx, this);
-        wd.exec();
+        workRecDialog wrd(this);
+        QItemSelectionModel *selmodel =  m_worksTableView->selectionModel();
+        QModelIndex idx = selmodel->currentIndex();
+        int row = idx.row();
+
+        wrd.m_contents = m_worksModel->data(m_worksModel->index(row,2)).toString();
+        wrd.m_date = QDate::fromString(m_worksModel->data(m_worksModel->index(row,3)).toString(),
+                                       Qt::ISODate);
+        wrd.m_time = m_worksModel->data(m_worksModel->index(row,4)).toString();
+        wrd.Initialize();
+        if(wrd.exec() == QDialog::Accepted)
+        {
+             m_worksModel->setData(m_worksModel->index(row,2), wrd.m_contents);
+             m_worksModel->setData(m_worksModel->index(row,3), wrd.m_date.toString(Qt::ISODate));
+             m_worksModel->setData(m_worksModel->index(row,4), wrd.m_time);
+             m_worksModel->submitAll();
+             m_worksModel->select();
+             calculateTaskTime();
+        }
+
     }
+
 }
 
 // установить фильтр отображения задач
@@ -250,7 +358,7 @@ void MainWindow::on_action_task_filter_triggered()
                 m_model->setFilter(s1);
                 m_model->select();
                 setWindowTitle("Учёт задач - все задачи");
-                taskTableView->resizeRowsToContents();
+                m_taskTableView->resizeRowsToContents();
             break;
             case TaskFilter::DONE:
                 now = QDate::currentDate().toString(Qt::ISODate);
@@ -262,7 +370,7 @@ void MainWindow::on_action_task_filter_triggered()
                 m_model->setFilter(s1);
                 m_model->select();
                 setWindowTitle("Учёт задач - завершённые задачи");
-                taskTableView->resizeRowsToContents();
+                m_taskTableView->resizeRowsToContents();
             break;
             case TaskFilter::INFINITE:
                 s1 = QString("fulfillmentdate = '9999-12-31'");
@@ -273,7 +381,7 @@ void MainWindow::on_action_task_filter_triggered()
                 m_model->setFilter(s1);
                 m_model->select();
                 setWindowTitle("Учёт задач - задачи без срока");
-                taskTableView->resizeRowsToContents();
+                m_taskTableView->resizeRowsToContents();
             break;
             case TaskFilter::EXPIRED:
                 now = QDate::currentDate().toString(Qt::ISODate);
@@ -285,7 +393,7 @@ void MainWindow::on_action_task_filter_triggered()
                 m_model->setFilter(s1);
                 m_model->select();
                 setWindowTitle("Учёт задач - просроченные задачи");
-                taskTableView->resizeRowsToContents();
+                m_taskTableView->resizeRowsToContents();
             break;
             default:
             break;
@@ -308,7 +416,8 @@ void MainWindow::on_action_task_finish_triggered()
         QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
         return;
     }
-    QItemSelectionModel *selmodel =  taskTableView->selectionModel();
+    if(m_tabWidget->currentIndex() != 0) return;
+    QItemSelectionModel *selmodel =  m_taskTableView->selectionModel();
     QModelIndex idx = selmodel->currentIndex();
     if(idx.isValid())
     {
@@ -326,11 +435,25 @@ void MainWindow::on_action_task_finish_triggered()
 void MainWindow::on_action_sqlite_export_triggered()
 {    
     if(!m_expDB->isRunning())
-        m_expDB->start();
+    {
+        QString dbName("TasksAccounting.db");
+        QString pathToData = pathToProgram + '/' + dbName;
+
+        QString dbfileName = QFileDialog::getSaveFileName(this,
+                                                 QString("Имя файла БД SQLite"),
+                                                  pathToData,
+                                                  "Файлы БД SQLite (*.db)");
+        if(!dbfileName.isEmpty())
+        {
+            m_expDB->setDbsqliteName(dbfileName);
+            m_expDB->start();
+        }
+    }
     else
         statusBar()->showMessage(QString("Повторите попытку позже. Производится экспорт в SQLite."));
 }
 
+// слот, обрабатывающий сигнал завершения экспорта
  void MainWindow::on_end_export_action()
  {
         QString Msg = m_expDB->errorMsg();
@@ -341,3 +464,59 @@ void MainWindow::on_action_sqlite_export_triggered()
             //QMessageBox::information(this,"Сообщение", "Экспорт в SQLite завершён");
 
  }
+
+// переход между закладками Задачи и Работы
+void MainWindow::on_m_tabWidget_currentChanged(int index)
+{
+    if(index == 1)
+    {
+        QItemSelectionModel *selmodel =  m_taskTableView->selectionModel();
+        QModelIndex m_taskIndex = selmodel->currentIndex();
+        m_taskID = 0;
+        if(m_taskIndex.isValid())
+        {
+            int row = m_taskIndex.row();
+            m_taskID = m_model->data(m_model->index(row,0)).toULongLong();
+            QString tName =  m_model->data(m_model->index(row,1)).toString();
+            statusBar()->showMessage(QString("Работы по задаче \"%1\"").arg(tName));
+        }
+        else
+            statusBar()->showMessage("Задача не выбрана");
+
+        QString filter = QString("taskid=%1").arg(m_taskID);
+        m_worksModel->setFilter(filter);
+        m_worksModel->submitAll();
+        m_worksTableView->resizeRowsToContents();
+        m_worksTableView->setFocus();
+    }
+    else
+    {
+        m_taskTableView->setFocus();
+        statusBar()->clearMessage();    
+    }
+}
+
+// рассчитать суммарное время, затраченное на выполнение задачи
+void MainWindow::calculateTaskTime()
+{
+    QModelIndex m_taskIndex = m_taskTableView->selectionModel()->currentIndex();
+    int row = m_taskIndex.row();
+
+    if(m_worksModel->rowCount() < 1)
+    {
+        m_model->setData(m_model->index(row,6), "00:00:00");
+        return;
+    }
+
+    QSqlQuery qr(m_database);
+    QString sqlText = QString("select sum(timespent) from works where taskid = %1").arg(m_taskID);
+    qr.exec(sqlText);
+    QString res("");
+    while(qr.next())
+    {
+        res = qr.value(0).toString();
+    }
+
+    if(!res.isEmpty())
+        m_model->setData(m_model->index(row,6), res);
+}
