@@ -56,8 +56,8 @@
    <property name="plainText">
     <string>Учёт Задач 
 Учёт времени исполнения задач
-Версия 3.00.00
-Сборка 20230202</string>
+Версия 3.00.02
+Сборка 20230208</string>
    </property>
   </widget>
   <widget class="QPushButton" name="m_closeButton">

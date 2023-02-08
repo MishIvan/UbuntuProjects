@@ -14,14 +14,15 @@ worksPeriodDialog::worksPeriodDialog(QSqlDatabase database,  QWidget *parent) :
     GetAccontingPeriod(dateBegin, dateEnd);
     m_dateFromEdit->setDate(dateBegin);
     m_dateToEdit->setDate(dateEnd);
+
     m_model = new QSqlQueryModel;
+    m_asc = false;
+    ShowResults();
 
-   ShowResults();
-
-   m_model->setHeaderData(0, Qt::Horizontal, QObject::tr("Наименование"));
-   m_model->setHeaderData(1, Qt::Horizontal, QObject::tr("Содержание"));
-   m_model->setHeaderData(2, Qt::Horizontal, QObject::tr("Дата"));
-   m_model->setHeaderData(3, Qt::Horizontal, QObject::tr("Время"));
+    m_model->setHeaderData(0, Qt::Horizontal, QObject::tr("Наименование"));
+    m_model->setHeaderData(1, Qt::Horizontal, QObject::tr("Содержание"));
+    m_model->setHeaderData(2, Qt::Horizontal, QObject::tr("Дата"));
+    m_model->setHeaderData(3, Qt::Horizontal, QObject::tr("Время"));
 
     m_reportView->setModel(m_model);
     m_reportView->setColumnWidth(0, 300);
@@ -30,7 +31,10 @@ worksPeriodDialog::worksPeriodDialog(QSqlDatabase database,  QWidget *parent) :
     m_reportView->resizeRowsToContents();
     m_reportView->show();
     m_flag = true;
-    m_periodCheckBox->setCheckState(Qt::Checked);
+    QHeaderView *m_headerView= m_reportView->horizontalHeader();
+    QObject::connect(m_headerView, SIGNAL(sectionClicked(int )),
+                     this, SLOT(on_sectionColumnClicked(int)));
+    m_periodCheckBox->setCheckState(Qt::Checked);    
 
     m_oldWidth = width();
     m_oldHeight = height();
@@ -41,15 +45,38 @@ worksPeriodDialog::~worksPeriodDialog()
     delete m_model;
 }
 
-void worksPeriodDialog::ShowResults()
+void worksPeriodDialog::ShowResults(int col)
 {
     QString from = m_dateFromEdit->date().toString(Qt::ISODate);
     QString to = m_dateToEdit->date().toString(Qt::ISODate);
     //m_model->clear();
 
-    QString textQuery =  QString("select name, content, date, timespent from worksview where date between '%1' and '%2' order by date")
-            .arg(from)
-            .arg(to);
+    QString textQuery;
+    switch(col)
+    {
+        case 2:
+        textQuery =  QString("select name, content, date, timespent from worksview where date between '%1' and '%2' order by date")
+                .arg(from)
+                .arg(to);
+            break;
+        case 1:
+        textQuery =  QString("select name, content, date, timespent from worksview where date between '%1' and '%2' order by content")
+                .arg(from)
+                .arg(to);
+            break;
+        case 3:
+        textQuery =  QString("select name, content, date, timespent from worksview where date between '%1' and '%2' order by timespent")
+                .arg(from)
+                .arg(to);
+            break;
+        case 0:
+        default:
+        textQuery =  QString("select name, content, date, timespent from worksview where date between '%1' and '%2' order by name")
+                .arg(from)
+                .arg(to);
+            break;
+    }
+    textQuery += m_asc ? " asc" : " desc";
     m_model->setQuery(textQuery, m_database);
 
     QSqlQuery qr(m_database);
@@ -58,6 +85,7 @@ void worksPeriodDialog::ShowResults()
             .arg(from)
             .arg(to);
     qr.exec(textQuery);
+    m_asc = !m_asc;
     QString stime = "";
     while(qr.next())
     {
@@ -133,4 +161,9 @@ void worksPeriodDialog::resizeEvent(QResizeEvent *evt)
     m_sumTimeLabel->updateGeometry();
     m_oldWidth = w;
     m_oldHeight = h;
+}
+
+void worksPeriodDialog::on_sectionColumnClicked(int col)
+{
+      ShowResults(col);
 }

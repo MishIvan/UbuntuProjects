@@ -14,25 +14,28 @@
 
 QTime m_workTime;
 extern QString pathToProgram;
+extern QString DatabaseName;
+extern QString UserName;
+extern QString Password;
+extern QString Host;
+extern int Port;
+bool readIniData();
 
-const char * DATABASE_NAME = "task_accounting";
-const char * USER_NAME = "ivan";
-const char * PASSWORD = "123456";
 // database \"task_accounting1\" does not exist
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 
 {
     setupUi(this);    
-    m_expDB = nullptr;
 
     qDebug() << QSqlDatabase::drivers();
+    readIniData();
     m_database = QSqlDatabase::addDatabase("QPSQL");
-    m_database.setHostName("localhost");
-    m_database.setDatabaseName(DATABASE_NAME);
-    m_database.setUserName(USER_NAME);
-    m_database.setPassword(PASSWORD);
-    m_database.setPort(5432);
+    m_database.setHostName(Host);
+    m_database.setDatabaseName(DatabaseName);
+    m_database.setUserName(UserName);
+    m_database.setPassword(Password);
+    m_database.setPort(Port);
     m_database.setConnectOptions();
 
     if(m_database.open())

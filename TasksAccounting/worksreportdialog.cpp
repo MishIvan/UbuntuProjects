@@ -16,6 +16,7 @@ worksReportDialog::worksReportDialog(QSqlDatabase database,
 
     //m_model = new taskReportModel();
     m_model = new QSqlQueryModel;
+    m_asc = false;
     ShowResults();
 
     m_model->setHeaderData(0, Qt::Horizontal, QObject::tr("Задача"));
@@ -28,6 +29,10 @@ worksReportDialog::worksReportDialog(QSqlDatabase database,
     m_reportView->setColumnWidth(0, 250);
     m_reportView->setColumnWidth(1, 400);
     m_reportView->resizeRowsToContents();
+
+    QHeaderView *m_headerView= m_reportView->horizontalHeader();
+    QObject::connect(m_headerView, SIGNAL(sectionClicked(int )),
+                     this, SLOT(on_sectionColumnClicked(int)));
     m_flag = true;
     m_oldWidth = width();
     m_oldHeight = height();
@@ -38,7 +43,7 @@ worksReportDialog::~worksReportDialog()
     delete m_model;
 }
 
-void worksReportDialog::ShowResults()
+void worksReportDialog::ShowResults(int col)
 {
     QString from = m_dateFromEdit->date().toString(Qt::ISODate);
     QString to = m_dateToEdit->date().toString(Qt::ISODate);
@@ -46,6 +51,27 @@ void worksReportDialog::ShowResults()
     QString textQuery = QString("select * from public.get_works('%1', '%2')")
             .arg(from)
             .arg(to);
+    switch(col)
+    {
+        case 1:
+        textQuery +=  " order by content";
+            break;
+        case 2:
+        textQuery +=  " order by deadline";
+            break;
+        case 3:
+        textQuery +=  " order by fulfiimentdate";
+            break;
+        case 4:
+        textQuery +=  " order by timespent";
+            break;
+        case 0:
+        default:
+        textQuery +=  " order by name";
+            break;
+    }
+
+    textQuery += m_asc ? " asc" : " desc";
     m_model->setQuery(textQuery, m_database);
     QSqlQuery qr(m_database);
 
@@ -53,6 +79,7 @@ void worksReportDialog::ShowResults()
             .arg(from)
             .arg(to);
     qr.exec(textQuery);
+    m_asc = !m_asc;
     QString stime("");
     while(qr.next())
     {
@@ -94,4 +121,8 @@ void worksReportDialog::resizeEvent(QResizeEvent *evt)
     m_sumTimeLabel->updateGeometry();
     m_oldWidth = w;
     m_oldHeight = h;
+}
+void worksReportDialog::on_sectionColumnClicked(int col)
+{
+    ShowResults(col);
 }
