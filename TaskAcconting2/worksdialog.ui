@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>worksDialog</class>
+ <widget class="QDialog" name="worksDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>938</width>
+    <height>564</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>938</width>
+    <height>564</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>938</width>
+    <height>564</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Работы по задаче</string>
+  </property>
+  <property name="modal">
+   <bool>true</bool>
+  </property>
+  <widget class="QTableView" name="worksTableView">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>180</y>
+     <width>721</width>
+     <height>311</height>
+    </rect>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::SingleSelection</enum>
+   </property>
+   <property name="selectionBehavior">
+    <enum>QAbstractItemView::SelectRows</enum>
+   </property>
+   <property name="sortingEnabled">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>10</y>
+     <width>164</width>
+     <height>184</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>10</number>
+    </property>
+    <item>
+     <widget class="QPushButton" name="addTaskButton">
+      <property name="toolTip">
+       <string>Добавить работу</string>
+      </property>
+      <property name="text">
+       <string>Добавить</string>
+      </property>
+      <property name="icon">
+       <iconset resource="MainResource.qrc">
+        <normaloff>:/images/add.png</normaloff>:/images/add.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>36</width>
+        <height>36</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="delTaskButton">
+      <property name="toolTip">
+       <string>Удалить работу</string>
+      </property>
+      <property name="text">
+       <string>Удалить</string>
+      </property>
+      <property name="icon">
+       <iconset resource="MainResource.qrc">
+        <normaloff>:/images/delete.png</normaloff>:/images/delete.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>36</width>
+        <height>36</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="editTaskButton">
+      <property name="toolTip">
+       <string>Изменить работу</string>
+      </property>
+      <property name="text">
+       <string>Редактировать</string>
+      </property>
+      <property name="icon">
+       <iconset resource="MainResource.qrc">
+        <normaloff>:/images/edit.png</normaloff>:/images/edit.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>36</width>
+        <height>36</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>0</y>
+     <width>721</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Задача</string>
+   </property>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>70</y>
+      <width>121</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Описание:</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="m_taskDescription">
+    <property name="geometry">
+     <rect>
+      <x>135</x>
+      <y>70</y>
+      <width>511</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>631</width>
+      <height>29</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Наименование:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="m_taskName">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="closeButton">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>510</y>
+     <width>151</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>Закрыть окно</string>
+   </property>
+   <property name="text">
+    <string>Закрыть</string>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="MainResource.qrc"/>
+ </resources>
+ <connections/>
+</ui>
