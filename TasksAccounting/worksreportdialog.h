@@ -8,7 +8,6 @@
 class worksReportDialog : public QDialog, private Ui::worksReportDialog
 {
     Q_OBJECT
-    QSqlDatabase m_database;
     QSqlQueryModel *m_model;
     QString m_sqlQuery;
     bool m_flag;
@@ -19,7 +18,7 @@ class worksReportDialog : public QDialog, private Ui::worksReportDialog
 
     void ShowResults(int col = 0);
 public:
-    explicit worksReportDialog(QSqlDatabase database, QWidget *parent = nullptr);
+    explicit worksReportDialog(QWidget *parent = nullptr);
     ~worksReportDialog();
 private slots:
     void on_m_dateFromEdit_userDateChanged(const QDate &date);

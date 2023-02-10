@@ -1,10 +1,10 @@
 #include "threadexportdb.h"
 extern QString pathToProgram;
+extern QSqlDatabase m_database;
 
-ThreadExportDB::ThreadExportDB(QSqlDatabase & database, QObject *parent)
+ThreadExportDB::ThreadExportDB(QObject *parent)
     : QThread{parent}
 {
-    m_database = database;
     m_errorMsg = "";
     m_dbsqliteName = "";
 }

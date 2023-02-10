@@ -1,13 +1,12 @@
 #include "worksreportdialog.h"
+extern QSqlDatabase m_database;
 
 void GetAccontingPeriod(QDate &, QDate &);
 
-worksReportDialog::worksReportDialog(QSqlDatabase database,
-                                     QWidget *parent) :  QDialog(parent)
+worksReportDialog::worksReportDialog(QWidget *parent) :  QDialog(parent)
 {
     setupUi(this);
     m_flag = false;
-    m_database = database;
 
     QDate dateBegin, dateEnd;
     GetAccontingPeriod(dateBegin, dateEnd);

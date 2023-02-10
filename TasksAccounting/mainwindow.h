@@ -47,7 +47,6 @@ private slots:
     void on_m_tabWidget_currentChanged(int index);
 
 private:
-    QSqlDatabase m_database;
     QSqlTableModel *m_model;
     QSqlTableModel *m_worksModel;
     timerDialog *m_timerDialog;

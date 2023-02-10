@@ -1,12 +1,11 @@
 #include "worksperioddialog.h"
-
+extern QSqlDatabase m_database;
 void GetAccontingPeriod(QDate &, QDate &);
-worksPeriodDialog::worksPeriodDialog(QSqlDatabase database,  QWidget *parent) :
+worksPeriodDialog::worksPeriodDialog(QWidget *parent) :
     QDialog(parent)
 {
     setupUi(this);
     m_flag = false;
-    m_database = database;
     //QDate today = QDate::currentDate();
     //QDate d1 = QDate(today.year(), today.month(),1);
     //QDate d2 = QDate(today.year(), today.month(),today.daysInMonth());

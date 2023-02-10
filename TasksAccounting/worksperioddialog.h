@@ -7,8 +7,7 @@
 
 class worksPeriodDialog : public QDialog, private Ui::worksPeriodDialog
 {
-    Q_OBJECT
-    QSqlDatabase m_database;
+    Q_OBJECT    
     QSqlQueryModel *m_model;   
     bool m_flag;
     bool m_asc;
@@ -19,7 +18,7 @@ class worksPeriodDialog : public QDialog, private Ui::worksPeriodDialog
     void ShowResults(int col = 0);
 
 public:
-    explicit worksPeriodDialog(QSqlDatabase database, QWidget *parent = nullptr);
+    explicit worksPeriodDialog(QWidget *parent = nullptr);
     ~worksPeriodDialog();
 
 private slots:

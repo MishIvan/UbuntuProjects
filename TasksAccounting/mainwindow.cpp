@@ -13,13 +13,8 @@
 #include <QFileDialog>
 
 QTime m_workTime;
+extern QSqlDatabase m_database;
 extern QString pathToProgram;
-extern QString DatabaseName;
-extern QString UserName;
-extern QString Password;
-extern QString Host;
-extern int Port;
-bool readIniData();
 
 // database \"task_accounting1\" does not exist
 MainWindow::MainWindow(QWidget *parent)
@@ -28,32 +23,10 @@ MainWindow::MainWindow(QWidget *parent)
 {
     setupUi(this);    
 
-    qDebug() << QSqlDatabase::drivers();
-    readIniData();
-    m_database = QSqlDatabase::addDatabase("QPSQL");
-    m_database.setHostName(Host);
-    m_database.setDatabaseName(DatabaseName);
-    m_database.setUserName(UserName);
-    m_database.setPassword(Password);
-    m_database.setPort(Port);
-    m_database.setConnectOptions();
-
-    if(m_database.open())
-    {
-        qDebug() << "opened!";
-    }
-    else
-    {
-        QString s1 = m_database.lastError().text();
-        QString se = m_database.lastError().nativeErrorCode();
-        qDebug() << s1;
-        statusBar()->showMessage(QString("Ошибка: %1").arg(s1));
-        return;
-    }
-
     m_model = new QSqlTableModel(nullptr, m_database);
     m_model->setTable("tasks");
     m_model->select();
+    int colCount = m_model->columnCount();
 
     m_model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
     m_model->setHeaderData(1, Qt::Horizontal, QObject::tr("Наименование"));
@@ -66,6 +39,11 @@ MainWindow::MainWindow(QWidget *parent)
     m_taskTableView->setModel(m_model);
     m_taskTableView->setColumnHidden(0, true);
     m_taskTableView->setColumnHidden(2, true);
+    if(colCount > 7)
+    {
+        m_taskTableView->setColumnHidden(7, true);
+        m_taskTableView->setColumnHidden(8, true);
+    }
     m_taskTableView->setColumnWidth(1, 280);
     m_taskTableView->resizeRowsToContents();    
 
@@ -112,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_filterFlag = TaskFilter::ALL;
     m_filterName = "";
 
-    m_expDB = new ThreadExportDB(m_database);
+    m_expDB = new ThreadExportDB;
     QObject::connect(m_expDB, SIGNAL(finished()),
                                 this, SLOT(on_end_export_action()));
     statusBar()->showMessage("Данные загружены");
@@ -169,14 +147,14 @@ void MainWindow::on_action_time_period_triggered()
         sqlText = stream.readAll();
         file.close();
     }*/
-    worksReportDialog dlg(m_database,  this);
+    worksReportDialog dlg(this);
     dlg.exec();
 }
 
 // показать список работ по задачам с их временем выполнения за период
 void MainWindow::on_action_triggered()
 {
-    worksPeriodDialog dlg(m_database, this);
+    worksPeriodDialog dlg(this);
     dlg.exec();
 }
 
@@ -205,11 +183,6 @@ void MainWindow::on_action_about_triggered()
 // добавить новую задачу или новую работу по задаче
 void MainWindow::on_action_add_task_triggered()
 {
-    if(!m_database.isOpen())
-    {
-        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-        return;
-    }
     int idx =  m_tabWidget->currentIndex();
     if(idx == 0)
     {
@@ -247,11 +220,6 @@ void MainWindow::on_action_add_task_triggered()
 // удалить задачу и все работы по ней или удалить работу по текущей задаче
 void MainWindow::on_action_delete_task_triggered()
 {
-    if(!m_database.isOpen())
-    {
-        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-        return;
-    }
     int idx = m_tabWidget->currentIndex();
     if (idx == 0)
     {
@@ -297,11 +265,6 @@ void MainWindow::on_action_delete_task_triggered()
 // правка параметров задачи или параметров работы по задаче
 void MainWindow::on_action_edit_task_triggered()
 {
-    if(!m_database.isOpen())
-    {
-        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-        return;
-    }
     int idx = m_tabWidget->currentIndex();
     if (idx == 0)
     {
@@ -414,11 +377,7 @@ void MainWindow::on_action_set_accounting_period_triggered()
 // установить дату завершения задачи
 void MainWindow::on_action_task_finish_triggered()
 {
-    if(!m_database.isOpen())
-    {
-        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-        return;
-    }
+
     if(m_tabWidget->currentIndex() != 0) return;
     QItemSelectionModel *selmodel =  m_taskTableView->selectionModel();
     QModelIndex idx = selmodel->currentIndex();
