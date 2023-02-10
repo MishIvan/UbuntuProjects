@@ -2,18 +2,14 @@
 #include <QApplication>
 #include <QSettings>
 #include <QDate>
+#include <QMessageBox>
 
 QSettings appSettings("PrivateMI", "Task Accounting 2");
 void GetAccontingPeriod(QDate &, QDate &);
 void SetAccountingPeriod(const QDate &, const QDate &);
 QString pathToProgram; // пути запуска программы (без обратного слэша на конце)
-
-QString DatabaseName;
-QString UserName = "postgres";
-QString Password;
-QString Host = "localhost";
-int Port = 5432;
-
+QSqlDatabase m_database;
+bool readIniData();
 
 int main(int argc, char *argv[])
 {
@@ -29,6 +25,11 @@ int main(int argc, char *argv[])
     SetAccountingPeriod(dateBegin, dateEnd);
 
     QApplication a(argc, argv);
+    if(!readIniData())
+    {
+        a.exit(-1);
+        return -1;
+    }
     MainWindow w;
     w.show();
     return a.exec();
@@ -67,12 +68,18 @@ void SetAccountingPeriod(const QDate &d1, const QDate &d2)
 // прочитать данные для соединения с БД
 bool readIniData()
 {
-    QString pathToIni = pathToProgram +"/TasksAccounting2.ini";
+    QString pathToIni = pathToProgram +"/TasksAccounting.ini";
     QFile file(pathToIni);
     if(file.exists())
     {
         if(file.open(QIODevice::ReadOnly))
         {
+            QString DatabaseName;
+            QString UserName = "postgres";
+            QString Password;
+            QString Host = "localhost";
+            int Port = 5432;
+
             QTextStream stream(&file);
             QString str;
             while(!stream.atEnd())
@@ -91,9 +98,31 @@ bool readIniData()
                     Password = strlst[1].trimmed();
             }
             file.close();
+
+            qDebug() << QSqlDatabase::drivers();
+            m_database = QSqlDatabase::addDatabase("QPSQL");
+            m_database.setHostName(Host);
+            m_database.setDatabaseName(DatabaseName);
+            m_database.setUserName(UserName);
+            m_database.setPassword(Password);
+            m_database.setPort(Port);
+            m_database.setConnectOptions();
+
+            if(m_database.open())
+                qDebug() << "Connection succeeds!";
+            else
+            {
+                QString s1 = m_database.lastError().text();
+                qDebug() << s1;
+                QMessageBox::critical(nullptr, "Database Connection",QString("Ошибка: %1").arg(s1));
+                return false;
+            }
+
             return true;
         }
 
     }
+    else
+        QMessageBox::critical(nullptr,"Считывание параметров", "Файл TasksAccounting.ini отсутсвует");
     return false;
 }

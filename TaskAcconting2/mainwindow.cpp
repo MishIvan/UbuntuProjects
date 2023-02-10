@@ -13,13 +13,8 @@
 #include <QFileDialog>
 
 QTime m_workTime;
+extern QSqlDatabase m_database;
 extern QString pathToProgram;
-extern QString DatabaseName;
-extern QString UserName;
-extern QString Password;
-extern QString Host;
-extern int Port;
-bool readIniData();
 
 // database \"task_accounting1\" does not exist
 MainWindow::MainWindow(QWidget *parent)
@@ -27,29 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 {
     setupUi(this);    
-
-    qDebug() << QSqlDatabase::drivers();
-    readIniData();
-    m_database = QSqlDatabase::addDatabase("QPSQL");
-    m_database.setHostName(Host);
-    m_database.setDatabaseName(DatabaseName);
-    m_database.setUserName(UserName);
-    m_database.setPassword(Password);
-    m_database.setPort(Port);
-    m_database.setConnectOptions();
-
-    if(m_database.open())
-    {
-        qDebug() << "opened!";
-    }
-    else
-    {
-        QString s1 = m_database.lastError().text();
-        QString se = m_database.lastError().nativeErrorCode();
-        qDebug() << s1;
-        statusBar()->showMessage(QString("Ошибка: %1").arg(s1));
-        return;
-    }
 
     m_model = new QSqlTableModel(nullptr, m_database);
     m_model->setTable("tasks");
