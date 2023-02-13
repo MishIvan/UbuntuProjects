@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Учёт задач - все задачи</string>
+   <string>Учёт задач</string>
   </property>
   <property name="windowIcon">
    <iconset resource="MainResource.qrc">
@@ -259,7 +259,7 @@
     <string>Добавить</string>
    </property>
    <property name="toolTip">
-    <string>Добавить задачу (Ctrl+Ins)</string>
+    <string>Добавить запись (Ctrl+Ins)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Ins</string>
@@ -274,7 +274,7 @@
     <string>Удалить</string>
    </property>
    <property name="toolTip">
-    <string>Удалить задачу (Ctrl+Del)</string>
+    <string>Удалить запись (Ctrl+Del)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Del</string>
@@ -289,7 +289,7 @@
     <string>Редактировать</string>
    </property>
    <property name="toolTip">
-    <string>Править параметры задачи (F7)</string>
+    <string>Править запись (F7)</string>
    </property>
    <property name="shortcut">
     <string>F7</string>

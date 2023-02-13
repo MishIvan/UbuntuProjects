@@ -3,6 +3,7 @@
 #include <QSettings>
 #include <QDate>
 #include <QMessageBox>
+#include "autorizationform.h"
 
 QSettings appSettings("PrivateMI", "Task Accounting 2");
 void GetAccontingPeriod(QDate &, QDate &);
@@ -30,9 +31,21 @@ int main(int argc, char *argv[])
         a.exit(-1);
         return -1;
     }
-    MainWindow w;
-    w.show();
-    return a.exec();
+
+    AutorizationForm frm;
+    frm.exec();
+    if(frm.result() == 1)
+    {
+        MainWindow w;
+        w.show();
+        return a.exec();
+    }
+    else
+    {
+        a.exit(-1);
+        return -1;
+
+    }
 }
 
 void GetAccontingPeriod(QDate &d1, QDate &d2)

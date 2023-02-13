@@ -11,10 +11,12 @@
 #include <QSql>
 #include <QDebug>
 #include <QFileDialog>
+#include "autorizationform.h"
 
 QTime m_workTime;
 extern QSqlDatabase m_database;
 extern QString pathToProgram;
+extern User m_currentUser;
 
 // database \"task_accounting1\" does not exist
 MainWindow::MainWindow(QWidget *parent)
@@ -82,6 +84,8 @@ MainWindow::MainWindow(QWidget *parent)
     m_oldWidth = width();
     m_oldHeight = height();
     m_filterFlag = TaskFilter::ALL;
+    setWindowTitle(QString("Учёт задач - все задачи. %1").arg(m_currentUser.name));
+
     m_filterName = "";
 
     m_expDB = new ThreadExportDB(m_database);
@@ -332,7 +336,7 @@ void MainWindow::on_action_task_filter_triggered()
                     s1 = QString("id>0");
                 m_model->setFilter(s1);
                 m_model->select();
-                setWindowTitle("Учёт задач - все задачи");
+                setWindowTitle(QString("Учёт задач - все задачи. %1").arg(m_currentUser.name));
                 m_taskTableView->resizeRowsToContents();
             break;
             case TaskFilter::DONE:
@@ -344,7 +348,7 @@ void MainWindow::on_action_task_filter_triggered()
                 }
                 m_model->setFilter(s1);
                 m_model->select();
-                setWindowTitle("Учёт задач - завершённые задачи");
+                setWindowTitle(QString("Учёт задач - завершённые задачи. %1").arg(m_currentUser.name));
                 m_taskTableView->resizeRowsToContents();
             break;
             case TaskFilter::INFINITE:
@@ -355,7 +359,7 @@ void MainWindow::on_action_task_filter_triggered()
                 }
                 m_model->setFilter(s1);
                 m_model->select();
-                setWindowTitle("Учёт задач - задачи без срока");
+                setWindowTitle(QString("Учёт задач - задачи без срока. %1").arg(m_currentUser.name));
                 m_taskTableView->resizeRowsToContents();
             break;
             case TaskFilter::EXPIRED:
@@ -367,7 +371,7 @@ void MainWindow::on_action_task_filter_triggered()
                 }
                 m_model->setFilter(s1);
                 m_model->select();
-                setWindowTitle("Учёт задач - просроченные задачи");
+                setWindowTitle(QString("Учёт задач - просроченные задачи. %1").arg(m_currentUser.name));
                 m_taskTableView->resizeRowsToContents();
             break;
             default:
@@ -436,8 +440,6 @@ void MainWindow::on_action_sqlite_export_triggered()
             statusBar()->showMessage(QString("Ошибка: %1").arg(Msg));
         else
             statusBar()->showMessage(QString("Экспорт в SQLite завершён"));
-            //QMessageBox::information(this,"Сообщение", "Экспорт в SQLite завершён");
-
  }
 
 // переход между закладками Задачи и Работы
