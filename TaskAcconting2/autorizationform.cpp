@@ -7,8 +7,6 @@
 #include <QCloseEvent>
 
 extern QSqlDatabase m_database;
-long userID;
-QString userLogin;
 User m_currentUser;
 
 AutorizationForm::AutorizationForm(QWidget *parent) :

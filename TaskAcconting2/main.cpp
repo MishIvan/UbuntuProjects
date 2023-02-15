@@ -139,3 +139,17 @@ bool readIniData()
         QMessageBox::critical(nullptr,"Считывание параметров", "Файл TasksAccounting.ini отсутсвует");
     return false;
 }
+
+// определить пользователя по ФИО
+// если не найден, возвращает 0, иначе ИД пользователя
+long getUserByName(const QString &uname)
+{
+    long id = 0;
+    QSqlQuery qry(m_database);
+    if(qry.exec(QString("select id from users where name ='%1'").arg(uname)))
+    {
+        if(qry.first())
+            id = qry.value(0).toULongLong();
+    }
+    return id;
+}

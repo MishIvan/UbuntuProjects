@@ -47,6 +47,7 @@ private slots:
     void on_m_tabWidget_currentChanged(int index);
 
 private:
+    QSqlQueryModel *m_projectsModel;
     QSqlTableModel *m_model;
     QSqlTableModel *m_worksModel;
     timerDialog *m_timerDialog;
@@ -54,7 +55,6 @@ private:
     int m_oldWidth;
     int m_oldHeight;
     int m_filterFlag;
-    long m_taskID;
     QString m_filterName;
     ThreadExportDB * m_expDB;
     void calculateTaskTime();

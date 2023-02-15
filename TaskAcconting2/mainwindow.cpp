@@ -12,11 +12,15 @@
 #include <QDebug>
 #include <QFileDialog>
 #include "autorizationform.h"
+#include "projectscarddialog.h"
 
 QTime m_workTime;
 extern QSqlDatabase m_database;
 extern QString pathToProgram;
 extern User m_currentUser;
+
+long currentTaskID = 0;
+long currentProjectID = 0;
 
 // database \"task_accounting1\" does not exist
 MainWindow::MainWindow(QWidget *parent)
@@ -24,7 +28,29 @@ MainWindow::MainWindow(QWidget *parent)
 
 {
     setupUi(this);    
+    // проекты
+    m_projectsModel = new QSqlQueryModel;
+    QString sqlText = "select id, projectname,description, deadline, fulfillmentdate, userid, chief from projectsview";
+    m_projectsModel->setQuery(sqlText,m_database);
 
+    m_projectsModel->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
+    m_projectsModel->setHeaderData(1, Qt::Horizontal, QObject::tr("Наименование"));
+    m_projectsModel->setHeaderData(2, Qt::Horizontal, QObject::tr("Описание"));
+    m_projectsModel->setHeaderData(3, Qt::Horizontal, QObject::tr("Время\nпо плану"));
+    m_projectsModel->setHeaderData(4, Qt::Horizontal, QObject::tr("Время\nпо факту"));
+    m_projectsModel->setHeaderData(5, Qt::Horizontal, QObject::tr("ID Руководителя"));
+    m_projectsModel->setHeaderData(6, Qt::Horizontal, QObject::tr("Руководитель"));
+
+    m_projectsTableView->setModel(m_projectsModel);
+    m_projectsTableView->setColumnHidden(0, true);
+    m_projectsTableView->setColumnHidden(2, true);
+    m_projectsTableView->setColumnHidden(5, true);
+
+    m_projectsTableView->resizeRowsToContents();
+    m_projectsTableView->show();
+
+
+    // задачи
     m_model = new QSqlTableModel(nullptr, m_database);
     m_model->setTable("tasks");
     m_model->select();
@@ -43,10 +69,11 @@ MainWindow::MainWindow(QWidget *parent)
     m_taskTableView->setColumnWidth(1, 280);
     m_taskTableView->resizeRowsToContents();    
 
+    // работы по задаче
     m_worksModel = new QSqlTableModel(nullptr, m_database);
     m_worksModel->setTable("works");
 
-    m_taskID = 0;
+    currentTaskID = 0;
     QItemSelectionModel *selmodel =  m_taskTableView->selectionModel();
     if(m_model->rowCount()>0)
     {
@@ -59,10 +86,10 @@ MainWindow::MainWindow(QWidget *parent)
     if(m_taskIndex.isValid())
     {
         int row = m_taskIndex.row();
-        m_taskID = m_model->data(m_model->index(row,0)).toULongLong();
+        currentTaskID = m_model->data(m_model->index(row,0)).toULongLong();
     }
 
-    QString filter = QString("taskid=%1").arg(m_taskID);
+    QString filter = QString("taskid=%1").arg(currentTaskID);
     m_worksModel->setFilter(filter);
     m_worksModel->select();
 
@@ -98,6 +125,7 @@ MainWindow::~MainWindow()
 {
     m_database.close();
 
+    delete m_projectsModel;
     delete m_model;
     delete m_worksModel;
 
@@ -181,20 +209,15 @@ void MainWindow::on_action_about_triggered()
 // добавить новую задачу или новую работу по задаче
 void MainWindow::on_action_add_task_triggered()
 {
-    if(!m_database.isOpen())
-    {
-        QMessageBox::critical(this,"Ошибка", m_database.lastError().text());
-        return;
-    }
     int idx =  m_tabWidget->currentIndex();
-    if(idx == 0)
+    if(idx == 1)
     {
         taskDialog dlg(m_model, QModelIndex(), this);
         dlg.setModal(true);
         if(dlg.exec() == QDialog::Accepted)
             m_taskTableView->resizeRowsToContents();
     }
-    else if (idx == 1)
+    else if (idx == 2)
     {
         workRecDialog wrd(this);
         wrd.m_contents = "";
@@ -206,14 +229,24 @@ void MainWindow::on_action_add_task_triggered()
         {
              int row = m_worksModel->rowCount();
              m_worksModel->insertRows(row,1);
-             m_worksModel->setData(m_worksModel->index(row,1), QVariant((qlonglong)m_taskID));
+             m_worksModel->setData(m_worksModel->index(row,1), QVariant((qlonglong)currentTaskID));
              m_worksModel->setData(m_worksModel->index(row,2), wrd.m_contents);
              m_worksModel->setData(m_worksModel->index(row,3), wrd.m_date.toString(Qt::ISODate));
              m_worksModel->setData(m_worksModel->index(row,4), wrd.m_time);
              m_worksModel->submitAll();
-             m_worksModel->setFilter(QString("TaskID=%1").arg(m_taskID));
+             m_worksModel->setFilter(QString("TaskID=%1").arg(currentTaskID));
              m_worksModel->select();
              calculateTaskTime();
+        }
+    }
+    else if(idx == 0)
+    {
+        ProjectsCardDialog dlg(0, this);
+        dlg.setModal(true);
+        if(dlg.exec() == QDialog::Accepted)
+        {
+            QString q = m_projectsModel->query().executedQuery();
+            m_projectsModel->setQuery(q, m_database);
         }
     }
 
@@ -445,22 +478,41 @@ void MainWindow::on_action_sqlite_export_triggered()
 // переход между закладками Задачи и Работы
 void MainWindow::on_m_tabWidget_currentChanged(int index)
 {
+    // першли на закладку задач
+    if(index == 1)
+    {
+        QItemSelectionModel *selmodel =  m_projectsTableView->selectionModel();
+        QModelIndex m_projectIndex = selmodel->currentIndex();
+        currentProjectID = 0;
+        if(m_projectIndex.isValid())
+        {
+            int row = m_projectIndex.row();
+            currentProjectID = m_projectsModel->data(m_projectsModel->index(0,row)).toULongLong();
+            QString pName =  m_projectsModel->data(m_projectsModel->index(row,1)).toString();
+            statusBar()->showMessage(QString("Работы по задаче \"%1\"").arg(pName));
+        }
+        else
+            statusBar()->showMessage("Проект не выбран");
+
+
+    }
+    // першли на закладку работ
     if(index == 2)
     {
         QItemSelectionModel *selmodel =  m_taskTableView->selectionModel();
         QModelIndex m_taskIndex = selmodel->currentIndex();
-        m_taskID = 0;
+        currentTaskID = 0;
         if(m_taskIndex.isValid())
         {
             int row = m_taskIndex.row();
-            m_taskID = m_model->data(m_model->index(row,0)).toULongLong();
+            currentTaskID = m_model->data(m_model->index(row,0)).toULongLong();
             QString tName =  m_model->data(m_model->index(row,1)).toString();
             statusBar()->showMessage(QString("Работы по задаче \"%1\"").arg(tName));
         }
         else
             statusBar()->showMessage("Задача не выбрана");
 
-        QString filter = QString("taskid=%1").arg(m_taskID);
+        QString filter = QString("taskid=%1").arg(currentTaskID);
         m_worksModel->setFilter(filter);
         m_worksModel->submitAll();
         m_worksTableView->resizeRowsToContents();
@@ -486,7 +538,7 @@ void MainWindow::calculateTaskTime()
     }
 
     QSqlQuery qr(m_database);
-    QString sqlText = QString("select sum(timespent) from works where taskid = %1").arg(m_taskID);
+    QString sqlText = QString("select sum(timespent) from works where taskid = %1").arg(currentTaskID);
     qr.exec(sqlText);
     QString res("");
     while(qr.next())

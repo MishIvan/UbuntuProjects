@@ -13,6 +13,7 @@ SOURCES += \
     autorizationform.cpp \
     main.cpp \
     mainwindow.cpp \
+    projectscarddialog.cpp \
     setperioddialog.cpp \
     taskDialog.cpp \
     taskfilterdialog.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
     aboutdialog.h \
     autorizationform.h \
     mainwindow.h \
+    projectscarddialog.h \
     setperioddialog.h \
     sorting.hpp \
     taskDialog.h \
@@ -42,6 +44,7 @@ FORMS += \
     aboutdialog.ui \
     autorizationform.ui \
     mainwindow.ui \
+    projectscarddialog.ui \
     setperioddialog.ui \
     taskDialog.ui \
     taskfilterdialog.ui \
