@@ -19,7 +19,6 @@ int main(int argc, char *argv[])
     // определение пути запуска (без обратного слэша на конце)
     int k = progPath.lastIndexOf('/');
     pathToProgram = k < 0 ?  "" : progPath.left(k);
-
     // установка отчётного периода
     QDate dateBegin, dateEnd;
     GetAccontingPeriod(dateBegin, dateEnd);
@@ -82,16 +81,22 @@ void SetAccountingPeriod(const QDate &d1, const QDate &d2)
 bool readIniData()
 {
     QString pathToIni = pathToProgram +"/TasksAccounting.ini";
+    QFile fileinres(":/texts/TasksAccounting.ini");
     QFile file(pathToIni);
-    if(file.exists())
+
+    if(fileinres.exists() && !file.exists())
     {
-        if(file.open(QIODevice::ReadOnly))
-        {
-            QString DatabaseName;
-            QString UserName = "postgres";
-            QString Password;
-            QString Host = "localhost";
-            int Port = 5432;
+        fileinres.copy(pathToIni);
+        file.setPermissions(file.permissions() | QFileDevice::WriteOwner);
+    }
+
+     if(file.open(QIODevice::ReadOnly))
+     {
+          QString DatabaseName;
+          QString UserName = "postgres";
+          QString Password;
+          QString Host = "localhost";
+           int Port = 5432;
 
             QTextStream stream(&file);
             QString str;
@@ -99,18 +104,18 @@ bool readIniData()
             {
                 str = stream.readLine();
                 QStringList strlst = str.split(':');
-                if(strlst[0].trimmed() == "HOST")
-                    Host = strlst[1].trimmed();
-                else if(strlst[0].trimmed() == "PORT")
-                    Port = strlst[1].trimmed().toInt();
-                else if(strlst[0].trimmed() == "DATABASE")
-                    DatabaseName = strlst[1].trimmed();
-                else if(strlst[0].trimmed() == "USER")
-                    UserName = strlst[1].trimmed();
-                else if(strlst[0].trimmed() == "PASS")
-                    Password = strlst[1].trimmed();
-            }
-            file.close();
+                 if(strlst[0].trimmed() == "HOST")
+                     Host = strlst[1].trimmed();
+                 else if(strlst[0].trimmed() == "PORT")
+                      Port = strlst[1].trimmed().toInt();
+                 else if(strlst[0].trimmed() == "DATABASE")
+                      DatabaseName = strlst[1].trimmed();
+                 else if(strlst[0].trimmed() == "USER")
+                      UserName = strlst[1].trimmed();
+                 else if(strlst[0].trimmed() == "PASS")
+                      Password = strlst[1].trimmed();
+                }
+                file.close();
 
             qDebug() << QSqlDatabase::drivers();
             m_database = QSqlDatabase::addDatabase("QPSQL");
@@ -129,14 +134,12 @@ bool readIniData()
                 qDebug() << s1;
                 QMessageBox::critical(nullptr, "Database Connection",QString("Ошибка: %1").arg(s1));
                 return false;
-            }
+             }
 
-            return true;
-        }
-
-    }
-    else
-        QMessageBox::critical(nullptr,"Считывание параметров", "Файл TasksAccounting.ini отсутсвует");
+                return true;
+     }
+     else
+         QMessageBox::critical(nullptr,"Считывание параметров", "Неудачная попытка открытия файла инициализации");
     return false;
 }
 
