@@ -13,5 +13,6 @@
         <file>images/addTimer48.png</file>
         <file>images/filter48.png</file>
         <file>images/calculate48.png</file>
+        <file>texts/TasksAccounting.ini</file>
     </qresource>
 </RCC>

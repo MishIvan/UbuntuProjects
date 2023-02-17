@@ -470,15 +470,19 @@ void MainWindow::calculateTaskTime()
         return;
     }
 
+    m_taskID = m_model->data(m_model->index(row,0)).toULongLong();
+
     QSqlQuery qr(m_database);
     QString sqlText = QString("select sum(timespent) from works where taskid = %1").arg(m_taskID);
-    qr.exec(sqlText);
-    QString res("");
-    while(qr.next())
+    if(qr.exec(sqlText))
     {
-        res = qr.value(0).toString();
+        qr.first();
+        QString res = qr.value(0).toString();
+        if(!res.isEmpty())
+        {
+            m_model->setData(m_model->index(row,6), res);
+            m_model->submitAll();
+        }
     }
 
-    if(!res.isEmpty())
-        m_model->setData(m_model->index(row,6), res);
 }

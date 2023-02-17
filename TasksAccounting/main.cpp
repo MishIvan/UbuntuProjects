@@ -69,57 +69,62 @@ void SetAccountingPeriod(const QDate &d1, const QDate &d2)
 bool readIniData()
 {
     QString pathToIni = pathToProgram +"/TasksAccounting.ini";
+    QFile fileinres(":/texts/TasksAccounting.ini");
     QFile file(pathToIni);
-    if(file.exists())
+
+    if(fileinres.exists() && !file.exists())
     {
-        if(file.open(QIODevice::ReadOnly))
+        fileinres.copy(pathToIni);
+        file.setPermissions(file.permissions() | QFileDevice::WriteOwner);
+    }
+
+    if(file.open(QIODevice::ReadOnly))
+    {
+        QString DatabaseName;
+        QString UserName = "postgres";
+        QString Password;
+        QString Host = "localhost";
+        int Port = 5432;
+
+        QTextStream stream(&file);
+        QString str;
+        while(!stream.atEnd())
         {
-            QString DatabaseName;
-            QString UserName = "postgres";
-            QString Password;
-            QString Host = "localhost";
-            int Port = 5432;
-
-            QTextStream stream(&file);
-            QString str;
-            while(!stream.atEnd())
-            {
-                str = stream.readLine();
-                QStringList strlst = str.split(':');
-                if(strlst[0].trimmed() == "HOST")
-                    Host = strlst[1].trimmed();
-                else if(strlst[0].trimmed() == "PORT")
-                    Port = strlst[1].trimmed().toInt();
-                else if(strlst[0].trimmed() == "DATABASE")
-                    DatabaseName = strlst[1].trimmed();
-                else if(strlst[0].trimmed() == "USER")
-                    UserName = strlst[1].trimmed();
-                else if(strlst[0].trimmed() == "PASS")
-                    Password = strlst[1].trimmed();
+             str = stream.readLine();
+             QStringList strlst = str.split(':');
+             if(strlst[0].trimmed() == "HOST")
+                 Host = strlst[1].trimmed();
+             else if(strlst[0].trimmed() == "PORT")
+                 Port = strlst[1].trimmed().toInt();
+             else if(strlst[0].trimmed() == "DATABASE")
+                 DatabaseName = strlst[1].trimmed();
+             else if(strlst[0].trimmed() == "USER")
+                 UserName = strlst[1].trimmed();
+             else if(strlst[0].trimmed() == "PASS")
+                 Password = strlst[1].trimmed();
             }
-            file.close();
-            qDebug() << QSqlDatabase::drivers();
-            m_database = QSqlDatabase::addDatabase("QPSQL");
-            m_database.setHostName(Host);
-            m_database.setDatabaseName(DatabaseName);
-            m_database.setUserName(UserName);
-            m_database.setPassword(Password);
-            m_database.setPort(Port);
-            m_database.setConnectOptions();
+        file.close();
+        qDebug() << QSqlDatabase::drivers();
+        m_database = QSqlDatabase::addDatabase("QPSQL");
+        m_database.setHostName(Host);
+        m_database.setDatabaseName(DatabaseName);
+        m_database.setUserName(UserName);
+        m_database.setPassword(Password);
+        m_database.setPort(Port);
+        m_database.setConnectOptions();
 
-            if(m_database.open())
-                qDebug() << "Connection succeeds!";
-            else
-            {
-                QString s1 = m_database.lastError().text();
-                qDebug() << s1;
-                QMessageBox::critical(nullptr, "Database Connection",QString("Ошибка: %1").arg(s1));
-                return false;
-            }
-
-            return true;
+        if(m_database.open())
+            qDebug() << "Connection succeeds!";
+        else
+        {
+            QString s1 = m_database.lastError().text();
+            qDebug() << s1;
+            QMessageBox::critical(nullptr, "Database Connection",QString("Ошибка: %1").arg(s1));
+            return false;
         }
 
+        return true;
     }
+
     return false;
 }
