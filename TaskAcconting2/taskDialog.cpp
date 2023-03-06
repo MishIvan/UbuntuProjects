@@ -1,36 +1,41 @@
 #include "taskDialog.h"
 //#include "timespan.h"
 #include <QMessageBox>
+#include <QSqlDatabase>
 
+extern long currentTaskID;
+extern QSqlDatabase m_database;
 
-taskDialog::taskDialog(QSqlTableModel *model ,QModelIndex idx, QWidget *parent) :
+taskDialog::taskDialog(bool isEdit, QWidget *parent) :
     QDialog(parent)
 {
-    m_model = model;
-    m_idx = idx;
-    setupUi(this);
-    if(idx.isValid())
+    m_edit = isEdit;
+    if(m_edit)
     {
-            int row = idx.row();
-            QModelIndex currIdx = m_model->index(row,1);
-            m_name->setText(m_model->data(currIdx).toString());
+            QSqlQuery qry(m_database);
+            QString sqlText = "select id,taskname,content,deadline,fulfillmentdate,plan,fact,executorid,executor,projectid,projectname";
+            sqlText = QString("where id = %1").arg(currentTaskID);
+            if(qry.exec(sqlText))
+            {
+                if(qry.first())
+                {
+                    m_name->setText(qry.value(1).toString());
+                    m_content->setText(qry.value(2).toString());
 
-            currIdx = m_model->index(row,2);
-            m_content->setText(m_model->data(currIdx).toString());
+                    QDate d1 = QDate::fromString(qry.value(3).toString(), Qt::ISODate);
+                    m_datePlan->setDate(d1);
 
-            currIdx = m_model->index(row,3);
-            QDate d1 = QDate::fromString(m_model->data(currIdx).toString(), Qt::ISODate);
-            m_datePlan->setDate(d1);
+                    d1 = QDate::fromString(qry.value(4).toString(), Qt::ISODate);
+                    m_dateFact->setDate(d1);
 
-            currIdx = m_model->index(row,4);
-            d1 = QDate::fromString(m_model->data(currIdx).toString(), Qt::ISODate);
-            m_dateFact->setDate(d1);
+                    m_planTime->setText(qry.value(5).toString());
 
-            currIdx = m_model->index(row,5);
-            m_planTime->setText(m_model->data(currIdx).toString());
+                    m_factTime->setText(qry.value(6).toString());
 
-            currIdx = m_model->index(row,6);
-            m_factTime->setText(m_model->data(currIdx).toString());
+                }
+            }
+
+
         }
     else
     {
@@ -64,13 +69,14 @@ void taskDialog::on_tasksDialog_accepted()
         return;
     }
 
-    int row = -1;
-    if(!m_idx.isValid())
+    QSqlQuery qry(m_database);
+    if(m_edit)
     {
-        row = m_model->rowCount();
-        m_model->insertRows(row,1);
+        sqlText = "insert "
     }
     else
+    {
+    }
         row = m_idx.row();
     m_model->setData(m_model->index(row,1), name);
     m_model->setData(m_model->index(row,2), content);
@@ -87,7 +93,6 @@ void taskDialog::on_tasksDialog_accepted()
         QString msg = m_model->database().lastError().text();
         QMessageBox::warning(this,"Ошибка",QString("Данные не внесены. %1").arg(msg));
     }
-    m_model->select();
 
 
 }

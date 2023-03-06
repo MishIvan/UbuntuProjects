@@ -48,7 +48,7 @@ private slots:
 
 private:
     QSqlQueryModel *m_projectsModel;
-    QSqlTableModel *m_model;
+    QSqlQueryModel *m_tasksModel;
     QSqlTableModel *m_worksModel;
     timerDialog *m_timerDialog;
 

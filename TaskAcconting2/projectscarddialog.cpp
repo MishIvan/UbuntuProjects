@@ -1,6 +1,8 @@
 #include "projectscarddialog.h"
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QMessageBox>
+#include <QSqlError>
 #include "autorizationform.h"
 
 extern QSqlDatabase m_database;
@@ -19,7 +21,7 @@ ProjectsCardDialog::ProjectsCardDialog(bool edit_mode, QWidget *parent) :
     if(m_isEditMode)
     {
         QSqlQuery qry(m_database);
-        QString textSQL =  QString("select id, name, description, deadline, fulfillmentdate, userid, chief from projectsview")
+        QString textSQL =  QString("select id, projectname, description, deadline, fulfillmentdate, userid, chief from projectsview")
                 + QString(" where id = %1").arg(currentProjectID);
         qry.exec(textSQL);
         while(qry.next())
@@ -30,6 +32,12 @@ ProjectsCardDialog::ProjectsCardDialog(bool edit_mode, QWidget *parent) :
             m_factDateEdit->setDate(qry.value(4).toDate());
             userName = qry.value(5).toString();
         }
+    }
+    else
+    {
+        QDate today = QDate::currentDate();
+        m_planDateEdit->setDate(QDate(today.year(), 12, 31));
+        m_factDateEdit->setDate(QDate(9999, 12, 31));
     }
 
     // руководитель проекта добавляет или просматривает только свои проекты
@@ -82,14 +90,22 @@ void ProjectsCardDialog::on_ProjectsCardDialog_accepted()
         qryText = "insert into projects(name,description, deadline,fulfillmentdate,userid) ";
         qryText += QString("values('%1','%2','%3','%4',%5)")
                        .arg(pname).arg(desc).arg(dp).arg(df).arg(userid);
-        qry.exec(qryText);
+        if(!qry.exec(qryText))
+        {
+            QString errMsg = qry.lastError().text();
+            QMessageBox::warning(this,"Ошибка",QString("Запись не добавлена: %1").arg(errMsg));
+        }
     }
     else
     {
         qryText = QString("update projects set name = '%1', description = '%2', deadline = '%3',fulfillmentdate = '%4',userid= %5")
                 .arg(pname).arg(desc).arg(dp).arg(df).arg(userid);
-        qryText += QString(" where projectid = %1").arg(currentProjectID);
-        qry.exec(qryText);
+        qryText += QString(" where id = %1").arg(currentProjectID);
+        if(!qry.exec(qryText))
+        {
+            QString errMsg = qry.lastError().text();
+            QMessageBox::warning(this,"Ошибка",QString("Поля записи не изменены: %1").arg(errMsg));
+        }
 
     }
 

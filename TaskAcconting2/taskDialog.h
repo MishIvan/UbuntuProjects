@@ -8,10 +8,9 @@
 class taskDialog : public QDialog, private Ui::tasksDialog
 {
     Q_OBJECT
-    QModelIndex m_idx;
-    QSqlTableModel *m_model;
+    bool m_edit; // правка записи (да) или добавление (нет)
 public:
-    explicit taskDialog(QSqlTableModel *model ,QModelIndex idx = QModelIndex(), QWidget *parent = nullptr);
+    explicit taskDialog(bool isEdit = false,QWidget *parent = nullptr);
 private slots:
     void on_tasksDialog_accepted();
 };
