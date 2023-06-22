@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>552</width>
+    <height>445</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Таблица умножения</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="MainResourse.qrc">
+    <normaloff>:/icons/Table32.png</normaloff>:/icons/Table32.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTableWidget" name="m_multiplyTable">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>521</width>
+      <height>351</height>
+     </rect>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::SingleSelection</enum>
+    </property>
+    <property name="rowCount">
+     <number>0</number>
+    </property>
+    <property name="columnCount">
+     <number>0</number>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>552</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Действия</string>
+    </property>
+    <addaction name="start_test_action"/>
+    <addaction name="stop_test_action"/>
+    <addaction name="separator"/>
+    <addaction name="clear_table_action"/>
+    <addaction name="populate_table_action"/>
+    <addaction name="exit_action"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="start_test_action"/>
+   <addaction name="stop_test_action"/>
+   <addaction name="separator"/>
+   <addaction name="clear_table_action"/>
+   <addaction name="populate_table_action"/>
+  </widget>
+  <action name="start_test_action">
+   <property name="icon">
+    <iconset resource="MainResourse.qrc">
+     <normaloff>:/icons/Start32.png</normaloff>:/icons/Start32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Начать тест</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+B</string>
+   </property>
+  </action>
+  <action name="stop_test_action">
+   <property name="icon">
+    <iconset resource="MainResourse.qrc">
+     <normaloff>:/icons/Stop32.png</normaloff>:/icons/Stop32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Завершить тест</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+S</string>
+   </property>
+  </action>
+  <action name="clear_table_action">
+   <property name="icon">
+    <iconset resource="MainResourse.qrc">
+     <normaloff>:/icons/Clear32.png</normaloff>:/icons/Clear32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Очистить таблицу</string>
+   </property>
+   <property name="toolTip">
+    <string>Очистить значения таблицы</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+C</string>
+   </property>
+  </action>
+  <action name="populate_table_action">
+   <property name="icon">
+    <iconset resource="MainResourse.qrc">
+     <normaloff>:/icons/Table32.png</normaloff>:/icons/Table32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Заполнить таблицу</string>
+   </property>
+   <property name="toolTip">
+    <string>Заполнить таблицу значениями</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+F</string>
+   </property>
+  </action>
+  <action name="exit_action">
+   <property name="text">
+    <string>Выход</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+X</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="MainResourse.qrc"/>
+ </resources>
+ <connections/>
+</ui>
