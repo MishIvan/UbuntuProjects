@@ -10,13 +10,16 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    protocoldialog.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    protocoldialog.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    protocoldialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

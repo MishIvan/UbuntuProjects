@@ -4,5 +4,6 @@
         <file>icons/Stop32.png</file>
         <file>icons/Start32.png</file>
         <file>icons/Clear32.png</file>
+        <file>icons/Report32.png</file>
     </qresource>
 </RCC>

@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "protocoldialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -22,8 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_testStarted = false;
     stop_test_action->setEnabled(false);
-
-    setEditableAll(false);
+    result_action->setEnabled(false);
 
 }
 
@@ -48,6 +48,8 @@ void MainWindow::on_populate_table_action_triggered()
             QTableWidgetItem *wi = new QTableWidgetItem(QString("%1").arg(res));
             wi->setBackground(QBrush(Qt::GlobalColor::white));
             wi->setForeground(QBrush(Qt::GlobalColor::black));
+            if(wi->flags() & Qt::ItemIsEditable)
+                wi->setFlags(wi->flags() ^ Qt::ItemIsEditable);
             m_multiplyTable->setItem(i,j, wi);
         }
     m_toFill = false;
@@ -66,6 +68,8 @@ void MainWindow::on_clear_table_action_triggered()
         for(int j=0; j < 8; j++)
         {
             QTableWidgetItem *wi =new QTableWidgetItem(QString(""));
+            if(wi->flags() & Qt::ItemIsEditable)
+                wi->setFlags(wi->flags() ^ Qt::ItemIsEditable);
             m_multiplyTable->setItem(i,j, wi);
         }
 }
@@ -74,8 +78,8 @@ void MainWindow::on_clear_table_action_triggered()
 void MainWindow::on_m_multiplyTable_itemChanged(QTableWidgetItem *item)
 {
     if(m_toFill || !m_testStarted) return;
-    int row = m_multiplyTable->currentRow();
-    int col = m_multiplyTable->currentColumn();
+    int row = m_multiplyTable->currentRow() + 2;
+    int col = m_multiplyTable->currentColumn() + 2;
     QString value = item->text();
     if(value.isEmpty()) return;
     bool ok;
@@ -85,15 +89,24 @@ void MainWindow::on_m_multiplyTable_itemChanged(QTableWidgetItem *item)
         QMessageBox::warning(this,"Ошибка","Неверно задано значение");
         return;
     }
-    if((row + 2)*(col +2) != ival)
+    if(row*col != ival)
     {
         item->setBackground(*m_errorBackBrush);
         item->setForeground(*m_errorForeBrush);
+        statusBar()->showMessage(QString("%1 x %2 = %3 неправильно!").arg(row).arg(col).arg(ival));
+        QString s1 = QString("%1 x %2 = %3 неправильно, ").arg(row).arg(col).arg(ival) +
+                QString("%1 x %2 = %3").arg(row).arg(col).arg(row*col);
+        if(!m_protocol.contains(s1))
+            m_protocol.append(s1);
     }
     else
     {
         item->setBackground(*m_succesBackBrush);
         item->setForeground(*m_succesForeBrush);
+        QString s1 = QString("%1 x %2 = %3 правильно!").arg(row).arg(col).arg(ival);
+        statusBar()->showMessage(s1);
+        if(!m_protocol.contains(s1))
+            m_protocol.append(s1);
     }
 
 }
@@ -106,8 +119,12 @@ void MainWindow::on_start_test_action_triggered()
     clear_table_action->setEnabled(false);
     populate_table_action->setEnabled(false);
     stop_test_action->setEnabled(true);
+    result_action->setEnabled(false);
     on_clear_table_action_triggered();
+    if(!m_multiplyTable->isEnabled())
+        m_multiplyTable->setEnabled(true);
     setEditableAll(true);
+    m_protocol.clear();
 }
 
 // Прекратить тест
@@ -122,6 +139,7 @@ void MainWindow::on_stop_test_action_triggered()
     stop_test_action->setEnabled(false);
     clear_table_action->setEnabled(true);
     populate_table_action->setEnabled(true);
+    result_action->setEnabled(true);
     setEditableAll(false);
 
 }
@@ -164,6 +182,11 @@ void MainWindow::on_m_multiplyTable_itemSelectionChanged()
     QColor scl = m_succesBackBrush->color();
     if((cl == ecl || cl == scl) && (item->flags() & Qt::ItemIsEditable))
         item->setFlags(item->flags() ^ Qt::ItemIsEditable);
+
+    int row = m_multiplyTable->currentRow() + 2;
+    int colum = m_multiplyTable->currentColumn() + 2;
+    if(m_testStarted)
+        statusBar()->showMessage(QString("%1 x %2 = ?").arg(row).arg(colum));
 }
 
 // установить или сбросить флаг редактирования во всех ячейках
@@ -180,3 +203,12 @@ void MainWindow::setEditableAll(bool editable)
             }
         }
 }
+
+// Показать результаты теста
+void MainWindow::on_result_action_triggered()
+{
+    QString res = m_protocol.join('\n');
+    ProtocolDialog dlg(res, this);
+    dlg.exec();
+}
+

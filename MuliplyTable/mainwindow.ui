@@ -19,6 +19,9 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTableWidget" name="m_multiplyTable">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -26,6 +29,13 @@
       <width>521</width>
       <height>351</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Таблица умножения.
+Для ввода значений начните тест.
+Введите число и нажмите ENTER.
+На красном фоне отображается неверный результат,
+на зелёном - верный.</string>
     </property>
     <property name="selectionMode">
      <enum>QAbstractItemView::SingleSelection</enum>
@@ -56,6 +66,7 @@
     <addaction name="separator"/>
     <addaction name="clear_table_action"/>
     <addaction name="populate_table_action"/>
+    <addaction name="result_action"/>
     <addaction name="exit_action"/>
    </widget>
    <addaction name="menu"/>
@@ -76,6 +87,7 @@
    <addaction name="separator"/>
    <addaction name="clear_table_action"/>
    <addaction name="populate_table_action"/>
+   <addaction name="result_action"/>
   </widget>
   <action name="start_test_action">
    <property name="icon">
@@ -84,6 +96,9 @@
    </property>
    <property name="text">
     <string>Начать тест</string>
+   </property>
+   <property name="toolTip">
+    <string>Начать тест (Alt+B)</string>
    </property>
    <property name="shortcut">
     <string>Alt+B</string>
@@ -97,8 +112,11 @@
    <property name="text">
     <string>Завершить тест</string>
    </property>
+   <property name="toolTip">
+    <string>Завершить тест (Alt+E)</string>
+   </property>
    <property name="shortcut">
-    <string>Alt+S</string>
+    <string>Alt+E</string>
    </property>
   </action>
   <action name="clear_table_action">
@@ -110,7 +128,7 @@
     <string>Очистить таблицу</string>
    </property>
    <property name="toolTip">
-    <string>Очистить значения таблицы</string>
+    <string>Очистить значения таблицы (Alt+C)</string>
    </property>
    <property name="shortcut">
     <string>Alt+C</string>
@@ -125,7 +143,7 @@
     <string>Заполнить таблицу</string>
    </property>
    <property name="toolTip">
-    <string>Заполнить таблицу значениями</string>
+    <string>Заполнить таблицу значениями (Alt+F)</string>
    </property>
    <property name="shortcut">
     <string>Alt+F</string>
@@ -137,6 +155,21 @@
    </property>
    <property name="shortcut">
     <string>Alt+X</string>
+   </property>
+  </action>
+  <action name="result_action">
+   <property name="icon">
+    <iconset resource="MainResourse.qrc">
+     <normaloff>:/icons/Report32.png</normaloff>:/icons/Report32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Результаты</string>
+   </property>
+   <property name="toolTip">
+    <string>Показать результаты теста (Alt+R)</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+R</string>
    </property>
   </action>
  </widget>

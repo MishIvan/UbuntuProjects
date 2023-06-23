@@ -17,6 +17,7 @@ class MainWindow : public QMainWindow, private Ui::MainWindow
     QBrush* m_succesForeBrush;
     bool m_toFill;
     bool m_testStarted;
+    QStringList m_protocol;
     void show_results();
     void setEditableAll(bool editable = true);
 public:
@@ -30,5 +31,6 @@ private slots:
     void on_start_test_action_triggered();
     void on_stop_test_action_triggered();
     void on_m_multiplyTable_itemSelectionChanged();
+    void on_result_action_triggered();
 };
 #endif // MAINWINDOW_H
