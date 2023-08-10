@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FlightDialog</class>
+ <widget class="QDialog" name="FlightDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>426</width>
+    <height>389</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Рейс</string>
+  </property>
+  <widget class="QDialogButtonBox" name="m_buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>340</y>
+     <width>341</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>171</y>
+     <width>151</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Отправление откуда:</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="m_from">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>171</y>
+     <width>231</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Пункт отправления рейса&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+   <property name="editable">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>211</y>
+     <width>112</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Прибытие куда:</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="m_to">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>211</y>
+     <width>231</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Пункт прибытия рейса&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>250</y>
+     <width>131</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Количество мест:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="m_placeCount">
+   <property name="geometry">
+    <rect>
+     <x>170</x>
+     <y>250</y>
+     <width>113</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="m_freePlaces">
+   <property name="geometry">
+    <rect>
+     <x>12</x>
+     <y>290</y>
+     <width>251</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Количество свободных мест:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>201</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Номер:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="m_number">
+      <property name="toolTip">
+       <string>Номер рейса</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>50</y>
+     <width>251</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Отправление:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QDateTimeEdit" name="m_timeDeparture">
+      <property name="toolTip">
+       <string>Время отправления</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>90</y>
+     <width>251</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <item>
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Прибытие:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QDateTimeEdit" name="m_timeArrival">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>11</x>
+     <y>130</y>
+     <width>212</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <item>
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Врема полёта (час):</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTimeEdit" name="m_flightTime"/>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>m_buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>FlightDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>m_buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>FlightDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

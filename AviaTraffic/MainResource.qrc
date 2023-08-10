@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>texts/AviaTraffic.ini</file>
+        <file>images/ticket32.png</file>
+        <file>images/edit32.png</file>
+        <file>images/airport32.png</file>
+        <file>images/add32.png</file>
+        <file>images/flight32.png</file>
+        <file>images/exit32.png</file>
+        <file>images/add_user32.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>990</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Пассажирские авиаперевозки</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTableView" name="m_flightTableView">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>951</width>
+      <height>511</height>
+     </rect>
+    </property>
+    <property name="selectionMode">
+     <enum>QAbstractItemView::SingleSelection</enum>
+    </property>
+    <property name="selectionBehavior">
+     <enum>QAbstractItemView::SelectRows</enum>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>990</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Рейс</string>
+    </property>
+    <addaction name="flight_add_action"/>
+    <addaction name="flight_edit_action"/>
+    <addaction name="flight_status_action"/>
+    <addaction name="tickets_view_action"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>Действия</string>
+    </property>
+    <addaction name="town_add_action"/>
+    <addaction name="add_user_action"/>
+    <addaction name="close_user_action"/>
+    <addaction name="change_password_action"/>
+    <addaction name="exit_action"/>
+   </widget>
+   <addaction name="menu_3"/>
+   <addaction name="menu"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="flight_add_action"/>
+   <addaction name="flight_edit_action"/>
+   <addaction name="flight_status_action"/>
+   <addaction name="tickets_view_action"/>
+   <addaction name="separator"/>
+   <addaction name="town_add_action"/>
+   <addaction name="exit_action"/>
+  </widget>
+  <action name="flight_add_action">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/add32.png</normaloff>:/images/add32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Добавить</string>
+   </property>
+   <property name="toolTip">
+    <string>Добавить рейс</string>
+   </property>
+  </action>
+  <action name="flight_status_action">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/flight32.png</normaloff>:/images/flight32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Установить статус</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Изменить статус рейса: готов к отправке (по умолчанию), отложен, перенесён, отменён&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="flight_edit_action">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/edit32.png</normaloff>:/images/edit32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Править</string>
+   </property>
+   <property name="toolTip">
+    <string>Изменить параметры выбранного рейса</string>
+   </property>
+  </action>
+  <action name="town_add_action">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/airport32.png</normaloff>:/images/airport32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Добавить пункт отправления/прибытия</string>
+   </property>
+   <property name="toolTip">
+    <string>Добавить пункт отправления и (или) прибытия</string>
+   </property>
+  </action>
+  <action name="exit_action">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/exit32.png</normaloff>:/images/exit32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Выход</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+X</string>
+   </property>
+  </action>
+  <action name="tickets_view_action">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/ticket32.png</normaloff>:/images/ticket32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Билеты</string>
+   </property>
+   <property name="toolTip">
+    <string>Показать билеты на выбранный рейс</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+T</string>
+   </property>
+  </action>
+  <action name="add_user_action">
+   <property name="icon">
+    <iconset resource="MainResource.qrc">
+     <normaloff>:/images/add_user32.png</normaloff>:/images/add_user32.png</iconset>
+   </property>
+   <property name="text">
+    <string>Добавить пользователя</string>
+   </property>
+   <property name="toolTip">
+    <string>Добавить запись пользователя</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+U</string>
+   </property>
+  </action>
+  <action name="close_user_action">
+   <property name="text">
+    <string>Закрыть запись пользователя</string>
+   </property>
+  </action>
+  <action name="change_password_action">
+   <property name="text">
+    <string>Сменить пароль</string>
+   </property>
+   <property name="toolTip">
+    <string>Сменить пароль текущего пользователя</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="MainResource.qrc"/>
+ </resources>
+ <connections/>
+</ui>
