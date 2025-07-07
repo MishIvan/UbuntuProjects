@@ -60,13 +60,13 @@ BaseHTTPServer::BaseHTTPServer(const char * host, const char *port)
 
 // Запуск цикла обработки запроса
 void BaseHTTPServer::Run()
-{
-    char buff[BUFF_SIZE];
+{    
     listen(m_socket, 5);
     while(true)
     {
         future<bool> asyncFuture = async(launch::async, [&]()
         {
+            char buff[BUFF_SIZE];
             sockaddr client;
             socklen_t addrlen = sizeof(client);
             int client_sock = accept(m_socket, &client,

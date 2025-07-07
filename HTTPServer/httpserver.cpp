@@ -64,11 +64,13 @@ void HTTPServer::do_GET(const RequestData& recvdata)
     path = "";
     for(auto el : params)
     {
-        path += el.first+": "+el.second+"\n";
+        path += el.first+": "+el.second+"; ";
     }
 
-    msg_resp = "200 OK. Parameters are:\n"+path;
+    msg_resp = "200 OK";
     sprintf(buff, m_response_str, msg_resp.c_str());
+    msg_resp = buff;
+    msg_resp +="\r\n\r\nParameters are:"+path;
     send(sock, msg_resp.c_str(), msg_resp.length(), 0);
 
 }
@@ -78,8 +80,10 @@ void HTTPServer::do_POST(const RequestData& recvdata)
     string path = recvdata.m_path;
     char buff[128];
 
-    string msg_resp = "200 OK path = "+path;
+    string msg_resp = "200 OK";
     sprintf(buff, m_response_str, msg_resp.c_str());
+    msg_resp = buff;
+    msg_resp +"\r\n\r\n"+path;
     send(sock, msg_resp.c_str(), msg_resp.length(), 0);
 
 }
