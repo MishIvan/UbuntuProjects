@@ -6,8 +6,10 @@ CONFIG -= qt
 SOURCES += \
         basehttpserver.cpp \
         httpserver.cpp \
-        main.cpp
+        main.cpp \
+        reply.cpp
 
 HEADERS += \
     basehttpserver.h \
-    httpserver.h
+    httpserver.h \
+    reply.h

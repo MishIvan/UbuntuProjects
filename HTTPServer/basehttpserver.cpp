@@ -1,4 +1,5 @@
 #include "basehttpserver.h"
+#include "reply.h"
 
 // Создание сокета и привязка его к серверу
 BaseHTTPServer::BaseHTTPServer(const char * host, const char *port)
@@ -91,15 +92,21 @@ void BaseHTTPServer::Run()
             }while(bytes_read>0);
 
             RequestData rdata;
+            Reply repl;
             rdata.m_socket = client_sock;
             if(msg.length() > 0)
             {
                 bool rp = Parse(msg, rdata); // парсить текст запроса
                 if(!rp) // не удалось спарсить текст запроса
                 {
-                    msg_resp = "400 - Bad Request";
-                    sprintf(buff, m_response_str, msg_resp.c_str());
-                    send(client_sock, msg_resp.c_str(), msg_resp.length(), 0);
+                    repl.setStatus(400);
+                    repl.SetHeader("Content-Type","text/html; charset=UTF-8");
+                    string body = "Ошибка при разборе текста запроса";
+                    repl.setBody(body.c_str());
+                    sprintf(buff,"%d", (int)body.length());
+                    repl.SetHeader("Content-Length",buff);
+                    repl.Send(client_sock);
+
                     shutdown(client_sock,0);
                     close(client_sock);
                     return false;
@@ -114,9 +121,14 @@ void BaseHTTPServer::Run()
             }
             else // данные запроса не получены
             {
-                msg_resp = "410 - Couldn't receive message from client";
-                sprintf(buff, m_response_str, msg_resp.c_str());
-                send(client_sock, msg_resp.c_str(), msg_resp.length(), 0);
+                repl.setStatus(404);
+                repl.SetHeader("Content-Type","text/html; charset=UTF-8");
+                string body = "Данные от клиента не получены";
+                repl.setBody(body.c_str());
+                sprintf(buff,"%d", (int)body.length());
+                repl.SetHeader("Content-Length",buff);
+                repl.Send(client_sock);
+
                 shutdown(client_sock,0);
                 close(client_sock);
                 return false;

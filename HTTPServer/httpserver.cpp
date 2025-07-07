@@ -1,4 +1,5 @@
 #include "httpserver.h"
+#include "reply.h"
 
 // Функция декодирования URL
 string urlDecode(const string& encoded) {
@@ -51,11 +52,15 @@ void HTTPServer::do_GET(const RequestData& recvdata)
 
     size_t pos = path.find('?');
     bool err = pos == string::npos;
+    Reply repl;
     if(err)
-    {
-        msg_resp = "400 OK  = Bad Request";
-        sprintf(buff, m_response_str, msg_resp.c_str());
-        send(sock, msg_resp.c_str(), msg_resp.length(), 0);
+    {        
+        repl.setStatus(400);
+        repl.SetHeader("Content-Type","text/html; charset=UTF-8");
+        string body = "Неверное задание пути в запросе";
+        sprintf(buff,"%d", (int)body.length());
+        repl.SetHeader("Content-Length",buff);
+        repl.Send(sock);
         return;
     }
 
@@ -67,23 +72,27 @@ void HTTPServer::do_GET(const RequestData& recvdata)
         path += el.first+": "+el.second+"; ";
     }
 
-    msg_resp = "200 OK";
-    sprintf(buff, m_response_str, msg_resp.c_str());
-    msg_resp = buff;
-    msg_resp +="\r\n\r\nParameters are:"+path;
-    send(sock, msg_resp.c_str(), msg_resp.length(), 0);
+    repl.setStatus(200);
+    repl.SetHeader("Content-Type","text/html; charset=UTF-8");
+    string body = "Параметры запроса:\n"+path;
+    repl.setBody(body.c_str());
+    sprintf(buff,"%d", (int)body.length());
+    repl.SetHeader("Content-Length",buff);
+    repl.Send(sock);
 
 }
 void HTTPServer::do_POST(const RequestData& recvdata)
 {
-    int sock = recvdata.m_socket;
     string path = recvdata.m_path;
     char buff[128];
 
-    string msg_resp = "200 OK";
-    sprintf(buff, m_response_str, msg_resp.c_str());
-    msg_resp = buff;
-    msg_resp +"\r\n\r\n"+path;
-    send(sock, msg_resp.c_str(), msg_resp.length(), 0);
+    Reply repl;
+    repl.setStatus(200);
+    repl.SetHeader("Content-Type","text/html; charset=UTF-8");
+    string body = path;
+    repl.setBody(body.c_str());
+    sprintf(buff,"%d", (int)body.length());
+    repl.SetHeader("Content-Length",buff);
+    repl.Send(recvdata.m_socket);
 
 }
