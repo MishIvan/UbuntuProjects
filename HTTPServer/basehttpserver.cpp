@@ -63,67 +63,43 @@ BaseHTTPServer::BaseHTTPServer(const char * host, const char *port)
 void BaseHTTPServer::Run()
 {    
     listen(m_socket, 5);
-    while(true)
+    // функция обработки запроса
+    auto fn =  [&]()
     {
-        future<bool> asyncFuture = async(launch::async, [&]()
+        char buff[BUFF_SIZE];
+        sockaddr client;
+        socklen_t addrlen = sizeof(client);
+        int client_sock = accept(m_socket, &client,
+                                 &addrlen);
+        if(client_sock < 1)
         {
-            char buff[BUFF_SIZE];
-            sockaddr client;
-            socklen_t addrlen = sizeof(client);
-            int client_sock = accept(m_socket, &client,
-                                     &addrlen);
-            if(client_sock < 1)
+            throw "Could not accept receive client message";
+            return;
+        }
+
+        ssize_t bytes_read = 0;
+        string msg;
+        do
+        {
+            bytes_read = read(client_sock, buff, BUFF_SIZE);
+            if(bytes_read > 0)
             {
-                throw "Could not accept receive client message";
-                return false;
+                msg += buff;
+                if(bytes_read <= BUFF_SIZE) break;
             }
+        }while(bytes_read>0);
 
-            ssize_t bytes_read = 0;
-            string msg;
-            string msg_resp;
-            do
+        RequestData rdata;
+        Reply repl;
+        rdata.m_socket = client_sock;
+        if(msg.length() > 0)
+        {
+            bool rp = Parse(msg, rdata); // парсить текст запроса
+            if(!rp) // не удалось спарсить текст запроса
             {
-                bytes_read = read(client_sock, buff, BUFF_SIZE);
-                if(bytes_read > 0)
-                {
-                    msg += buff;
-                    if(bytes_read <= BUFF_SIZE) break;
-                }
-            }while(bytes_read>0);
-
-            RequestData rdata;
-            Reply repl;
-            rdata.m_socket = client_sock;
-            if(msg.length() > 0)
-            {
-                bool rp = Parse(msg, rdata); // парсить текст запроса
-                if(!rp) // не удалось спарсить текст запроса
-                {
-                    repl.setStatus(400);
-                    repl.SetHeader("Content-Type","text/html; charset=UTF-8");
-                    string body = "Ошибка при разборе текста запроса";
-                    repl.setBody(body.c_str());
-                    sprintf(buff,"%d", (int)body.length());
-                    repl.SetHeader("Content-Length",buff);
-                    repl.Send(client_sock);
-
-                    shutdown(client_sock,0);
-                    close(client_sock);
-                    return false;
-
-                }
-                if(rdata.m_method == "POST")
-                    do_POST(rdata);
-                if(rdata.m_method == "GET")
-                    do_GET(rdata);
-
-
-            }
-            else // данные запроса не получены
-            {
-                repl.setStatus(404);
+                repl.setStatus(400);
                 repl.SetHeader("Content-Type","text/html; charset=UTF-8");
-                string body = "Данные от клиента не получены";
+                string body = "Ошибка при разборе текста запроса";
                 repl.setBody(body.c_str());
                 sprintf(buff,"%d", (int)body.length());
                 repl.SetHeader("Content-Length",buff);
@@ -131,15 +107,55 @@ void BaseHTTPServer::Run()
 
                 shutdown(client_sock,0);
                 close(client_sock);
-                return false;
+                return;
+
+            }
+            if(rdata.m_method == "POST")
+                do_POST(rdata);
+            else if(rdata.m_method == "GET")
+                do_GET(rdata);
+            else
+            {
+                repl.setStatus(405);
+                repl.SetHeader("Content-Type","text/html; charset=UTF-8");
+                string body = "Метод не поддерживается";
+                repl.setBody(body.c_str());
+                sprintf(buff,"%d", (int)body.length());
+                repl.SetHeader("Content-Length",buff);
+                repl.Send(client_sock);
+
+                shutdown(client_sock,0);
+                close(client_sock);
+                return;
+
+
             }
 
-            shutdown(client_sock,0);
-            close(client_sock);
-            return true;
-        });
 
-        bool flag = asyncFuture.get();
+        }
+        else // данные запроса не получены
+        {
+            repl.setStatus(404);
+            repl.SetHeader("Content-Type","text/html; charset=UTF-8");
+            string body = "Данные от клиента не получены";
+            repl.setBody(body.c_str());
+            sprintf(buff,"%d", (int)body.length());
+            repl.SetHeader("Content-Length",buff);
+            repl.Send(client_sock);
+
+        }
+
+        shutdown(client_sock,0);
+        close(client_sock);
+    };
+
+    while(true)
+    {
+        packaged_task<void()> task(fn);
+        auto future = task.get_future();
+        thread th(move(task));
+        th.detach();
+        future.get();
     }
 }
 // Парсить заголовок и тело запроса

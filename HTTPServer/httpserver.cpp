@@ -48,7 +48,6 @@ void HTTPServer::do_GET(const RequestData& recvdata)
     int sock = recvdata.m_socket;
     string path = recvdata.m_path;
     char buff[128];
-    string msg_resp;
 
     size_t pos = path.find('?');
     bool err = pos == string::npos;
@@ -72,6 +71,7 @@ void HTTPServer::do_GET(const RequestData& recvdata)
         path += el.first+": "+el.second+"; ";
     }
 
+    sleep(3);
     repl.setStatus(200);
     repl.SetHeader("Content-Type","text/html; charset=UTF-8");
     string body = "Параметры запроса:\n"+path;
