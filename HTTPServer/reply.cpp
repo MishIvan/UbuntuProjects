@@ -1,7 +1,5 @@
 #include "reply.h"
 
-Reply::Reply() {}
-
 void Reply::Send(int socket)
 {
     string reply = "HTTP/1.1 ";
@@ -11,6 +9,8 @@ void Reply::Send(int socket)
             reply += "200 OK\r\n"; break;
         case 400:
             reply += "400 Bad Request\r\n"; break;
+        case 401:
+            reply += "401 Unautorized\r\n"; break;
         case 404:
             reply += "404 Not Found\r\n"; break;
         case 403:
@@ -34,9 +34,22 @@ void Reply::Send(int socket)
         reply+= el.first +": "+el.second+"\r\n";
     }
     reply+="\r\n"+m_body;
-     send(socket, reply.c_str(), reply.length(), 0);
+    send(socket, reply.c_str(), reply.length(), 0);
 }
-void Reply::SetHeader(const char *key, const char *value)
+
+void Request::Send(int socket)
+{
+    string reply = m_method + ' ' + m_path + " HTTP/1.1\r\n";
+
+    for(auto el : m_headers)
+    {
+        reply+= el.first +": "+el.second+"\r\n";
+    }
+    reply+="\r\n"+m_body;
+    send(socket, reply.c_str(), reply.length(), 0);
+}
+
+void ReplyOrRequest::SetHeader(const char *key, const char *value)
 {
     string first = key;
     string second = value;

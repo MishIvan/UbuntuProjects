@@ -9,6 +9,7 @@ public:
     HTTPServer(const char * host, const char *port);
     void do_GET(const RequestData& recvdata);
     void do_POST(const RequestData& recvdata);
+    bool Autorization(const char *login, const char *password);
 
 };
 

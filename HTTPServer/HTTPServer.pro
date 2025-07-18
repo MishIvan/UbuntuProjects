@@ -10,6 +10,7 @@ SOURCES += \
         reply.cpp
 
 HEADERS += \
+    ../Common/json.hpp \
     basehttpserver.h \
     httpserver.h \
     reply.h

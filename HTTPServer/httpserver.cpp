@@ -1,5 +1,9 @@
 #include "httpserver.h"
 #include "reply.h"
+#include "../Common/json.hpp"
+
+using json = nlohmann::json;
+
 
 // Функция декодирования URL
 string urlDecode(const string& encoded) {
@@ -50,34 +54,43 @@ void HTTPServer::do_GET(const RequestData& recvdata)
     char buff[128];
 
     size_t pos = path.find('?');
+
     bool err = pos == string::npos;
     Reply repl;
+    json j;
     if(err)
     {        
         repl.setStatus(400);
-        repl.SetHeader("Content-Type","text/html; charset=UTF-8");
-        string body = "Неверное задание пути в запросе";
-        sprintf(buff,"%d", (int)body.length());
-        repl.SetHeader("Content-Length",buff);
+        repl.SetHeader("Content-Type","application/json");
+
+        j["status"] = 400;
+        j["errorMessage"] = "Неверное задание пути в запросе";
+
+        string body = j.dump();
+        sprintf(buff,"%d",(int)body.length());
+        repl.SetHeader("Content-Length", buff);
+        repl.setBody(body.c_str());
         repl.Send(sock);
         return;
     }
 
     string pear = path.substr(pos+1);
     map<string, string> params = parseParams(pear);
-    path = "";
+    j["status"] = 200;
+    j["errorMessage"] = nullptr;
     for(auto el : params)
     {
-        path += el.first+": "+el.second+"; ";
+        j[el.first.c_str()] = el.second.c_str();
     }
 
-    sleep(3);
+    //sleep(3);
     repl.setStatus(200);
-    repl.SetHeader("Content-Type","text/html; charset=UTF-8");
-    string body = "Параметры запроса:\n"+path;
+    repl.SetHeader("Content-Type","application/json");
+
+    string body = j.dump();
     repl.setBody(body.c_str());
-    sprintf(buff,"%d", (int)body.length());
-    repl.SetHeader("Content-Length",buff);
+    sprintf(buff,"%d",(int)body.length());
+    repl.SetHeader("Content-Length", buff);
     repl.Send(sock);
 
 }
